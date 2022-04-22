@@ -1,0 +1,54 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.GelirGiderUygulaması" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="colorPrimary">@color/Primary50</item>
+        <item name="colorOnPrimary">@color/Primary60</item>
+        <item name="colorPrimaryContainer">@color/Primary70</item>
+        <item name="colorOnPrimaryContainer">@color/Primary30</item>
+
+        <item name="colorSecondary">@color/Secondary60</item>
+        <item name="colorOnSecondary">@color/Secondary70</item>
+        <item name="colorSecondaryContainer">@color/Secondary80</item>
+        <item name="colorOnSecondaryContainer">@color/Secondary90</item>
+
+        <item name="colorTertiary">@color/Tertiary50</item>
+        <item name="colorOnTertiary">@color/Tertiary60</item>
+        <item name="colorTertiaryContainer">@color/Tertiary70</item>
+        <item name="colorOnTertiaryContainer">@color/Tertiary80</item>
+
+        <item name="colorBackgroundFloating">@color/Neutral30</item>
+        <item name="colorOnBackground">@color/Neutral40</item>
+        <item name="colorSurface">@color/Neutral30</item>
+        <item name="colorOnSurface">@color/Neutral40</item>
+
+        <item name="colorSurfaceVariant">@color/Neutral40</item>
+        <item name="colorOnSurfaceVariant">@color/Neutral_Variant50</item>
+        <item name="colorOutline">@color/Neutral_Variant60</item>
+    </style>
+
+    <!--Kart Teması:Filled-->
+    <style name="Widget.App.CardViewMyFilled" parent="Widget.Material3.CardView.Filled">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.CardExpense</item>
+    </style>
+    <style name="ThemeOverlay.App.CardExpense" parent="">
+        <item name="colorSurfaceVariant">@color/Neutral20</item>
+    </style>
+
+
+
+    <!--slide layout teması: gider ekle -->
+    <style name="DialogAnimationSlide">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_dawn</item>
+    </style>
+    <style name="DialogAnimationScale">
+        <item name="android:windowEnterAnimation">@anim/scale_up</item>
+        <item name="android:windowExitAnimation">@anim/scale_down</item>
+    </style>
+    <style name="DialogAnimationScaleCenter">
+        <item name="android:windowEnterAnimation">@anim/scale_up_center</item>
+        <item name="android:windowExitAnimation">@anim/scale_down_center</item>
+    </style>
+
+</resources>

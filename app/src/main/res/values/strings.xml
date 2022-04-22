@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">Gelir Gider Uygulaması</string>
+    <string name="income">Gelir</string>
+    <string name="expense">Gider</string>
+    <string name="home">Ev</string>
+
+    <string name="income_name">Gelir İsmi</string>
+    <string name="income_add">Gelir Ekle</string>
+    <string name="income_day">Gelir Günü</string>
+    <string name="income_amount">Gelir Tutarı</string>
+
+    
+    <string name="expense_add">Gider Ekle</string>
+    <string name="remaining_day">Kalan Gün</string>
+    <string name="date">Tarih</string>
+    <string name="expense_name">Gider İsmi</string>
+    <string name="expense_amount">Gider Tutarı</string>
+    <string name="expense_date">Gider Tarihi</string>
+    <string name="debt">Borç</string>
+    <string name="lender">Borç Veren</string>
+    
+    <string name="expense_monthly">Aylık</string>
+    <string name="expense_forOnce">Tek seferlik</string>
+    <string name="expense_repetition">Tekrar Sayısı(Ay)</string>
+    <string name="every_month">Her Ay</string>
+    <string name="expense_thisMonth">Gider Bu Ay</string>
+
+    <string name="delete">Sil</string>
+    <string name="edit">Düzenle</string>
+    <string name="add">Ekle</string>
+    <string name="cancel">İptal</string>
+
+    <string name="total_income">Toplam Gelir</string>
+    <string name="total_expense">Toplam Gider</string>
+    <string name="avarage_income">Ortalama Gelir</string>
+    <string name="avarage_expense">Ortalama Gider</string>
+    <string name="remaining_money">Kalan Para</string>
+    <string name="undo_complete">Geri al Tamamla</string>
+    <string name="investment">Yatırım</string>
+
+    <string name="income_this_month">Gelir Bu Ay</string>
+    <string name="percentage_of_increase">Artış Yüzdesi</string>
+
+    <string name="need">İhtiyaç</string>
+    <string name="want">İstek</string>
+
+    <string name="save">Kaydet</string>
+
+
+</resources>

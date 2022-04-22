@@ -1,0 +1,52 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.GelirGiderUygulaması" parent="Theme.Material3.Light.NoActionBar">
+
+        <!--green theme-->
+        <item name="colorPrimary">@color/Primary10</item>
+        <item name="colorOnPrimary">@color/Primary20</item>
+        <item name="colorPrimaryContainer">@color/Primary30</item>
+        <item name="colorOnPrimaryContainer">@color/Primary40</item>
+
+        <item name="colorSecondary">@color/Secondary10</item>
+        <item name="colorOnSecondary">@color/Secondary20</item>
+        <item name="colorSecondaryContainer">@color/Secondary30</item>
+        <item name="colorOnSecondaryContainer">@color/Secondary40</item>
+
+        <item name="colorTertiary">@color/Tertiary10</item>
+        <item name="colorOnTertiary">@color/Tertiary20</item>
+        <item name="colorTertiaryContainer">@color/Tertiary30</item>
+        <item name="colorOnTertiaryContainer">@color/Tertiary40</item>
+
+        <item name="colorBackgroundFloating">@color/Neutral10</item>
+        <item name="colorOnBackground">@color/Neutral20</item>
+        <item name="colorSurface">@color/Neutral10</item>
+        <item name="colorOnSurface">@color/Neutral20</item>
+
+        <item name="colorSurfaceVariant">@color/Neutral10</item>
+        <item name="colorOnSurfaceVariant">@color/Neutral20</item>
+        <item name="colorOutline">@color/Neutral30</item>
+    </style>
+
+
+
+    <!--slide layout teması: gider ekle -->
+    <style name="DialogAnimationSlide">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_dawn</item>
+    </style>
+
+    <style name="DialogAnimationScale">
+        <item name="android:windowEnterAnimation">@anim/scale_up</item>
+        <item name="android:windowExitAnimation">@anim/scale_down</item>
+    </style>
+
+    <style name="DialogAnimationScaleCenter">
+        <item name="android:windowEnterAnimation">@anim/scale_up_center</item>
+        <item name="android:windowExitAnimation">@anim/scale_down_center</item>
+    </style>
+
+    
+
+
+</resources>

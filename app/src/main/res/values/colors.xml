@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--fundamental-->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <!--Light Mode-->
+
+    <color name="Primary10">#386A20</color>
+    <color name="Primary20">#FFFFFF</color>
+    <color name="Primary30">#B7F397</color>
+    <color name="Primary40">#042100</color>
+
+
+    <color name="Secondary10">#55624C</color>
+    <color name="Secondary20">#FFFFFF</color>
+    <color name="Secondary30">#D9E7CB</color>
+    <color name="Secondary40">#131F0D</color>
+    <color name="Secondary50">#72776C</color>
+
+    <color name="Tertiary10">#19686A</color>
+    <color name="Tertiary20">#FFFFFF</color>
+    <color name="Tertiary30">#A8EFF0</color>
+    <color name="Tertiary40">#002021</color>
+
+    <color name="Neutral10">#FDFDF5</color>
+    <color name="Neutral20">#191C18</color>
+
+    <color name="Neutral_Variant10">#E0E5D7</color>
+    <color name="Neutral_Variant20">#43483E</color>
+    <color name="Neutral_Variant30">#72776C</color>
+
+
+    <!--Dark Mode-->
+
+    <color name="Primary50">#9CD67E</color>
+    <color name="Primary60">#0C3900</color>
+    <color name="Primary70">#205107</color>
+
+    <color name="Secondary60">#BDCBB0</color>
+    <color name="Secondary70">#273420</color>
+    <color name="Secondary80">#3E4A36</color>
+    <color name="Secondary90">#D9E7CB</color>
+
+    <color name="Tertiary50">#8CD3D4</color>
+    <color name="Tertiary60">#003738</color>
+    <color name="Tertiary70">#004F51</color>
+    <color name="Tertiary80">#A8EFF0</color>
+
+    <color name="Neutral30">#1A1C18</color>
+    <color name="Neutral40">#E0E4D7</color>
+
+    <color name="Neutral_Variant40">#43483E</color>
+    <color name="Neutral_Variant50">#C4C9BC</color>
+    <color name="Neutral_Variant60">#8D9287</color>
+
+
+    <color name="red_delete">#d11a2a</color>
+
+    <color name="yellow1">#FFEB3B</color>
+    <color name="yellow2">#CDDC39</color>
+    <color name="yellow3">#8BC34A</color>
+    <color name="yellow4">#4CAF50</color>
+
+</resources>

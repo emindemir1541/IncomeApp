@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    >
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/income_add"
+        android:textColor="@color/Primary10"
+        style="@style/Widget.Material3.AutoCompleteTextView.FilledBox.Dense"
+        android:layout_marginTop="15dp"
+        android:textSize="30dp"
+        />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/incomeAddPage_incomeName"
+        style="@style/MaterialAlertDialog.Material3.Title.Text.CenterStacked"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="@string/income_name"
+        android:inputType="textPersonName" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/incomeAddPage_incomeAmount"
+        style="@style/MaterialAlertDialog.Material3.Title.Text.CenterStacked"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="@string/income_amount"
+        android:inputType="numberDecimal" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/incomeAddPage_incomeDate"
+        style="@style/MaterialAlertDialog.Material3.Title.Text.CenterStacked"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="@string/income_day"
+        android:inputType="numberSigned"
+        android:maxLength="2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="35dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/incomeAddPage_addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"
+            style="@style/Widget.Material3.Button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

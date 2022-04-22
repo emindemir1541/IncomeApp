@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itemIncome"
+        android:enabled="true"
+        android:icon="@drawable/png_income"
+        android:title="@string/income"/>
+    <item
+        android:id="@+id/itemHome"
+        android:enabled="true"
+        android:icon="@drawable/png_home"
+        android:title="@string/home"/>
+    <item
+        android:id="@+id/itemExpense"
+        android:enabled="true"
+        android:icon="@drawable/png_expense"
+        android:title="@string/expense"/>
+</menu>
