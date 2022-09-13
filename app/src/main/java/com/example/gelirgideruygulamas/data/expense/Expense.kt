@@ -27,9 +27,9 @@ data class Expense(
     var type: Int, //need, want, debt
     var dateLong: Long,
     var dataChanged: Long = DateHelper.currentTime, //livedatanın çalışması için datayı değiştiriyor
+    var cardId:Long=DateHelper.currentTime,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-    var cardId:String="card_$id",
     ) : Parcelable {
 
 

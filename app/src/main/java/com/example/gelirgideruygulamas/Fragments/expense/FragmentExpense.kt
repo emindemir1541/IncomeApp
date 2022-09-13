@@ -69,7 +69,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
         expenseUndoneList = ArrayList()
         expenseDoneList = ArrayList()
 
-        //expenseViewModel.addExpense(Expense("asd", 24f, DateHelper.currentTime, false, false, null, null, false, Expense.NEED, DateHelper.currentTime, DateHelper.currentTime, 1))
+       // expenseViewModel.addExpense(Expense("asd", 24f, DateHelper.currentTime, false, false, null, null, false, Expense.NEED, DateHelper.currentTime, DateHelper.currentTime, 1))
 
      //   Log.e("aa","")
 
