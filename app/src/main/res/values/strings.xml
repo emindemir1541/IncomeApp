@@ -46,5 +46,10 @@
 
     <string name="save">Kaydet</string>
 
+    <!--warnings-->
+
+    <string name="warning_empty">Lütfen Boş Bırakmayın</string>
+    <string name="warning_character_much"> Karakterden Fazla Girmeyin</string>
+    <string name="warning_character_less"> Karakterden Az Girmeyin</string>
 
 </resources>

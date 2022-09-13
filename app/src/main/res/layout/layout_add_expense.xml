@@ -101,7 +101,7 @@
                 app:layout_constraintVertical_bias="0.0">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/layout_expense_add_incomeName"
+                    android:id="@+id/layout_expense_add_expenseName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
@@ -213,13 +213,15 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/layout_expense_add_repetition"
+                        android:id="@+id/layout_expense_add_repetation"
                         style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
                         android:layout_marginEnd="24dp"
                         android:hint="@string/expense_repetition"
+                        android:inputType="number"
+                        android:maxLength="2"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -229,21 +231,19 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginRight="24dp"
+                android:id="@+id/layout_expense_add_date"
+                android:textColor="@color/black"
                 tools:layout_editor_absoluteX="276dp"
-                tools:layout_editor_absoluteY="4dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/layout_expense_add_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/expense_date" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                app:backgroundTint="@null"
+                android:paddingLeft="15dp"
+                android:background="@drawable/rectengle_outline"
+                android:text="@string/expense_date"
+                tools:layout_editor_absoluteY="4dp"/>
 
         </LinearLayout>
 
