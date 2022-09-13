@@ -18,15 +18,14 @@ interface ExpenseDao {
     @Query("select * from table_expense order by id asc") // TODO: 22.07.2022 sql kodunu ayarla
     fun readData(): LiveData<List<Expense>>
 
-    @Query("select DISTINCT savedDateTime from table_expense ORDER by savedDateTime ASC") // id olarak kullanılıyor
-    fun readSavedData(): LiveData<List<SavedDate>>
-
     @Query("Update table_expense set dataChanged =:dataChanged")
     fun refreshData(dataChanged: Long)
 
 
 }
 
+/*    @Query("select DISTINCT startedDateLong from table_expense ORDER by startedDateLong ASC") // id olarak kullanılıyor
+    fun readSavedData(): LiveData<List<SavedDate>>*/
 
 /*@Query("Delete from table_expense")
 suspend fun deleteAll()*/

@@ -12,13 +12,11 @@ import kotlinx.coroutines.launch
 class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: ExpenseRepository
     val readAllData: LiveData<List<Expense>>
-    val readSavedData: LiveData<List<SavedDate>>
 
     init {
         val expenseDao = ExpenseDatabase.getDatabase(application).expenseDao()
         repository = ExpenseRepository(expenseDao)
         readAllData = repository.readAllData
-        readSavedData = repository.readSavedData
     }
 
     fun addExpense(expense: Expense) {

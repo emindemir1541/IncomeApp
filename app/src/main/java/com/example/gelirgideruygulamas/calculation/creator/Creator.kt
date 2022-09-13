@@ -17,12 +17,9 @@ class Creator(private val mAppCompatActivity: AppCompatActivity,private val mFra
 
     fun createCard(){
         expenseViewModel.readAllData.observe(mFragment.viewLifecycleOwner, Observer {expenseAllList->
-           expenseViewModel.readSavedData.observe(mFragment.viewLifecycleOwner, Observer{savedDateList->
 
-DateHelper
-
-           })
         })
-
     }
+
+
 }

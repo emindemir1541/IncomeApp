@@ -17,26 +17,24 @@ import java.time.LocalDateTime
 data class Expense(
     var name: String,
     var amount: Float,
-    var savedDateTime: Long,
-    var done: Boolean,
+    var startedDateLong: Long,
+    var completed: Boolean,
     var debt: Boolean,
     var lender: String?, //null ise borç veren yok
     var repetition: Int?,  // her ay için 0, tekrarsız için null, kalan tekrar sayısı
     var deleted: Boolean,
     var type: Int, //need, want, debt
-    var dateTime: Long,
+    var payDay: Long,
     var dataChanged: Long = DateHelper.currentTime, //livedatanın çalışması için datayı değiştiriyor
+    var cardId: Int = 1,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
 ) : Parcelable {
 
     @IgnoredOnParcel
     @Ignore
-    var localDateTime: LocalDateTime = DateHelper.convertToDateTime(dateTime)
+    var startedDate = DateHelper.convertToDateTime(startedDateLong)
 
-    @Ignore
-    @IgnoredOnParcel
-    var savedLocalDateTime: LocalDateTime = DateHelper.convertToDateTime(savedDateTime)
 
     companion object {
         //Expense Type
@@ -50,20 +48,19 @@ data class Expense(
             repetition == null -> {
                 ExpenseCardType.ONCE
             }
-            done -> {
+            completed -> {
                 ExpenseCardType.DONE
             }
             else -> ExpenseCardType.UNDONE
         }
     }
 
-    fun isSelected(context: Context): Boolean {
+/*    fun isSelected(context: Context): Boolean {
         //cart, StatedDate de kaydedilen tarihle uyuşuyor mu
         return StatedDate(context).getDateTime().checkMonthAndYear(localDateTime)
-    }
+    }*/
 
 }
-
 
 
 enum class ExpenseCardType {
@@ -72,19 +69,11 @@ enum class ExpenseCardType {
     ONCE
 }
 
-@Entity
-@Parcelize
-data class SavedDate(var savedDateTime: Long) : Parcelable{
-
-    @Ignore
-    @IgnoredOnParcel
-    val localDateTime = DateHelper.convertToDateTime(savedDateTime)
-}
 
 /*    fun getCard(cardId: Int): ExpenseCardTable {
         return monthlyCard.single { it.cardId == cardId }
     }
 
-    fun getCard(date: Date): ExpenseCardTable {
-        return monthlyCard.single { it.month == date.month && it.year == date.year }
+    fun getCard(payDay: Date): ExpenseCardTable {
+        return monthlyCard.single { it.month == payDay.month && it.year == payDay.year }
     }*/

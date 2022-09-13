@@ -1,15 +1,10 @@
 package com.example.gelirgideruygulamas.calculation.creator
 
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.gelirgideruygulamas.data.expense.Expense
 import com.example.gelirgideruygulamas.data.expense.ExpenseCardType
 import com.example.gelirgideruygulamas.data.expense.ExpenseViewModel
 import com.example.gelirgideruygulamas.data.expense.SavedDate
 import com.example.gelirgideruygulamas.helper.DateHelper
-import com.example.gelirgideruygulamas.helper.DateHelper.Companion.checkMonthAndYear
-import java.lang.Error
 import java.time.LocalDateTime
 
 class ExpenseCreator(private val expenseViewModel: ExpenseViewModel,private val expenseListAll:List<Expense>,private val savedDates:List<SavedDate>) {
@@ -43,7 +38,7 @@ return createdCardList
 
     private fun createCard(expense: Expense, localDate: LocalDateTime) {
             val newExpense = expense
-            newExpense.dateTime = DateHelper.toLong(localDate)
+            newExpense.payDay = DateHelper.toLong(localDate)
             createdCardList.add(newExpense)
     }
 
@@ -53,7 +48,7 @@ return createdCardList
         val cardDeckList = ArrayList<List<Expense>>()
         val expenseList = expenseListAll
         savedDates.forEach { savedDate ->
-            val oneCardDeck = expenseList.filter { expense: Expense -> expense.savedDateTime == savedDate.savedDateTime && !expense.deleted && expense.getCardType() != ExpenseCardType.ONCE }.sortedBy { expense: Expense -> expense.dateTime }
+            val oneCardDeck = expenseList.filter { expense: Expense -> expense.startedDateLong == savedDate.savedDateTime && !expense.deleted && expense.getCardType() != ExpenseCardType.ONCE }.sortedBy { expense: Expense -> expense.payDay }
             cardDeckList.add(oneCardDeck)
         }
         return cardDeckList
@@ -61,6 +56,6 @@ return createdCardList
 
 }
 
-/*dateTimesWithoutCreatedCards(savedDate, cardsWithOneSavedDate).forEach { dateTime ->
-    createCard(cardsWithOneSavedDate[0], dateTime)
+/*dateTimesWithoutCreatedCards(savedDate, cardsWithOneSavedDate).forEach { payDay ->
+    createCard(cardsWithOneSavedDate[0], payDay)
 }*/

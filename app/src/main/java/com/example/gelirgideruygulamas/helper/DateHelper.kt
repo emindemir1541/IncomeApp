@@ -73,14 +73,14 @@ class DateHelper {
 
 
     //fun getLocalDate(): String = DateTimeFormatter.ofPattern(UTC_TR).format(LocalDate.now())
-    /*  fun dateToMonthAndYear(date: String): String {
-        val splintedDate = date.split("/")
+    /*  fun dateToMonthAndYear(payDay: String): String {
+        val splintedDate = payDay.split("/")
         return splintedDate[1] + "/" + splintedDate[2]
     }*/
     //fun convertToString(day: Int, month: Int, year: Int): String = "$day/$month/$year"
-    //fun convertToTimeInMillis(date: String): Long = convertToDate(date).time
-    //fun convertToDate(date: String): java.util.Date = formatter().parse(date)
-    //fun convertToDate(date:Long):java.util.Date= convertToDate(convertToString(date))
+    //fun convertToTimeInMillis(payDay: String): Long = convertToDate(payDay).time
+    //fun convertToDate(payDay: String): java.util.Date = formatter().parse(payDay)
+    //fun convertToDate(payDay:Long):java.util.Date= convertToDate(convertToString(payDay))
 
 }
 

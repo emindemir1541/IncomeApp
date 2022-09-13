@@ -25,5 +25,5 @@ interface IncomeDao {
     fun refreshData(dataChanged: Long)
 }
 
-/*@Query("select * from table_income where date=:date order by id asc")
-  fun readDataByDate(date:String):LiveData<List<Income>>*/
+/*@Query("select * from table_income where payDay=:payDay order by id asc")
+  fun readDataByDate(payDay:String):LiveData<List<Income>>*/

@@ -99,7 +99,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
 
     override fun getItemCount(): Int {
         incomeViewModel = ViewModelProvider(mAppCompatActivity)[IncomeViewModel::class.java]
-        //fazladan bir date kardı ve bir görünmez kart var
+        //fazladan bir payDay kardı ve bir görünmez kart var
         return incomeList.size + 2
     }
 

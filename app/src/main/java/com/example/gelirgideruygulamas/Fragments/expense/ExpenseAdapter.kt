@@ -230,7 +230,7 @@ class ExpenseAdapter(
                 cardExpenseUndone.expenseName.text = expense.name
                 cardExpenseUndone.expenseAmount.text = expense.amount.clearZero()
                 cardExpenseUndone.expenseDate.text = DateHelper.convertToString(expense.localDateTime)
-                cardExpenseUndone.expenseCheckBox.isChecked = expense.done
+                cardExpenseUndone.expenseCheckBox.isChecked = expense.completed
                 //cardExpenseUndone.expenseUndone_viewForColor.setBackgroundColor(Color.parseColor("#FF0000")) todo renklere göre işlem yap
                 cardExpenseUndone.expenseUndone_debt.isVisible = expense.debt
                 if (expense.debt) {
@@ -242,7 +242,7 @@ class ExpenseAdapter(
                 }
                 cardExpenseUndone.expenseCheckBox.setOnClickListener {
                     if (cardExpenseUndone.expenseCheckBox.isChecked) {
-                        expense.done = true
+                        expense.completed = true
                         expenseViewModel.updateExpense(expense)
                     }
                 }
@@ -372,14 +372,14 @@ class ExpenseAdapter(
             fun setDateTimePickerDialog() {
                 val datePicker =
                     MaterialDatePicker.Builder.datePicker()
-                        // .setTitleText("Select date")
+                        // .setTitleText("Select payDay")
                         .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                         .build()
 
                 datePicker.show(mAppCompatActivity.supportFragmentManager, "tag")
 
                 datePicker.addOnPositiveButtonClickListener { timeInMillis ->
-                    oldExpense.dateTime = timeInMillis
+                    oldExpense.payDay = timeInMillis
                     bindingDialog.layoutExpenseAddDate.text = DateHelper.convertToString(timeInMillis)
                 }
             }
@@ -431,14 +431,14 @@ class ExpenseAdapter(
                     val newExpense = Expense(
                         bindingDialog.layoutExpenseAddExpenseName.text.toString(),
                         bindingDialog.layoutExpenseAddAmount.text.toString().toFloat(),
-                        oldExpense.savedDateTime,
-                        oldExpense.done,
+                        oldExpense.startedDateLong,
+                        oldExpense.completed,
                         bindingDialog.layoutExpenseAddTypeDebt.isChecked,
                         if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) bindingDialog.layoutExpenseAddLender.text.toString() else null,
                         if (bindingDialog.layoutExpenseAddRepetationType2.isChecked) null else if (bindingDialog.layoutExpenseAddEveryMonty.isChecked) 0 else bindingDialog.layoutExpenseAddRepetation.text.toString().toInt(),
                         false,
                         if (bindingDialog.layoutExpenseAddTypeNeed.isChecked) Expense.NEED else if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) Expense.DEBT else Expense.WANT,
-                        oldExpense.dateTime,
+                        oldExpense.payDay,
                         DateHelper.currentTime,
                         oldExpense.id
                     )
@@ -457,7 +457,7 @@ class ExpenseAdapter(
             }
 
             bindingDialog.layoutExpenseAddDone.setOnClickListener {
-                oldExpense.done = false
+                oldExpense.completed = false
                 expenseViewModel.updateExpense(oldExpense)
                 exitFullScreen()
             }

@@ -32,4 +32,4 @@ class IncomeRepository(private val incomeDao: IncomeDao) {
 
 }
 
-/*fun readDataByDate(date:String):LiveData<List<Income>> = incomeDao.readDataByDate(date)*/
+/*fun readDataByDate(payDay:String):LiveData<List<Income>> = incomeDao.readDataByDate(payDay)*/
