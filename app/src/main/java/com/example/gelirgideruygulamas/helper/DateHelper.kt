@@ -2,9 +2,7 @@ package com.example.gelirgideruygulamas.helper
 
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.*
 import java.time.format.TextStyle
 import java.util.*
 
@@ -28,10 +26,14 @@ class DateHelper {
         fun convertToString(day: Int, month: Int, year: Int): String = "$day/$month/$year "
         fun convertToString(timeInMillis: Long): String = android.text.format.DateFormat.format(PATTERN_TR, timeInMillis).toString()
         fun convertToString(dateTime: LocalDateTime): String = "${dateTime.dayOfMonth}/${dateTime.monthValue}/${dateTime.year}"
+        fun convertToString(dateTime: LocalDate): String = "${dateTime.dayOfMonth}/${dateTime.monthValue}/${dateTime.year}"
         private fun convertToStringEu(timeInMillis: Long): String = android.text.format.DateFormat.format(PATTERN_EU, timeInMillis).toString()
 
         fun convertToDateTime(dateTime: Long): LocalDateTime {
             return Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime()
+        }
+        fun convertToDateTime(date: LocalDate,time:LocalTime= LocalTime.of(0,0,0)): LocalDateTime {
+            return LocalDateTime.of(date,time)
         }
 
         fun convertToDateTime(year: Int, month: Int, dayOfMonth: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, nanoOfSecond: Int = 0): LocalDateTime {
@@ -69,18 +71,30 @@ class DateHelper {
         fun LocalDateTime.checkMonthAndYear(localDateTime: LocalDateTime): Boolean {
             return localDateTime.monthValue == this.monthValue && localDateTime.year == this.year
         }
+        fun LocalDateTime.checkMonthAndYear(localDateTime: LocalDate): Boolean {
+            return localDateTime.monthValue == this.monthValue && localDateTime.year == this.year
+        }
+        fun LocalDate.checkMonthAndYear(localDateTime: LocalDate): Boolean {
+            return localDateTime.monthValue == this.monthValue && localDateTime.year == this.year
+        }
+        fun LocalDate.checkMonthAndYear(localDateTime: LocalDateTime): Boolean {
+            return localDateTime.monthValue == this.monthValue && localDateTime.year == this.year
+        }
+        fun LocalDate.toDateTime():LocalDateTime{
+            return convertToDateTime(this)
+        }
     }
 
 
     //fun getLocalDate(): String = DateTimeFormatter.ofPattern(UTC_TR).format(LocalDate.now())
-    /*  fun dateToMonthAndYear(payDay: String): String {
-        val splintedDate = payDay.split("/")
+    /*  fun dateToMonthAndYear(dateLong: String): String {
+        val splintedDate = dateLong.split("/")
         return splintedDate[1] + "/" + splintedDate[2]
     }*/
     //fun convertToString(day: Int, month: Int, year: Int): String = "$day/$month/$year"
-    //fun convertToTimeInMillis(payDay: String): Long = convertToDate(payDay).time
-    //fun convertToDate(payDay: String): java.util.Date = formatter().parse(payDay)
-    //fun convertToDate(payDay:Long):java.util.Date= convertToDate(convertToString(payDay))
+    //fun convertToTimeInMillis(dateLong: String): Long = convertToDate(dateLong).time
+    //fun convertToDate(dateLong: String): java.util.Date = formatter().parse(dateLong)
+    //fun convertToDate(dateLong:Long):java.util.Date= convertToDate(convertToString(dateLong))
 
 }
 

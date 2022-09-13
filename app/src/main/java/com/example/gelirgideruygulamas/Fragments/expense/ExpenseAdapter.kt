@@ -229,7 +229,7 @@ class ExpenseAdapter(
                 cardExpenseUndone.expenseID.isVisible = false
                 cardExpenseUndone.expenseName.text = expense.name
                 cardExpenseUndone.expenseAmount.text = expense.amount.clearZero()
-                cardExpenseUndone.expenseDate.text = DateHelper.convertToString(expense.localDateTime)
+                cardExpenseUndone.expenseDate.text = DateHelper.convertToString(expense.date)
                 cardExpenseUndone.expenseCheckBox.isChecked = expense.completed
                 //cardExpenseUndone.expenseUndone_viewForColor.setBackgroundColor(Color.parseColor("#FF0000")) todo renklere göre işlem yap
                 cardExpenseUndone.expenseUndone_debt.isVisible = expense.debt
@@ -258,7 +258,7 @@ class ExpenseAdapter(
                 cardExpenseDone.expenseID.isVisible = false
                 cardExpenseDone.expenseName.text = expense.name
                 cardExpenseDone.expenseAmount.text = expense.amount.clearZero()
-                cardExpenseDone.expenseDate.text = DateHelper.convertToString(expense.localDateTime)
+                cardExpenseDone.expenseDate.text = DateHelper.convertToString(expense.date)
                 cardExpenseDone.expenseDone_debt.isVisible = expense.debt
                 if (expense.debt) {
                     cardExpenseDone.expenseDone_debt.text = expense.lender
@@ -274,7 +274,7 @@ class ExpenseAdapter(
                 cardExpense.expenseID.text = expense.id.toString()
                 cardExpense.expenseID.isVisible = false
                 cardExpense.expenseAmount.text = expense.amount.clearZero()
-                cardExpense.expenseDate.text = DateHelper.convertToString(expense.localDateTime)
+                cardExpense.expenseDate.text = DateHelper.convertToString(expense.date)
                 cardExpense.expenseName.text = expense.name
                 cardExpense.cardView.setOnLongClickListener {
                     setFullScreenDialogExpense(false, expense)
@@ -329,7 +329,7 @@ class ExpenseAdapter(
 
             bindingDialog.layoutExpenseAddExpenseName.setText(oldExpense.name)
             bindingDialog.layoutExpenseAddAmount.setText(oldExpense.amount.toString())
-            bindingDialog.layoutExpenseAddDate.text = DateHelper.convertToString(expense.localDateTime)
+            bindingDialog.layoutExpenseAddDate.text = DateHelper.convertToString(expense.date)
             bindingDialog.layoutExpenseAddTypeDebt.isChecked = oldExpense.debt
             when (oldExpense.repetition) {
                 null -> { //tek seferlik işaretli
@@ -372,14 +372,14 @@ class ExpenseAdapter(
             fun setDateTimePickerDialog() {
                 val datePicker =
                     MaterialDatePicker.Builder.datePicker()
-                        // .setTitleText("Select payDay")
+                        // .setTitleText("Select dateLong")
                         .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                         .build()
 
                 datePicker.show(mAppCompatActivity.supportFragmentManager, "tag")
 
                 datePicker.addOnPositiveButtonClickListener { timeInMillis ->
-                    oldExpense.payDay = timeInMillis
+                    oldExpense.dateLong = timeInMillis
                     bindingDialog.layoutExpenseAddDate.text = DateHelper.convertToString(timeInMillis)
                 }
             }
@@ -427,7 +427,7 @@ class ExpenseAdapter(
 
             bindingDialog.layoutExpenseAddSave.setOnClickListener {
                 if (emptySafe()) {
-                    val date = oldExpense.localDateTime
+                    val date = oldExpense.date
                     val newExpense = Expense(
                         bindingDialog.layoutExpenseAddExpenseName.text.toString(),
                         bindingDialog.layoutExpenseAddAmount.text.toString().toFloat(),
@@ -438,7 +438,7 @@ class ExpenseAdapter(
                         if (bindingDialog.layoutExpenseAddRepetationType2.isChecked) null else if (bindingDialog.layoutExpenseAddEveryMonty.isChecked) 0 else bindingDialog.layoutExpenseAddRepetation.text.toString().toInt(),
                         false,
                         if (bindingDialog.layoutExpenseAddTypeNeed.isChecked) Expense.NEED else if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) Expense.DEBT else Expense.WANT,
-                        oldExpense.payDay,
+                        oldExpense.dateLong,
                         DateHelper.currentTime,
                         oldExpense.id
                     )

@@ -10,6 +10,7 @@ import com.example.gelirgideruygulamas.helper.DateHelper
 import com.example.gelirgideruygulamas.helper.DateHelper.Companion.checkMonthAndYear
 import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity(tableName = "table_expense")
@@ -24,17 +25,22 @@ data class Expense(
     var repetition: Int?,  // her ay için 0, tekrarsız için null, kalan tekrar sayısı
     var deleted: Boolean,
     var type: Int, //need, want, debt
-    var payDay: Long,
+    var dateLong: Long,
     var dataChanged: Long = DateHelper.currentTime, //livedatanın çalışması için datayı değiştiriyor
-    var cardId: Int = 1,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-) : Parcelable {
+    var cardId:String="card_$id",
+    ) : Parcelable {
+
+
 
     @IgnoredOnParcel
     @Ignore
-    var startedDate = DateHelper.convertToDateTime(startedDateLong)
+    var startedDate:LocalDate = DateHelper.convertToDateTime(startedDateLong).toLocalDate()
 
+    @IgnoredOnParcel
+    @Ignore
+    var date:LocalDate = DateHelper.convertToDateTime(dateLong).toLocalDate()
 
     companion object {
         //Expense Type
@@ -55,10 +61,10 @@ data class Expense(
         }
     }
 
-/*    fun isSelected(context: Context): Boolean {
+    fun isSelected(context: Context): Boolean {
         //cart, StatedDate de kaydedilen tarihle uyuşuyor mu
-        return StatedDate(context).getDateTime().checkMonthAndYear(localDateTime)
-    }*/
+        return StatedDate(context).getDateTime().checkMonthAndYear(date)
+    }
 
 }
 
@@ -74,6 +80,6 @@ enum class ExpenseCardType {
         return monthlyCard.single { it.cardId == cardId }
     }
 
-    fun getCard(payDay: Date): ExpenseCardTable {
-        return monthlyCard.single { it.month == payDay.month && it.year == payDay.year }
+    fun getCard(dateLong: Date): ExpenseCardTable {
+        return monthlyCard.single { it.month == dateLong.month && it.year == dateLong.year }
     }*/

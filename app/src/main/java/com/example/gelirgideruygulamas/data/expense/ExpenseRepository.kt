@@ -23,7 +23,7 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         return readAllData.value?.filter { expense -> expense.isSelected(context) } ?: emptyList()
     }
 
-    val readSavedData: LiveData<List<SavedDate>> = expenseDao.readSavedData()
+   // val readSavedData: LiveData<List<SavedDate>> = expenseDao.readSavedData()
 
     fun refreshData(dataChanged: Long) = expenseDao.refreshData(dataChanged)
 }

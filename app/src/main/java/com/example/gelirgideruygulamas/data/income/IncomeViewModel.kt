@@ -47,7 +47,7 @@ class IncomeViewModel(application: Application) : AndroidViewModel(application) 
         }
     }*/
 
-/*fun readDataByDate(payDay: String): LiveData<List<Income>> = repository.readDataByDate(payDay)*/
+/*fun readDataByDate(dateLong: String): LiveData<List<Income>> = repository.readDataByDate(dateLong)*/
 
 /*   fun deleteAllIncome() {
         viewModelScope.launch(Dispatchers.IO) {
