@@ -9,39 +9,46 @@ import com.example.gelirgideruygulamas.helper.DateHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: ExpenseRepository
+class ExpenseViewModel(application: Application,) : AndroidViewModel(application) {
+    private val repository: ExpenseCreator
     val readAllData: LiveData<List<Expense>>
 
     init {
         val expenseDao = ExpenseDatabase.getDatabase(application).expenseDao()
-        repository = ExpenseRepository(expenseDao)
+        repository = ExpenseCreator(expenseDao)
         readAllData = repository.readAllData
     }
 
-    fun addExpense(expense: Expense) {
+    fun add(expense: Expense) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.add(expense)
         }
     }
 
-    fun updateExpense(expense: Expense) {
+    fun updateOne(expense: Expense) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.update(expense)
+            repository.updateOne(expense)
+        }
+    }
+    fun updateAll(expense: Expense,expenseList: List<Expense>){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.updateAll(expense,expenseList)
         }
     }
 
-    fun deleteExpense(expense: Expense) {
+    fun delete(expense: Expense,expenseList: List<Expense>) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.delete(expense)
+            repository.delete(expense,expenseList)
         }
     }
+
+    fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = repository.readDataByCardId(cardId)
 
     fun readSelectedData(context: Context): List<Expense> = repository.readSelectedData(context)
 
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.refreshData(DateHelper.currentTime)
+            repository.refreshData(DateHelper().currentTime)
         }
     }
 }

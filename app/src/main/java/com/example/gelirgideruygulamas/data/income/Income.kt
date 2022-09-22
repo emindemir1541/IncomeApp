@@ -10,30 +10,31 @@ import com.example.gelirgideruygulamas.helper.DateHelper
 import com.example.gelirgideruygulamas.helper.DateHelper.Companion.checkMonthAndYear
 import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
+import java.time.LocalDate
 
 @Entity(tableName = "table_income")
 @Parcelize
 data class Income(
     val name: String?,
-    val amount: Float?,
-    val savedDate: Long,
-    var date: Long,
+    val amount: Float,
+    val savedDateLong: Long,
+    var dateLong: Long,
     var deleted: Boolean,
-    var dataChanged: Long = DateHelper.currentTime, //livedatanın çalışması için datayı değiştiriyor
+    var dataChanged: Long = DateHelper().currentTime, //livedatanın çalışması için datayı değiştiriyor
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 ) : Parcelable {
     @IgnoredOnParcel
     @Ignore
-    var savedLocalDateTime = DateHelper.convertToDateTime(savedDate)
+    var savedDate: LocalDate = DateHelper.convertToDateTime(savedDateLong).toLocalDate()
 
     @IgnoredOnParcel
     @Ignore
-    var localDateTime = DateHelper.convertToDateTime(date)
+    var date: LocalDate = DateHelper.convertToDateTime(dateLong).toLocalDate()
 
     fun isSelected(context: Context): Boolean {
         //cart StatedDate de kaydedilen tarihle uyuşuyor mu
-        return  StatedDate(context).getDateTime().checkMonthAndYear(savedLocalDateTime)
+        return  StatedDate(context).getDateTime().checkMonthAndYear(savedDate)
     }
 }
 

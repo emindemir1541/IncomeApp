@@ -3,7 +3,6 @@ package com.example.gelirgideruygulamas.fragments.expense
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gelirgideruygulamas.R
-import com.example.gelirgideruygulamas.calculation.creator.Creator
 import com.example.gelirgideruygulamas.data.expense.Expense
 import com.example.gelirgideruygulamas.data.expense.ExpenseCardType
 import com.example.gelirgideruygulamas.data.expense.ExpenseViewModel
@@ -43,6 +41,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
     var created = false
 
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentExpenseBinding.bind(inflater.inflate(R.layout.fragment_expense, container, false))
         expenseViewModel = ViewModelProvider(this)[ExpenseViewModel::class.java]
@@ -54,8 +53,6 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
 
         setFabButton()
         setRvExpense()
-
-      //  Creator(mAppCompatActivity, this).createCard()
 
 
     }
@@ -69,9 +66,9 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
         expenseUndoneList = ArrayList()
         expenseDoneList = ArrayList()
 
-       // expenseViewModel.addExpense(Expense("asd", 24f, DateHelper.currentTime, false, false, null, null, false, Expense.NEED, DateHelper.currentTime, DateHelper.currentTime, 1))
+        // expenseViewModel.add(Expense("asd", 24f, DateHelper.currentTime, false, false, null, null, false, Expense.NEED, DateHelper.currentTime, DateHelper.currentTime, 1))
 
-     //   Log.e("aa","")
+        //   Log.e("aa","")
 
         expenseViewModel.readAllData.observe(viewLifecycleOwner, Observer {
 
@@ -83,6 +80,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
         adapter = ExpenseAdapter(
             mContext,
             mAppCompatActivity,
+            this,
             fab_add
         )
         binding.rvExpense.adapter = adapter
@@ -126,8 +124,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
             bindingDialog.layoutExpenseAddMonthlyView.isVisible = false
             bindingDialog.layoutExpenseAddDelete.isVisible = false
             bindingDialog.layoutExpenseAddDone.isVisible = false
-            bindingDialog.layoutExpenseAddEveryMonty.isChecked = true
-            bindingDialog.layoutExpenseAddRepetitionView.isVisible = false
+            bindingDialog.layoutExpenseAddRepetitionView.isVisible = true
             bindingDialog.layoutExpenseAddTypeWant.isChecked = true
             bindingDialog.layoutExpenseAddLenderView.isVisible = false
             bindingDialog.layoutExpenseAddDate.text = StatedDate(mContext).getDateString()
@@ -136,7 +133,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
             fun emptySafe(): Boolean {
                 if (bindingDialog.layoutExpenseAddRepetationType1.isChecked && bindingDialog.layoutExpenseAddDate.text.toString().isEmpty()) return false
                 if (bindingDialog.layoutExpenseAddTypeDebt.isChecked && bindingDialog.layoutExpenseAddLender.text.toString().isEmpty()) return false
-                if (!bindingDialog.layoutExpenseAddEveryMonty.isChecked && bindingDialog.layoutExpenseAddRepetation.text.toString().isEmpty()) return false
+                if (bindingDialog.layoutExpenseAddRepetationType1.isChecked && bindingDialog.layoutExpenseAddRepetation.text.toString().isEmpty()) return false
                 return bindingDialog.layoutExpenseAddAmount.text.toString().isNotEmpty() &&
                         bindingDialog.layoutExpenseAddExpenseName.text.toString().isNotEmpty()
             }
@@ -158,11 +155,14 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
                 val repetition = bindingDialog.layoutExpenseAddRepetation.text
                 if (repetition!!.isNotEmpty() && repetition.toString().toInt() > 24) {
                     repetition.clear()
-                    Message(mContext).muchCharacterWarning(24)
+                    Message(mContext).warningMuchCharacter(24)
+                }
+                if (repetition.isNotEmpty() && repetition.toString().toInt() < 1){
+                    repetition.clear()
+                    Message(mContext).lessCharacterWarning(1)
                 }
             }
 
-            bindingDialog.layoutExpenseAddEveryMonty.setOnClickListener { bindingDialog.layoutExpenseAddRepetitionView.isVisible = !bindingDialog.layoutExpenseAddEveryMonty.isChecked }
 
             bindingDialog.layoutExpenseAddExpenseType.setOnCheckedChangeListener { _, _ ->
                 when {
@@ -208,17 +208,17 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
                         false,
                         bindingDialog.layoutExpenseAddTypeDebt.isChecked,
                         if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) bindingDialog.layoutExpenseAddLender.text.toString() else null,
-                        if (bindingDialog.layoutExpenseAddRepetationType2.isChecked) null else if (bindingDialog.layoutExpenseAddEveryMonty.isChecked) 0 else bindingDialog.layoutExpenseAddRepetation.text.toString().toInt(),
+                        if (bindingDialog.layoutExpenseAddRepetationType2.isChecked) null else bindingDialog.layoutExpenseAddRepetation.text.toString().toInt(),
                         false,
                         if (bindingDialog.layoutExpenseAddTypeNeed.isChecked) Expense.NEED else if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) Expense.DEBT else Expense.WANT,
                         mTimeInMillis
                     )
-                    expenseViewModel.addExpense(expense)
+                    expenseViewModel.add(expense)
                     fullScreenDialog?.cancel()
                     fullScreenDialog = null
                 }
                 else {
-                    Message(mContext).emptyWarning()
+                    Message(mContext).warningEmpty()
                 }
             }
 

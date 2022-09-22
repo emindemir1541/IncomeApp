@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import com.example.gelirgideruygulamas.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.helper.DateHelper
 import com.example.gelirgideruygulamas.helper.DateHelper.Companion.checkMonthAndYear
+import com.example.gelirgideruygulamas.helper.DateHelper.Companion.convertToDateTime
 import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
 import java.time.LocalDate
@@ -22,12 +23,12 @@ data class Expense(
     var completed: Boolean,
     var debt: Boolean,
     var lender: String?, //null ise borç veren yok
-    var repetition: Int?,  // her ay için 0, tekrarsız için null, kalan tekrar sayısı
+    var repetition: Int?,  //tekrarsız için null, kalan tekrar sayısı
     var deleted: Boolean,
     var type: Int, //need, want, debt
     var dateLong: Long,
-    var dataChanged: Long = DateHelper.currentTime, //livedatanın çalışması için datayı değiştiriyor
-    var cardId:Long=DateHelper.currentTime,
+    var dataChanged: Long = DateHelper().currentTime, //livedatanın çalışması için datayı değiştiriyor
+    var cardId:Long=DateHelper().currentTime,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     ) : Parcelable {
@@ -36,11 +37,11 @@ data class Expense(
 
     @IgnoredOnParcel
     @Ignore
-    var startedDate:LocalDate = DateHelper.convertToDateTime(startedDateLong).toLocalDate()
+    var startedDate:LocalDate = convertToDateTime(startedDateLong).toLocalDate()
 
     @IgnoredOnParcel
     @Ignore
-    var date:LocalDate = DateHelper.convertToDateTime(dateLong).toLocalDate()
+    var date:LocalDate = convertToDateTime(dateLong).toLocalDate()
 
     companion object {
         //Expense Type

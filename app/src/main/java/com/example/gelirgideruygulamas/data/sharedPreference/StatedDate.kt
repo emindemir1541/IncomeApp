@@ -22,7 +22,7 @@ class StatedDate(private val context: Context) {
     }
 
     fun setToday(): String {
-        setDate(DateHelper.currentTime)
+        setDate(DateHelper().currentTime)
         return getMonth()
     }
 
@@ -51,7 +51,7 @@ class StatedDate(private val context: Context) {
     }
 
     fun isToday():Boolean{
-        return getDateTime().checkMonthAndYear(DateHelper.currentDateTime)
+        return getDateTime().checkMonthAndYear(DateHelper().currentDateTime)
     }
 
 }

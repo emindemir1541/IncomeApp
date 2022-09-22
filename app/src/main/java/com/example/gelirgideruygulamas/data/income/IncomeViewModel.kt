@@ -35,7 +35,7 @@ class IncomeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.refreshData(DateHelper.currentTime)
+            repository.refreshData(DateHelper().currentTime)
         }
     }
 
@@ -43,7 +43,7 @@ class IncomeViewModel(application: Application) : AndroidViewModel(application) 
 
 /* fun updateIncome(income: Income) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.update(income)
+            repository.updateAll(income)
         }
     }*/
 

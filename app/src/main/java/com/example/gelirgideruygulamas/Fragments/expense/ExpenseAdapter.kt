@@ -3,7 +3,6 @@ package com.example.gelirgideruygulamas.fragments.expense
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gelirgideruygulamas.R
@@ -33,14 +33,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class ExpenseAdapter(
     private val mContext: Context,
     private val mAppCompatActivity: AppCompatActivity,
+    private val mFragment: Fragment,
     private val fab_add: FloatingActionButton,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var bindingDialog: LayoutAddExpenseBinding
     private var fullScreenDialog: Dialog? = null
+    private var datePicker: MaterialDatePicker<Long>? = null
     private var expenseItems = emptyList<Expense>()
     private var expenseUndoneItems = emptyList<Expense>()
     private var expenseDoneItems = emptyList<Expense>()
+    private var expenseListAll = emptyList<Expense>()
+    private fun expenseListByCardId(cardId: Long, _expenseListAll: List<Expense>) = _expenseListAll.filter { expense -> expense.cardId == cardId }
+
 
     private lateinit var expenseViewModel: ExpenseViewModel
 
@@ -180,6 +185,9 @@ class ExpenseAdapter(
 
     override fun getItemCount(): Int {
         expenseViewModel = ViewModelProvider(mAppCompatActivity)[ExpenseViewModel::class.java]
+        expenseViewModel.readAllData.observe(mFragment.viewLifecycleOwner, Observer {
+            expenseListAll = it
+        })
         return expenseUndoneItems.size + expenseDoneItems.size + expenseItems.size + 3
     }
 
@@ -203,7 +211,7 @@ class ExpenseAdapter(
                 //Tarihi burada ayarla
                 cardDate.dateButton.setOnClickListener {
                     StatedDate(mContext).setToday()
-                    cardDate.dateButton.text = StatedDate(mContext).getMonth()
+                    cardDateToday(StatedDate(mContext).isToday())
                     refreshData()
                 }
                 cardDate.selectedDateButton.setOnClickListener() {
@@ -211,12 +219,13 @@ class ExpenseAdapter(
                 }
                 cardDate.rightArrow.setOnClickListener {
                     StatedDate(mContext).addMonth()
-                    cardDate.dateButton.text = StatedDate(mContext).getMonth()
+                    cardDateToday(StatedDate(mContext).isToday())
+
                     refreshData()
                 }
                 cardDate.leftArrow.setOnClickListener {
                     StatedDate(mContext).subtractMonth()
-                    cardDate.dateButton.text = StatedDate(mContext).getMonth()
+                    cardDateToday(StatedDate(mContext).isToday())
                     refreshData()
                 }
             }
@@ -243,7 +252,7 @@ class ExpenseAdapter(
                 cardExpenseUndone.expenseCheckBox.setOnClickListener {
                     if (cardExpenseUndone.expenseCheckBox.isChecked) {
                         expense.completed = true
-                        expenseViewModel.updateExpense(expense)
+                        expenseViewModel.updateOne(expense)
                     }
                 }
             }
@@ -290,19 +299,20 @@ class ExpenseAdapter(
 
     private fun setDateTimePickerCard(button: Button) {
 
-        val datePicker =
-            MaterialDatePicker.Builder.datePicker()
-                .setSelection(StatedDate(mContext).getDateLong())
-                .build()
+        if (datePicker == null) {
+            datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).getDateLong()).build()
+            datePicker!!.show(mAppCompatActivity.supportFragmentManager, "tag")
+        }
 
-        datePicker.show(mAppCompatActivity.supportFragmentManager, "tag")
-
-        datePicker.addOnPositiveButtonClickListener { timeInMillis ->
+        datePicker!!.addOnPositiveButtonClickListener { timeInMillis ->
             StatedDate(mContext).setDate(timeInMillis)
             button.text = StatedDate(mContext).getMonth()
             refreshData()
         }
 
+        datePicker!!.addOnCancelListener {
+            datePicker = null
+        }
 
     }
 
@@ -329,92 +339,18 @@ class ExpenseAdapter(
 
             bindingDialog.layoutExpenseAddExpenseName.setText(oldExpense.name)
             bindingDialog.layoutExpenseAddAmount.setText(oldExpense.amount.toString())
-            bindingDialog.layoutExpenseAddDate.text = DateHelper.convertToString(expense.date)
-            bindingDialog.layoutExpenseAddTypeDebt.isChecked = oldExpense.debt
-            when (oldExpense.repetition) {
-                null -> { //tek seferlik işaretli
-                    bindingDialog.layoutExpenseAddRepetitionView.isVisible = true
-                    bindingDialog.layoutExpenseAddRepetationType2.isChecked = true
-                    bindingDialog.layoutExpenseAddMonthlyView.isVisible = false
-                    bindingDialog.layoutExpenseAddEveryMonty.isChecked = true
-                }
-                0 -> { // aylık işaretli ve her ay
-                    bindingDialog.layoutExpenseAddRepetationType1.isChecked = true
-                    bindingDialog.layoutExpenseAddMonthlyView.isVisible = true
-                    bindingDialog.layoutExpenseAddEveryMonty.isChecked = true
-                }
-                else -> { //aylık işaretli ve tekrar sayısı var
-                    bindingDialog.layoutExpenseAddRepetationType1.isChecked = true
-                    bindingDialog.layoutExpenseAddMonthlyView.isVisible = true
-                    bindingDialog.layoutExpenseAddEveryMonty.isChecked = false
-                }
-            }
-            bindingDialog.layoutExpenseAddRepetitionView.isVisible = !bindingDialog.layoutExpenseAddEveryMonty.isChecked
-            if (oldExpense.debt) bindingDialog.layoutExpenseAddLender.setText(oldExpense.lender)
-            if (oldExpense.repetition != null && oldExpense.repetition != 0) bindingDialog.layoutExpenseAddRepetation.setText(oldExpense.repetition.toString())
-            when (oldExpense.type) {
-                Expense.NEED -> bindingDialog.layoutExpenseAddTypeNeed.isChecked = true
-                Expense.WANT -> bindingDialog.layoutExpenseAddTypeWant.isChecked = true
-                Expense.DEBT -> bindingDialog.layoutExpenseAddTypeDebt.isChecked = true
-            }
-            bindingDialog.layoutExpenseAddLenderView.isVisible = oldExpense.debt
+
+            bindingDialog.layoutExpenseAddMonthlyView.isVisible = false
+            bindingDialog.layoutExpenseAddRepetationType.isVisible = false
+            bindingDialog.layoutExpenseAddExpenseType.isVisible = false
+            bindingDialog.layoutExpenseAddLenderView.isVisible = false
             bindingDialog.layoutExpenseAddDone.isVisible = checkButtonExists
-            bindingDialog.layoutExpenseAddLenderView.isVisible = oldExpense.type == Expense.DEBT
 
             fun emptySafe(): Boolean {
-                if (bindingDialog.layoutExpenseAddRepetationType1.isChecked && bindingDialog.layoutExpenseAddDate.text.toString().isEmpty()) return false
-                if (bindingDialog.layoutExpenseAddTypeDebt.isChecked && bindingDialog.layoutExpenseAddLender.text.toString().isEmpty()) return false
-                if (!bindingDialog.layoutExpenseAddEveryMonty.isChecked && bindingDialog.layoutExpenseAddRepetation.text.toString().isEmpty()) return false
-                return bindingDialog.layoutExpenseAddAmount.text.toString().isNotEmpty() &&
+                return bindingDialog.layoutExpenseAddAmount.text.toString().isNotEmpty() ||
                         bindingDialog.layoutExpenseAddExpenseName.text.toString().isNotEmpty()
             }
 
-            fun setDateTimePickerDialog() {
-                val datePicker =
-                    MaterialDatePicker.Builder.datePicker()
-                        // .setTitleText("Select dateLong")
-                        .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                        .build()
-
-                datePicker.show(mAppCompatActivity.supportFragmentManager, "tag")
-
-                datePicker.addOnPositiveButtonClickListener { timeInMillis ->
-                    oldExpense.dateLong = timeInMillis
-                    bindingDialog.layoutExpenseAddDate.text = DateHelper.convertToString(timeInMillis)
-                }
-            }
-
-            bindingDialog.layoutExpenseAddRepetation.addTextChangedListener {
-                if (bindingDialog.layoutExpenseAddRepetation.text.toString().isNotEmpty() && bindingDialog.layoutExpenseAddRepetation.text.toString().toInt() > 24) {
-                    bindingDialog.layoutExpenseAddRepetation.text!!.clear()
-                    Message(mContext).muchCharacterWarning(24)
-                }
-            }
-
-            bindingDialog.layoutExpenseAddEveryMonty.setOnClickListener { bindingDialog.layoutExpenseAddRepetitionView.isVisible = !bindingDialog.layoutExpenseAddEveryMonty.isChecked }
-
-            bindingDialog.layoutExpenseAddExpenseType.setOnCheckedChangeListener { _, _ ->
-                when {
-                    bindingDialog.layoutExpenseAddTypeNeed.isChecked -> {
-                        bindingDialog.layoutExpenseAddLenderView.isVisible = false
-                    }
-                    bindingDialog.layoutExpenseAddTypeWant.isChecked -> {
-                        bindingDialog.layoutExpenseAddLenderView.isVisible = false
-                    }
-                    bindingDialog.layoutExpenseAddTypeDebt.isChecked -> {
-                        bindingDialog.layoutExpenseAddLenderView.isVisible = true
-                    }
-                }
-            }
-
-            bindingDialog.layoutExpenseAddRepetationType.setOnCheckedChangeListener { _, _ ->
-                if (bindingDialog.layoutExpenseAddRepetationType1.isChecked) {
-                    bindingDialog.layoutExpenseAddMonthlyView.isVisible = true
-                }
-                if (bindingDialog.layoutExpenseAddRepetationType2.isChecked) {
-                    bindingDialog.layoutExpenseAddMonthlyView.isVisible = false
-                }
-            }
 
             fullScreenDialog?.setOnCancelListener {
                 fab_add.show()
@@ -427,44 +363,40 @@ class ExpenseAdapter(
 
             bindingDialog.layoutExpenseAddSave.setOnClickListener {
                 if (emptySafe()) {
-                    val date = oldExpense.date
                     val newExpense = Expense(
                         bindingDialog.layoutExpenseAddExpenseName.text.toString(),
                         bindingDialog.layoutExpenseAddAmount.text.toString().toFloat(),
                         oldExpense.startedDateLong,
                         oldExpense.completed,
-                        bindingDialog.layoutExpenseAddTypeDebt.isChecked,
-                        if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) bindingDialog.layoutExpenseAddLender.text.toString() else null,
-                        if (bindingDialog.layoutExpenseAddRepetationType2.isChecked) null else if (bindingDialog.layoutExpenseAddEveryMonty.isChecked) 0 else bindingDialog.layoutExpenseAddRepetation.text.toString().toInt(),
-                        false,
-                        if (bindingDialog.layoutExpenseAddTypeNeed.isChecked) Expense.NEED else if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) Expense.DEBT else Expense.WANT,
+                        oldExpense.debt,
+                        oldExpense.lender,
+                        oldExpense.repetition,
+                        oldExpense.deleted,
+                        oldExpense.type,
                         oldExpense.dateLong,
-                        DateHelper.currentTime,
-                        oldExpense.id
+                        DateHelper().currentTime,
+                        oldExpense.cardId,
+                        oldExpense.id,
                     )
-                    Log.e("aa", newExpense.toString())
-                    expenseViewModel.updateExpense(newExpense)
+                    expenseViewModel.updateAll(newExpense, expenseListByCardId(newExpense.cardId, expenseListAll))
                     exitFullScreen()
                 }
                 else {
-                    Message(mContext).emptyWarning()
+                    Message(mContext).warningEmpty()
                 }
             }
 
             bindingDialog.layoutExpenseAddDelete.setOnClickListener {
-                expenseViewModel.deleteExpense(oldExpense)
+                expenseViewModel.delete(oldExpense, expenseListByCardId(expense.cardId, expenseListAll))
                 exitFullScreen()
             }
 
             bindingDialog.layoutExpenseAddDone.setOnClickListener {
                 oldExpense.completed = false
-                expenseViewModel.updateExpense(oldExpense)
+                expenseViewModel.updateOne(oldExpense)
                 exitFullScreen()
             }
 
-            bindingDialog.layoutExpenseAddDate.setOnClickListener {
-                setDateTimePickerDialog()
-            }
 
         }
     }

@@ -47,9 +47,11 @@
     <string name="save">Kaydet</string>
 
     <!--warnings-->
-
     <string name="warning_empty">Lütfen Boş Bırakmayın</string>
     <string name="warning_character_much"> Karakterden Fazla Girmeyin</string>
     <string name="warning_character_less"> Karakterden Az Girmeyin</string>
 
+    <!--info-->
+    <string name="info_deleted_after_now"> sonrası silindi</string>
+    <string name="info_deleted_card">Geçerli kart silindi</string>
 </resources>

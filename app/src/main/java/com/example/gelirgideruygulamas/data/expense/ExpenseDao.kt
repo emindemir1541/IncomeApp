@@ -7,19 +7,27 @@ import androidx.room.*
 interface ExpenseDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun add(expense: Expense)
+    suspend fun add(expense: Expense)
 
     @Update
     suspend fun update(expense: Expense)
 
     @Delete
-    fun delete(expense: Expense)
+    suspend fun delete(expense: Expense)
+
+    @Query("Delete from table_expense where cardId =:cardId")
+    suspend fun deleteByCardId(cardId: Long)
 
     @Query("select * from table_expense order by id asc") // TODO: 22.07.2022 sql kodunu ayarla
-    fun readData(): LiveData<List<Expense>>
+     fun readData(): LiveData<List<Expense>>
+
+    @Query("select * from table_expense where cardId =:cardId order by id asc")
+     fun readDataByCardId(cardId:Long):LiveData<List<Expense>>
 
     @Query("Update table_expense set dataChanged =:dataChanged")
-    fun refreshData(dataChanged: Long)
+    suspend fun refreshData(dataChanged: Long)
+
+
 
 
 }

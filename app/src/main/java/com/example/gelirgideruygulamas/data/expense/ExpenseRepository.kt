@@ -2,28 +2,36 @@ package com.example.gelirgideruygulamas.data.expense
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import com.example.gelirgideruygulamas.helper.DateHelper
 
 class ExpenseRepository(private val expenseDao: ExpenseDao) {
 
-    fun add(expense: Expense) {
-        expenseDao.add(expense)
+    suspend fun add(expense: Expense) {
+            expenseDao.add(expense)
     }
 
     suspend fun update(expense: Expense) {
         expenseDao.update(expense)
     }
 
-    fun delete(expense: Expense) {
+    suspend fun delete(expense: Expense) {
         expenseDao.delete(expense)
     }
 
-    val readAllData: LiveData<List<Expense>> = expenseDao.readData()
+    suspend fun deleteByCardId(expense: Expense){
+        expenseDao.deleteByCardId(expense.cardId)
+    }
+
+     val readAllData: LiveData<List<Expense>> = expenseDao.readData()
 
     fun readSelectedData(context: Context): List<Expense> {
         return readAllData.value?.filter { expense -> expense.isSelected(context) } ?: emptyList()
     }
 
-   // val readSavedData: LiveData<List<SavedDate>> = expenseDao.readSavedData()
+    fun readDataByCardId(cardId:Long):LiveData<List<Expense>> = expenseDao.readDataByCardId(cardId)
 
-    fun refreshData(dataChanged: Long) = expenseDao.refreshData(dataChanged)
+   suspend fun refreshData(dataChanged: Long) = expenseDao.refreshData(dataChanged)
+
 }
+
+// val readSavedData: LiveData<List<SavedDate>> = expenseDao.readSavedData()

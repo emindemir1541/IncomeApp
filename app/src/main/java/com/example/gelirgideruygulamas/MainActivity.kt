@@ -3,11 +3,10 @@ package com.example.gelirgideruygulamas
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.gelirgideruygulamas.calculation.creator.Creator
 import com.example.gelirgideruygulamas.data.sharedPreference.PageLocation
 import com.example.gelirgideruygulamas.databinding.ActivityMainBinding
 import com.example.gelirgideruygulamas.fragments.expense.FragmentExpense
-import com.example.gelirgideruygulamas.fragments.income.FragmentIncome
+import com.example.gelirgideruygulamas.Fragments.income.FragmentIncome
 import com.example.gelirgideruygulamas.fragments.main.FragmentMain
 
 class MainActivity : AppCompatActivity() {

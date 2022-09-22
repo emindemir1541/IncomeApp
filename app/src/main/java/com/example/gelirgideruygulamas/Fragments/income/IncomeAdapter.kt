@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
@@ -32,6 +31,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
     private var selectedCards = ArrayList<MaterialCardView>()
     private var selectedCardsID = ArrayList<Int>()
     private lateinit var incomeViewModel: IncomeViewModel
+    private var datePicker: MaterialDatePicker<Long>? = null
 
     inner class DateCard(view: View) : RecyclerView.ViewHolder(view) {
         var cardView: MaterialCardView
@@ -120,7 +120,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
                 //Tarihi burada ayarla
                 cardDate.dateButton.setOnClickListener {
                     StatedDate(mContext).setToday()
-                    cardDate.dateButton.text = StatedDate(mContext).getMonth()
+                    cardDateToday(StatedDate(mContext).isToday())
                     incomeViewModel.refreshData()
                 }
                 cardDate.selectedDateButton.setOnClickListener() {
@@ -129,13 +129,13 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
                 cardDate.leftArrow.setOnClickListener {
                     val statedDate = StatedDate(mContext)
                     statedDate.subtractMonth()
-                    cardDate.dateButton.text = statedDate.getMonth()
+                    cardDateToday(statedDate.isToday())
                     incomeViewModel.refreshData()
                 }
                 cardDate.rightArrow.setOnClickListener {
                     val statedDate = StatedDate(mContext)
                     statedDate.addMonth()
-                    cardDate.dateButton.text = statedDate.getMonth()
+                    cardDateToday(statedDate.isToday())
                     incomeViewModel.refreshData()
                 }
             }
@@ -149,7 +149,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
                 cardIncome.incomeID.text = card.id.toString()
                 cardIncome.incomeID.isVisible = false
                 cardIncome.incomeName.text = card.name
-                cardIncome.incomeDate.text = DateHelper.convertToString(card.localDateTime.dayOfMonth, card.localDateTime.monthValue, card.localDateTime.year)
+                cardIncome.incomeDate.text = DateHelper.convertToString(card.date.dayOfMonth, card.date.monthValue, card.date.year)
                 cardIncome.incomeAmount.text = card.amount!!.clearZero()
 
                 //cardview basılı tutunca seçme
@@ -195,20 +195,22 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
     }
 
     private fun setDateTimePicker(button: Button) {
-        val datePicker =
-            MaterialDatePicker.Builder.datePicker()
-                .setSelection(StatedDate(mContext).getDateLong())
-                .build()
 
-        datePicker.show(mAppCompatActivity.supportFragmentManager, "tag")
+        if (datePicker == null) {
+            datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).getDateLong()).build()
+            datePicker!!.show(mAppCompatActivity.supportFragmentManager, "tag")
+        }
 
-        datePicker.addOnPositiveButtonClickListener { timeInMillis ->
+
+        datePicker!!.addOnPositiveButtonClickListener { timeInMillis ->
             StatedDate(mContext).setDate(timeInMillis)
             button.text = StatedDate(mContext).getMonth()
             incomeViewModel.refreshData()
         }
 
-
+        datePicker!!.addOnCancelListener {
+            datePicker = null
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

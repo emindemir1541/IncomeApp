@@ -1,4 +1,4 @@
-package com.example.gelirgideruygulamas.fragments.income
+package com.example.gelirgideruygulamas.Fragments.income
 
 import android.content.Context
 import android.os.Bundle
@@ -19,6 +19,7 @@ import com.example.gelirgideruygulamas.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.FragmentIncomeBinding
 import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
 import com.example.gelirgideruygulamas.feedback.Message
+import com.example.gelirgideruygulamas.fragments.income.IncomeAdapter
 import com.example.gelirgideruygulamas.helper.DateHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -30,6 +31,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     private lateinit var binding: FragmentIncomeBinding
     private lateinit var bindingDialog: LayoutAddIncomeBinding
     private lateinit var adapter: IncomeAdapter
+    private var incomeListAll:List<Income> = emptyList<Income>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentIncomeBinding.bind(inflater.inflate(R.layout.fragment_income, container, false))
@@ -48,6 +50,8 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
 
         setFabButton()
 
+
+
     }
 
     private fun setRvIncome() {
@@ -55,8 +59,12 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         binding.rvIncome.layoutManager = LinearLayoutManager(mContext)
 
         incomeViewModel.readAllData.observe(viewLifecycleOwner, Observer {
+            incomeListAll = it
             val incomeNewList = incomeViewModel.readSelectedData(mContext)
             adapter.setData(incomeNewList)
+
+        //    Log.e("aa",Calculator().totalIncomeInSpecificDate(incomeListAll).toString())
+
         })
 
         adapter =
@@ -92,7 +100,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
             val incomeDate = bindingDialog.incomeAddPageIncomeDate
             if (incomeDate.text!!.isNotEmpty() && incomeDate.text.toString().toInt() > 31) {
                 incomeDate.text!!.clear()
-                Message(mContext).muchCharacterWarning(31)
+                Message(mContext).warningMuchCharacter(31)
             }
         }
 
@@ -117,7 +125,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
                 alertDialog.dismiss()
             }
             else {
-                Message(mContext).emptyWarning()
+                Message(mContext).warningEmpty()
             }
 
         }

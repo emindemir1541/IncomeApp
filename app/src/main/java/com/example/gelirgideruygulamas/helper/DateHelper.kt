@@ -11,12 +11,13 @@ private const val PATTERN_EU = "yyyy-MM-dd"
 
 
 @SuppressLint("SimpleDateFormat")
-class DateHelper {
+class DateHelper() {
+
+    val currentTime: Long = toLong(LocalDateTime.now())
+    val currentDateTime: LocalDateTime = LocalDateTime.now()
+
 
     companion object {
-
-        val currentTime: Long = toLong(LocalDateTime.now())
-        val currentDateTime: LocalDateTime = LocalDateTime.now()
 
         private fun formatter() = SimpleDateFormat(PATTERN_TR)
         private fun splitDate(date: String): MutableList<String> = date.split("/").toMutableList()
@@ -43,6 +44,9 @@ class DateHelper {
         fun toLong(localDateTime: LocalDateTime): Long {
             return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         }
+        fun toLong(localDate: LocalDate): Long {
+            return convertToDateTime(localDate).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        }
 
         fun toLong(year: Int, month: Int, dayOfMonth: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, nanoOfSecond: Int = 0): Long {
             return convertToDateTime(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -58,12 +62,12 @@ class DateHelper {
         fun getMonth(localDateTime: Long): String = convertToDateTime(localDateTime).month.getDisplayName(TextStyle.FULL, Locale.getDefault())
 
         fun LocalDateTime.ifToday(): Boolean {
-            val date = convertToDateTime(currentTime)
+            val date = convertToDateTime(DateHelper().currentTime)
             return this.dayOfMonth == date.dayOfMonth && this.month == date.month && this.year == date.year
         }
 
         fun Long.ifToday(): Boolean {
-            val currentDate = convertToDateTime(currentTime)
+            val currentDate = convertToDateTime(DateHelper().currentTime)
             val selectedDate = convertToDateTime(this)
             return currentDate.toLocalDate() == selectedDate.toLocalDate()
         }
