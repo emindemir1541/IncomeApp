@@ -18,7 +18,7 @@ interface ExpenseDao {
     @Query("Delete from table_expense where cardId =:cardId")
     suspend fun deleteByCardId(cardId: Long)
 
-    @Query("select * from table_expense order by id asc") // TODO: 22.07.2022 sql kodunu ayarla
+    @Query("select * from table_expense order by id asc")
      fun readData(): LiveData<List<Expense>>
 
     @Query("select * from table_expense where cardId =:cardId order by id asc")

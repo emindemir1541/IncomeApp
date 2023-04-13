@@ -5,29 +5,41 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.example.gelirgideruygulamas.helper.DateHelper
+import com.example.gelirgideruygulamas.common.helper.DateUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class IncomeViewModel(application: Application) : AndroidViewModel(application) {
     val readAllData: LiveData<List<Income>>
-    private val repository: IncomeRepository
+    private val repository: IncomeCreator
 
     init {
         val incomeDao = IncomeDatabase.getDatabase(application).incomeDao()
-        repository = IncomeRepository(incomeDao)
+        repository = IncomeCreator(incomeDao)
         readAllData = repository.readAllData
     }
 
-    fun addIncome(income: Income) {
+    fun add(income: Income) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.add(income)
         }
     }
 
-    fun deleteIncome(id: Int) {
+    fun updateOne(income: Income){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.updateOne(income)
+        }
+    }
+
+    fun updateAll(income: Income,incomeList: List<Income>){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.updateAll(income,incomeList)
+        }
+    }
+
+    fun delete(income: Income,incomeList: List<Income> = emptyList()) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.delete(id)
+            repository.delete(income,incomeList)
         }
     }
 
@@ -35,7 +47,7 @@ class IncomeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.refreshData(DateHelper().currentTime)
+            repository.refreshData(DateUtil().currentTime)
         }
     }
 

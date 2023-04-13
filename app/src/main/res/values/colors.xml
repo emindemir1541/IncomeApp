@@ -30,6 +30,10 @@
     <color name="Neutral_Variant20">#43483E</color>
     <color name="Neutral_Variant30">#72776C</color>
 
+    <color name="Navigation_Light">#ECF0E3</color>
+
+
+
 
     <!--Dark Mode-->
 
@@ -61,5 +65,15 @@
     <color name="yellow2">#CDDC39</color>
     <color name="yellow3">#8BC34A</color>
     <color name="yellow4">#4CAF50</color>
+
+
+    <!--Warnings-->
+    <color name="dark_green_warning">#339900</color>
+    <color name="light_green_warning">#99cc33</color>
+    <color name="yellow_warning">#ffcc00</color>
+    <color name="orange_warning">#ff9966</color>
+    <color name="red_warning">#cc3300</color>
+
+
 
 </resources>

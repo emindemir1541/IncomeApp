@@ -5,11 +5,11 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.example.gelirgideruygulamas.helper.DateHelper
+import com.example.gelirgideruygulamas.common.helper.DateUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ExpenseViewModel(application: Application,) : AndroidViewModel(application) {
+class ExpenseViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: ExpenseCreator
     val readAllData: LiveData<List<Expense>>
 
@@ -48,7 +48,7 @@ class ExpenseViewModel(application: Application,) : AndroidViewModel(application
 
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.refreshData(DateHelper().currentTime)
+            repository.refreshData(DateUtil().currentTime)
         }
     }
 }

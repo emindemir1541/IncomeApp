@@ -1,13 +1,15 @@
 package com.example.gelirgideruygulamas
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gelirgideruygulamas.data.sharedPreference.PageLocation
+import com.example.gelirgideruygulamas.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.ActivityMainBinding
+import com.example.gelirgideruygulamas.common.feedback.error.Error
 import com.example.gelirgideruygulamas.fragments.expense.FragmentExpense
-import com.example.gelirgideruygulamas.Fragments.income.FragmentIncome
+import com.example.gelirgideruygulamas.fragments.income.FragmentIncome
 import com.example.gelirgideruygulamas.fragments.main.FragmentMain
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,22 +20,30 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         setNavigationBar()
         //navigation bar hangi item ile başladı
         binding.bottomNavigation.selectedItemId = R.id.itemHome
         setFragmentMain()
 
+      //  Error().globalErrorCatcher(this)
 
 
 
 
+
+
+
+        Error(this).sendToServer()
+
+        StatedDate(this).setToday()
 
     }
 
+
+
     //Fragment Sayfaların Gelir-Ana Sayfa- Gider
     private fun setFragmentIncome() {
-        supportFragmentManager.beginTransaction().add(R.id.frame_layout, FragmentIncome(this, this, binding.fabAdd, binding.fabEditModeBack, binding.fabEditModeDelete)).commit()
+        supportFragmentManager.beginTransaction().add(R.id.frame_layout, FragmentIncome(this, this, binding.fabAdd)).commit()
     }
 
     private fun setFragmentMain() {
@@ -41,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragmentExpense() {
-        supportFragmentManager.beginTransaction().add(R.id.frame_layout, FragmentExpense(this, this, binding.fabAdd, binding.fabEditModeBack, binding.fabEditModeDelete)).commit()
+        supportFragmentManager.beginTransaction().add(R.id.frame_layout, FragmentExpense(this, this, binding.fabAdd)).commit()
     }
 
     private fun setNavigationBar() {
@@ -50,18 +60,18 @@ class MainActivity : AppCompatActivity() {
             when (selectedItem.itemId) {
                 R.id.itemIncome -> {
                     setFragmentIncome()
-                    editModeFabButtons()
+                    binding.fabAdd.show()
                     true
                 }
 
                 R.id.itemHome -> {
                     setFragmentMain()
-                    setFabButtonStart()
+                    binding.fabAdd.hide()
                     true
                 }
                 R.id.itemExpense -> {
                     setFragmentExpense()
-                    editModeFabButtons()
+                    binding.fabAdd.show()
                     true
                 }
                 else -> false
@@ -69,19 +79,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFabButtonStart() {
-        binding.fabAdd.hide()
-        binding.fabEditModeBack.hide()
-        binding.fabEditModeDelete.hide()
-    }
-
-    private fun editModeFabButtons() {
-        binding.fabAdd.show()
-        binding.fabEditModeBack.hide()
-        binding.fabEditModeDelete.hide()
-    }
-
 
 }
-
-// TODO: 8.09.2022 tarih butonunda buayı farklı bir şekilde göster, tarih butonunun üzerine ilk basıldığında buaya gitsin,sonra tarih seçme yeri açılsın

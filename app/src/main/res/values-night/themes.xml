@@ -25,6 +25,11 @@
         <item name="colorSurfaceVariant">@color/Neutral40</item>
         <item name="colorOnSurfaceVariant">@color/Neutral_Variant50</item>
         <item name="colorOutline">@color/Neutral_Variant60</item>
+
+
+        <!--todo gece temasını değiştir-->
+        <item name="android:navigationBarColor">@color/Navigation_Light</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
     <!--Kart Teması:Filled-->

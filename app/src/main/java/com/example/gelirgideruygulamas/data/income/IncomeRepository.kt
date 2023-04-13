@@ -14,8 +14,8 @@ class IncomeRepository(private val incomeDao: IncomeDao) {
         incomeDao.update(income)
     }
 
-    suspend fun delete(id: Int) {
-        incomeDao.delete(id)
+    suspend fun delete(income: Income) {
+        incomeDao.delete(income.id)
     }
 
     suspend fun deleteAll() {

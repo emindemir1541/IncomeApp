@@ -75,7 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:text="@string/total_income"
+                        android:text="@string/income"
                         android:textColor="@color/Primary60"
                         android:textSize="23dp"
                         android:textStyle="bold"
@@ -88,7 +88,7 @@
                         android:id="@+id/fragment_main_totalIncome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="250tl"
+                        android:text="0₺"
                         android:textColor="@color/Secondary10"
                         android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -129,7 +129,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:text="@string/total_expense"
+                        android:text="@string/remaining_money"
                         android:textColor="@color/Primary60"
                         android:textSize="23dp"
                         android:textStyle="bold"
@@ -139,10 +139,10 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/fragment_main_totalExpense"
+                        android:id="@+id/fragment_main_remaining_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="250tl"
+                        android:text="0₺"
                         android:textColor="@color/Secondary10"
                         android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -188,8 +188,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:text="@string/remaining_money"
+                        android:text="@string/total_expense"
                         android:textColor="@color/Primary60"
+                        android:textAlignment="center"
                         android:textSize="23dp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -198,10 +199,10 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/fragment_main_remainingMoney"
+                        android:id="@+id/fragment_main_potential_expense"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="250tl"
+                        android:text="0₺"
                         android:textColor="@color/Secondary10"
                         android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -243,7 +244,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:text="@string/investment"
+                        android:text="@string/paid_expense"
                         android:textColor="@color/Primary60"
                         android:textSize="23dp"
                         android:textStyle="bold"
@@ -253,10 +254,10 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/fragment_main_investiment"
+                        android:id="@+id/fragment_main_paid_expense"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="250tl"
+                        android:text="0₺"
                         android:textColor="@color/Secondary10"
                         android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"

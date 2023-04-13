@@ -21,6 +21,9 @@ interface IncomeDao {
     @Query("select * from table_income order by id asc")
     fun readAllData(): LiveData<List<Income>>
 
+    @Query("select * from table_income where cardId =:cardId order by id asc")
+    fun readCardData(cardId:Long):LiveData<List<Income>>
+
     @Query("Update table_income set dataChanged =:dataChanged")
     fun refreshData(dataChanged: Long)
 }

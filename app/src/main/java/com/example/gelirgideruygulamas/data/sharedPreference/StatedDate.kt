@@ -1,9 +1,9 @@
 package com.example.gelirgideruygulamas.data.sharedPreference
 
 import android.content.Context
-import com.example.gelirgideruygulamas.helper.DateHelper
-import com.example.gelirgideruygulamas.helper.DateHelper.Companion.checkMonthAndYear
-import java.time.DateTimeException
+import com.example.gelirgideruygulamas.common.helper.DateUtil
+import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.checkMonthAndYear
+import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.toLong
 import java.time.LocalDateTime
 
 private const val SAVED_DATE = "SAVED_DATE"
@@ -18,11 +18,11 @@ class StatedDate(private val context: Context) {
     }
 
     fun setDate(dateTime: LocalDateTime) {
-        repository.setLong(SAVED_DATE, DATE_IN_MILLIS, DateHelper.toLong(dateTime))
+        repository.setLong(SAVED_DATE, DATE_IN_MILLIS, dateTime.toLong())
     }
 
     fun setToday(): String {
-        setDate(DateHelper().currentTime)
+        setDate(DateUtil().currentTime)
         return getMonth()
     }
 
@@ -31,27 +31,31 @@ class StatedDate(private val context: Context) {
     }
 
     fun getDateString(): String {
-        return DateHelper.convertToString(getDateLong())
+        return DateUtil.convertToString(getDateLong())
     }
 
     fun getDateTime(): LocalDateTime {
-        return DateHelper.convertToDateTime(repository.getLong(SAVED_DATE, DATE_IN_MILLIS))
+        return DateUtil.convertToDateTime(repository.getLong(SAVED_DATE, DATE_IN_MILLIS))
     }
 
     fun getMonth(): String {
-        return DateHelper.getMonth(repository.getLong(SAVED_DATE, DATE_IN_MILLIS))
+        return DateUtil.getMonth(repository.getLong(SAVED_DATE, DATE_IN_MILLIS))
     }
 
     fun addMonth() {
-        setDate(DateHelper.plusMonth(getDateTime(), 1))
+        setDate(DateUtil.plusMonth(getDateTime(), 1))
     }
 
     fun subtractMonth() {
-        setDate(DateHelper.minusMonth(getDateTime(), 1))
+        setDate(DateUtil.minusMonth(getDateTime(), 1))
     }
 
     fun isToday():Boolean{
-        return getDateTime().checkMonthAndYear(DateHelper().currentDateTime)
+        return getDateTime().checkMonthAndYear(DateUtil().currentDateTime)
+    }
+
+    fun dateChanged(){
+
     }
 
 }

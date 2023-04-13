@@ -2,7 +2,8 @@ package com.example.gelirgideruygulamas.data.expense
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.example.gelirgideruygulamas.helper.DateHelper
+import com.example.gelirgideruygulamas.common.helper.DateUtil
+import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.toLong
 
 class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
@@ -10,11 +11,11 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
     suspend fun add(expense: Expense) {
 
-        val cardId = DateHelper().currentTime
+        val cardId = DateUtil().currentTime
         if (expense.repetition != null) {
 
             repeat(expense.repetition!!) {
-                var newExpense = Expense(
+                val newExpense = Expense(
                     expense.name,
                     expense.amount,
                     expense.startedDateLong,
@@ -24,7 +25,7 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
                     expense.repetition,
                     expense.deleted,
                     expense.type,
-                    DateHelper.toLong(expense.startedDate.plusMonths(it.toLong())),
+                    expense.startedDate.plusMonths(it.toLong()).toLong(),
                     expense.dataChanged,
                     cardId,
                 )
@@ -37,17 +38,18 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
         }
     }
 
-    suspend fun updateOne(expense: Expense, expenseList: List<Expense> = emptyList()) {
+    suspend fun updateOne(expense: Expense,) {
         repository.update(expense)
     }
 
     suspend fun updateAll(expense: Expense, expenseList: List<Expense>) {
+        // TODO: 11.10.2022 update ederken yeniden expense oluşturuyor,çünkü sıfırdan id üretiyor, gelir kısmı da böyle,düzelt 
         if (expense.getCardType() == ExpenseCardType.ONCE) {
             repository.update(expense)
         }
         else {
             expenseList.forEach { exExpense ->
-                if (expense.date >= DateHelper().currentDateTime.toLocalDate()) {
+                if (expense.date >= DateUtil().currentDateTime.toLocalDate()) {
                     val newExpense = Expense(
                         expense.name,
                         expense.amount,
@@ -96,7 +98,7 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
             expenseList.forEach { exExpense: Expense ->
                 exExpense.deleted = true
                 repository.update(exExpense)
-                if (exExpense.dateLong >= DateHelper().currentTime) {
+                if (exExpense.date >= DateUtil().currentDateTime.toLocalDate()) {
                     repository.delete(exExpense)
                 }
             }

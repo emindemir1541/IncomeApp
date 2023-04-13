@@ -81,6 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/remaining_day"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/expenseUndone_ExpenseAmount"
             app:layout_constraintEnd_toStartOf="@+id/expenseUndone_ExpenseAmount"
             app:layout_constraintHorizontal_bias="0.5"

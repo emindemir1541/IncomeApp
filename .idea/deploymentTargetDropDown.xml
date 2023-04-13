@@ -7,11 +7,11 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\emind\.android\avd\Oreo_8_API_26.avd" />
+            <value value="C:\Users\emind\.android\avd\Nougat_7.0_API_24.ini" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-09-22T11:51:30.083396500Z" />
+    <timeTargetWasSelectedWithDropDown value="2022-12-26T19:04:11.882783400Z" />
   </component>
 </project>
