@@ -9,6 +9,7 @@ import com.example.gelirgideruygulamas.common.feedback.error.Error
 import com.example.gelirgideruygulamas.fragments.expense.FragmentExpense
 import com.example.gelirgideruygulamas.fragments.income.FragmentIncome
 import com.example.gelirgideruygulamas.fragments.main.FragmentMain
+import com.sddk.mobileapphelper_main.common.helper.FeedbackUtil.startupProcess
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         //navigation bar hangi item ile başladı
         binding.bottomNavigation.selectedItemId = R.id.itemHome
         setFragmentMain()
+
+
 
       //  Error().globalErrorCatcher(this)
 

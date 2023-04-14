@@ -1,9 +1,9 @@
 package com.example.gelirgideruygulamas.data.sharedPreference
 
 import android.content.Context
-import com.example.gelirgideruygulamas.common.helper.DateUtil
-import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.checkMonthAndYear
-import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.toLong
+import com.example.gelirgideruygulamas.common.constant.DateUtil
+import com.example.gelirgideruygulamas.common.constant.DateUtil.checkMonthAndYear
+import com.example.gelirgideruygulamas.common.constant.DateUtil.toLong
 import java.time.LocalDateTime
 
 private const val SAVED_DATE = "SAVED_DATE"
@@ -22,7 +22,7 @@ class StatedDate(private val context: Context) {
     }
 
     fun setToday(): String {
-        setDate(DateUtil().currentTime)
+        setDate(DateUtil.currentTime)
         return getMonth()
     }
 
@@ -51,7 +51,7 @@ class StatedDate(private val context: Context) {
     }
 
     fun isToday():Boolean{
-        return getDateTime().checkMonthAndYear(DateUtil().currentDateTime)
+        return getDateTime().checkMonthAndYear(DateUtil.currentDateTime)
     }
 
     fun dateChanged(){

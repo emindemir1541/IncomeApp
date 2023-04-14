@@ -19,7 +19,7 @@ import com.example.gelirgideruygulamas.data.income.Income
 import com.example.gelirgideruygulamas.data.income.IncomeViewModel
 import com.example.gelirgideruygulamas.data.sharedPreference.SavedMoney
 import com.example.gelirgideruygulamas.databinding.FragmentMainBinding
-import com.example.gelirgideruygulamas.common.helper.Helper.Companion.clearZero
+import com.example.gelirgideruygulamas.common.constant.Helper.Companion.clearZero
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
@@ -67,9 +67,9 @@ class FragmentMain(private val mContext: Context) : Fragment() {
         incomeViewModel.readAllData.observe(viewLifecycleOwner, Observer { incomeList ->
             this.incomeList = incomeList
             val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
-            binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome().clearZero() + Money.TL
-            binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney(mContext).clearZero() + Money.TL
-            updateProgressBar(monthlyCalculator.totalIncome(), monthlyCalculator.remainedMoney(mContext))
+            binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome.clearZero() + Money.TL
+            binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Money.TL
+            updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
 
             Toast.makeText(mContext, SavedMoney(mContext).getTemporary().toString() + " " +SavedMoney(mContext).getPermanent().toString(), Toast.LENGTH_SHORT).show()
 
@@ -79,9 +79,9 @@ class FragmentMain(private val mContext: Context) : Fragment() {
             this.expenseList = expenseList
             val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
             binding.fragmentMainPaidExpense.text = monthlyCalculator.paidExpense.clearZero() + Money.TL
-            binding.fragmentMainPotentialExpense.text = monthlyCalculator.potentialExpense().clearZero() + Money.TL
-            binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney(mContext).clearZero() + Money.TL
-            updateProgressBar(monthlyCalculator.totalIncome(), monthlyCalculator.remainedMoney(mContext))
+            binding.fragmentMainPotentialExpense.text = monthlyCalculator.potentialExpense.clearZero() + Money.TL
+            binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Money.TL
+            updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
 
             Toast.makeText(mContext, SavedMoney(mContext).getTemporary().toString() + " " +SavedMoney(mContext).getPermanent().toString(), Toast.LENGTH_SHORT).show()
 

@@ -1,4 +1,4 @@
-package com.example.gelirgideruygulamas.common.helper
+package com.example.gelirgideruygulamas.common.constant
 
 import android.content.Context
 import android.content.res.Configuration

@@ -2,8 +2,8 @@ package com.example.gelirgideruygulamas.data.expense
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.example.gelirgideruygulamas.common.helper.DateUtil
-import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.toLong
+import com.example.gelirgideruygulamas.common.constant.DateUtil
+import com.example.gelirgideruygulamas.common.constant.DateUtil.toLong
 
 class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
@@ -11,7 +11,7 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
     suspend fun add(expense: Expense) {
 
-        val cardId = DateUtil().currentTime
+        val cardId = DateUtil.currentTime
         if (expense.repetition != null) {
 
             repeat(expense.repetition!!) {
@@ -49,7 +49,7 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
         }
         else {
             expenseList.forEach { exExpense ->
-                if (expense.date >= DateUtil().currentDateTime.toLocalDate()) {
+                if (expense.date >= DateUtil.currentDateTime.toLocalDate()) {
                     val newExpense = Expense(
                         expense.name,
                         expense.amount,
@@ -98,7 +98,7 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
             expenseList.forEach { exExpense: Expense ->
                 exExpense.deleted = true
                 repository.update(exExpense)
-                if (exExpense.date >= DateUtil().currentDateTime.toLocalDate()) {
+                if (exExpense.date >= DateUtil.currentDateTime.toLocalDate()) {
                     repository.delete(exExpense)
                 }
             }

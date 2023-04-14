@@ -1,9 +1,9 @@
 package com.example.gelirgideruygulamas.data.sharedPreference
 
 import android.content.Context
-import com.example.gelirgideruygulamas.common.helper.DateUtil
-import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.checkMonthAndYear
-import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.toLong
+import com.example.gelirgideruygulamas.common.constant.DateUtil
+import com.example.gelirgideruygulamas.common.constant.DateUtil.checkMonthAndYear
+import com.example.gelirgideruygulamas.common.constant.DateUtil.toLong
 import java.time.LocalDateTime
 
 private const val SAVED_MONEY = "SAVED_MONEY"
@@ -31,9 +31,9 @@ class SavedMoney(private val mContext: Context) {
 
     fun getDate() = DateUtil.convertToDateTime(repository.getLong(SAVED_MONEY, SAVED_MONEY_DATE))
 
-    fun resetTemporary()= setTemporary(0f, DateUtil().currentDateTime)
+    fun resetTemporary()= setTemporary(0f, DateUtil.currentDateTime)
 
-    fun checkDate() = !getDate().checkMonthAndYear(DateUtil().currentDateTime)
+    fun checkDate() = !getDate().checkMonthAndYear(DateUtil.currentDateTime)
 
     fun resetPermanent() = setPermanent(0f)
 

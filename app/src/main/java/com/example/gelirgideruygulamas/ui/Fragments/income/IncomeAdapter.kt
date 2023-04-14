@@ -23,10 +23,10 @@ import com.example.gelirgideruygulamas.data.sharedPreference.SavedMoney
 import com.example.gelirgideruygulamas.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
 import com.example.gelirgideruygulamas.common.feedback.Message
-import com.example.gelirgideruygulamas.common.helper.DateUtil
-import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.monthString
-import com.example.gelirgideruygulamas.common.helper.Helper
-import com.example.gelirgideruygulamas.common.helper.Helper.Companion.clearZero
+import com.example.gelirgideruygulamas.common.constant.DateUtil
+import com.example.gelirgideruygulamas.common.constant.DateUtil.monthString
+import com.example.gelirgideruygulamas.common.constant.Helper
+import com.example.gelirgideruygulamas.common.constant.Helper.Companion.clearZero
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -208,7 +208,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
         }
         card3(position) -> {
             val cardIncome = holder as IncomeCardSmall
-            val date = DateUtil().currentDateTime.minusMonths(1)
+            val date = DateUtil.currentDateTime.minusMonths(1)
             val savedMoney = SavedMoney(mContext).getPermanent()
             cardIncome.incomeID.isVisible = false
             cardIncome.incomeName.text = mContext.getString(R.string.money_in_cache)

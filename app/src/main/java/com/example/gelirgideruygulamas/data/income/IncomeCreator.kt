@@ -3,8 +3,8 @@ package com.example.gelirgideruygulamas.data.income
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.example.gelirgideruygulamas.common.helper.DateUtil
-import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.toLong
+import com.example.gelirgideruygulamas.common.constant.DateUtil
+import com.example.gelirgideruygulamas.common.constant.DateUtil.toLong
 
 class IncomeCreator(private val incomeDao: IncomeDao) {
 
@@ -12,7 +12,7 @@ class IncomeCreator(private val incomeDao: IncomeDao) {
 
 
     suspend fun add(income: Income) {
-        val cardId = DateUtil().currentTime
+        val cardId = DateUtil.currentTime
         if (income.repetation) {
 
             repeat(24) {
@@ -42,7 +42,7 @@ class IncomeCreator(private val incomeDao: IncomeDao) {
     suspend fun updateAll(income: Income, incomeList: List<Income>) {
         if (income.repetation) {
             incomeList.forEach { exIncome ->
-                if (income.date >= DateUtil().currentDateTime.toLocalDate()) {
+                if (income.date >= DateUtil.currentDateTime.toLocalDate()) {
                     val newIncome = Income(
                         income.name,
                         income.amount,
@@ -87,7 +87,7 @@ class IncomeCreator(private val incomeDao: IncomeDao) {
             incomeList.forEach { exIncome ->
                 exIncome.deleted = true
                 repository.update(exIncome)
-                if (exIncome.date >= DateUtil().currentDateTime.toLocalDate()) {
+                if (exIncome.date >= DateUtil.currentDateTime.toLocalDate()) {
                     repository.delete(exIncome)
                 }
             }

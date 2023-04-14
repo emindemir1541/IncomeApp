@@ -7,8 +7,8 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.gelirgideruygulamas.R
 import com.example.gelirgideruygulamas.data.sharedPreference.StatedDate
-import com.example.gelirgideruygulamas.common.helper.DateUtil
-import com.example.gelirgideruygulamas.common.helper.DateUtil.Companion.checkMonthAndYear
+import com.example.gelirgideruygulamas.common.constant.DateUtil
+import com.example.gelirgideruygulamas.common.constant.DateUtil.checkMonthAndYear
 import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
 import java.time.LocalDate
@@ -22,8 +22,8 @@ data class Income(
     var dateLong: Long,
     var deleted: Boolean,
     var repetation: Boolean,
-    var dataChanged: Long = DateUtil().currentTime, //livedatanın çalışması için datayı değiştiriyor
-    var cardId:Long= DateUtil().currentTime,
+    var dataChanged: Long = DateUtil.currentTime, //livedatanın çalışması için datayı değiştiriyor
+    var cardId:Long= DateUtil.currentTime,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 ) : Parcelable {
@@ -36,13 +36,13 @@ data class Income(
     @Ignore
     var date: LocalDate = DateUtil.convertToDateTime(dateLong).toLocalDate()
 
-    fun remainingDay(mContext:Context): String = if (itsTime) mContext.getString(R.string.paid) else (DateUtil.dayBetweenTwoDate(date, DateUtil().currentDateTime.toLocalDate())).toString() +" "+ mContext.getString(R.string.day_remained)
+    fun remainingDay(mContext:Context): String = if (itsTime) mContext.getString(R.string.paid) else (DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate())).toString() +" "+ mContext.getString(R.string.day_remained)
 
 
     //para yattı mı
     @IgnoredOnParcel
     @Ignore
-    val itsTime = date.dayOfMonth <= DateUtil().currentDateTime.dayOfMonth && date.checkMonthAndYear(DateUtil().currentDateTime)
+    val itsTime = date.dayOfMonth <= DateUtil.currentDateTime.dayOfMonth && date.checkMonthAndYear(DateUtil.currentDateTime)
 
 
     fun isSelected(context: Context): Boolean {
