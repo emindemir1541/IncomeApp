@@ -2,14 +2,12 @@ package com.example.gelirgideruygulamas
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.gelirgideruygulamas.data.sharedPreference.PageLocation
-import com.example.gelirgideruygulamas.data.sharedPreference.StatedDate
+import com.example.gelirgideruygulamas.main.data.sharedPreference.PageLocation
+import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.ActivityMainBinding
-import com.example.gelirgideruygulamas.common.feedback.error.Error
 import com.example.gelirgideruygulamas.fragments.expense.FragmentExpense
 import com.example.gelirgideruygulamas.fragments.income.FragmentIncome
 import com.example.gelirgideruygulamas.fragments.main.FragmentMain
-import com.sddk.mobileapphelper_main.common.helper.FeedbackUtil.startupProcess
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,8 +33,6 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
-        Error(this).sendToServer()
 
         StatedDate(this).setToday()
 

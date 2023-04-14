@@ -8,4 +8,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Gelir Gider Uygulaması"
 include ':app'
-include ':mobileapphelper-main'

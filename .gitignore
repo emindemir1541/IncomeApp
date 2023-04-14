@@ -13,4 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-/mobileapphelper-main
+/app/src/main/java/com/example/gelirgideruygulamas/helperlibrary/common/util/ResponseFeedbackModule.kt
