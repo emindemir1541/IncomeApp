@@ -1,4 +1,4 @@
-package com.example.gelirgideruygulamas.fragments.expense
+package com.example.gelirgideruygulamas.main.Fragments.expense
 
 import android.app.Dialog
 import android.content.Context
@@ -16,15 +16,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gelirgideruygulamas.R
 import com.example.gelirgideruygulamas.main.data.expense.Expense
-import com.example.gelirgideruygulamas.main.data.expense.ExpenseCardType
 import com.example.gelirgideruygulamas.main.data.expense.ExpenseViewModel
 import com.example.gelirgideruygulamas.main.data.sharedPreference.PageLocation
 import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.FragmentExpenseBinding
 import com.example.gelirgideruygulamas.databinding.LayoutAddExpenseBinding
+import com.example.gelirgideruygulamas.fragments.expense.ExpenseAdapter
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
+import com.example.gelirgideruygulamas.main.common.constant.ExpenseCardSituation
+import com.example.gelirgideruygulamas.main.common.constant.ExpenseType
 import com.example.gelirgideruygulamas.main.common.util.Message
+import com.example.gelirgideruygulamas.main.common.util.getCardType
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -215,7 +218,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
                         if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) bindingDialog.layoutExpenseAddLender.text.toString() else null,
                         if (bindingDialog.layoutExpenseAddRepetationType2.isChecked) null else bindingDialog.layoutExpenseAddRepetation.text.toString().toInt(),
                         false,
-                        if (bindingDialog.layoutExpenseAddTypeNeed.isChecked) Expense.NEED else if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) Expense.DEBT else Expense.WANT,
+                        if (bindingDialog.layoutExpenseAddTypeNeed.isChecked) ExpenseType.NEED else if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) ExpenseType.DEBT else ExpenseType.WANT,
                         mTimeInMillis
                     )
                     expenseViewModel.add(expense)
@@ -241,10 +244,10 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
 
         for (expense in expenseList) {
             when {
-                expense.getCardType() == ExpenseCardType.ONCE -> {
+                expense.getCardType() == ExpenseCardSituation.ONCE -> {
                     this.expenseList.add(expense)
                 }
-                expense.getCardType() == ExpenseCardType.DONE -> {
+                expense.getCardType() == ExpenseCardSituation.DONE -> {
                     expenseDoneList.add(expense)
                 }
                 else -> {

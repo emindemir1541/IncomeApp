@@ -24,6 +24,9 @@ interface ExpenseDao {
     @Query("select * from table_expense where cardId =:cardId order by id asc")
      fun readDataByCardId(cardId:Long):LiveData<List<Expense>>
 
+/*    @Query("select * from table_expense where cardId =:cardId order by id asc")
+    fun readSelectedData(cardId:Long):LiveData<List<Expense>>*/
+
     @Query("Update table_expense set dataChanged =:dataChanged")
     suspend fun refreshData(dataChanged: Long)
 

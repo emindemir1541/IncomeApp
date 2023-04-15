@@ -22,6 +22,9 @@ import com.example.gelirgideruygulamas.databinding.LayoutAddExpenseBinding
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.clearZero
+import com.example.gelirgideruygulamas.main.common.constant.ExpenseCardType
+import com.example.gelirgideruygulamas.main.common.constant.ExpenseType
+import com.example.gelirgideruygulamas.main.common.util.remainingDay
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -138,13 +141,13 @@ class ExpenseAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when {
-            card0(position) -> 0 //DateCard
-            card1(position) -> 1 //ExpenseUndoneCard
-            card2(position) -> 2 //LineCard
-            card3(position) -> 3 //ExpenseCardDone
-            card4(position) -> 4 //ExpenseCard
-            else -> 5
-        } //InvisibleCard
+            card0(position) -> ExpenseCardType.DATE_CARD
+            card1(position) -> ExpenseCardType.EXPENSE_UNDONE_CARD
+            card2(position) -> ExpenseCardType.LINE_CARD
+            card3(position) -> ExpenseCardType.EXPENSE_DONE_CARD
+            card4(position) -> ExpenseCardType.EXPENSE_CARD
+            else -> ExpenseCardType.INVISIBLE_CARD
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -166,11 +169,11 @@ class ExpenseAdapter(
         )
 
         return when (viewType) {
-            0 -> mDateCard
-            1 -> mExpenseCardUndone
-            2 -> mLineCard
-            3 -> mExpenseCardDone
-            4 -> mExpenseCard
+            ExpenseCardType.DATE_CARD -> mDateCard
+            ExpenseCardType.EXPENSE_UNDONE_CARD -> mExpenseCardUndone
+            ExpenseCardType.LINE_CARD -> mLineCard
+            ExpenseCardType.EXPENSE_DONE_CARD -> mExpenseCardDone
+            ExpenseCardType.EXPENSE_CARD -> mExpenseCard
             else -> mInvisibleCard
         }
     }

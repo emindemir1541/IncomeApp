@@ -2,6 +2,7 @@ package com.example.gelirgideruygulamas.main.data.expense
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import com.example.gelirgideruygulamas.main.common.util.isSelected
 
 class ExpenseRepository(private val expenseDao: ExpenseDao) {
 

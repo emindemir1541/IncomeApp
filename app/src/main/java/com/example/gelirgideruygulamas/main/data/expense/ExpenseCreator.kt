@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
+import com.example.gelirgideruygulamas.main.common.constant.ExpenseCardSituation
+import com.example.gelirgideruygulamas.main.common.util.getCardType
+import com.example.gelirgideruygulamas.main.common.util.isSelected
 
 class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
@@ -38,13 +41,13 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
         }
     }
 
-    suspend fun updateOne(expense: Expense,) {
+    suspend fun updateOne(expense: Expense) {
         repository.update(expense)
     }
 
     suspend fun updateAll(expense: Expense, expenseList: List<Expense>) {
         // TODO: 11.10.2022 update ederken yeniden expense oluşturuyor,çünkü sıfırdan id üretiyor, gelir kısmı da böyle,düzelt 
-        if (expense.getCardType() == ExpenseCardType.ONCE) {
+        if (expense.getCardType() == ExpenseCardSituation.ONCE) {
             repository.update(expense)
         }
         else {
@@ -90,7 +93,7 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
     }
 
     suspend fun delete(expense: Expense, expenseList: List<Expense> = emptyList()) {
-        if (expense.deleted || expense.getCardType() == ExpenseCardType.ONCE) {
+        if (expense.deleted || expense.getCardType() == ExpenseCardSituation.ONCE) {
             repository.delete(expense)
             // TODO: 22.09.2022  message.infoDeletedCard()
         }

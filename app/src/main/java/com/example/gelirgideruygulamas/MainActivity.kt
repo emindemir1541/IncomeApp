@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.gelirgideruygulamas.main.data.sharedPreference.PageLocation
 import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.ActivityMainBinding
-import com.example.gelirgideruygulamas.fragments.expense.FragmentExpense
+import com.example.gelirgideruygulamas.main.Fragments.expense.FragmentExpense
 import com.example.gelirgideruygulamas.fragments.income.FragmentIncome
 import com.example.gelirgideruygulamas.fragments.main.FragmentMain
 
