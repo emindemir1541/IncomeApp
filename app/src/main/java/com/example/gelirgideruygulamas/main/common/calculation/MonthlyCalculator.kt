@@ -2,9 +2,9 @@ package com.example.gelirgideruygulamas.main.common.calculation
 
 import android.content.Context
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
-import com.example.gelirgideruygulamas.main.common.util.isSelected
-import com.example.gelirgideruygulamas.main.data.expense.Expense
-import com.example.gelirgideruygulamas.main.data.income.Income
+import com.example.gelirgideruygulamas.expense.common.util.isSelected
+import com.example.gelirgideruygulamas.expense.data.room.Expense
+import com.example.gelirgideruygulamas.income.data.room.Income
 import com.example.gelirgideruygulamas.main.data.sharedPreference.SavedMoney
 
 class MonthlyCalculator(private val incomeList: List<Income>, private val expenseList: List<Expense>, private val mContext: Context) {
