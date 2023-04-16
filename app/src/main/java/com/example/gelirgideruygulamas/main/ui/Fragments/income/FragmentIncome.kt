@@ -150,8 +150,8 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
             }
 
             var isDateSelected = false
-            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).getDateLong()).build()
-            var mTimeInMillis: Long = StatedDate(mContext).getDateLong()
+            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
+            var mTimeInMillis: Long = StatedDate(mContext).dateLong
 
             bindingDialog = LayoutAddIncomeBinding.inflate(LayoutInflater.from(mContext))
 

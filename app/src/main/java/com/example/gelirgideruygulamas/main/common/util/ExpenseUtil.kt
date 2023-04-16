@@ -4,7 +4,7 @@ import android.content.Context
 import com.example.gelirgideruygulamas.R
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.checkMonthAndYear
-import com.example.gelirgideruygulamas.main.common.constant.ExpenseCardSituation
+import com.example.gelirgideruygulamas.main.common.constant.ExpenseSituation
 import com.example.gelirgideruygulamas.main.data.expense.Expense
 import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 
@@ -22,17 +22,17 @@ fun Expense.remainingDay(mContext: Context): String {
 
 fun Expense.isSelected(context: Context): Boolean {
     //cart, StatedDate de kaydedilen tarihle uyuşuyor mu
-    return StatedDate(context).getDateTime().checkMonthAndYear(date)
+    return StatedDate(context).dateTime.checkMonthAndYear(date)
 }
 
-fun Expense.getCardType(): ExpenseCardSituation {
+fun Expense.getCardType(): ExpenseSituation {
     return when {
         repetition == null -> {
-            ExpenseCardSituation.ONCE
+            ExpenseSituation.ONCE
         }
         completed -> {
-            ExpenseCardSituation.DONE
+            ExpenseSituation.DONE
         }
-        else -> ExpenseCardSituation.UNDONE
+        else -> ExpenseSituation.UNDONE
     }
 }

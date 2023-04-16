@@ -3,10 +3,8 @@ package com.example.gelirgideruygulamas.main.data.expense
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
-import com.example.gelirgideruygulamas.main.common.constant.ExpenseCardSituation
+import com.example.gelirgideruygulamas.main.common.constant.ExpenseSituation
 import com.example.gelirgideruygulamas.main.common.util.getCardType
-import com.example.gelirgideruygulamas.main.common.util.isSelected
 
 class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
@@ -18,6 +16,7 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
         if (expense.repetition != null) {
 
             repeat(expense.repetition!!) {
+                val date = expense.startedDate.plusMonths(it.toLong())
                 val newExpense = Expense(
                     expense.name,
                     expense.amount,
@@ -28,7 +27,9 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
                     expense.repetition,
                     expense.deleted,
                     expense.type,
-                    expense.startedDate.plusMonths(it.toLong()).toLong(),
+                    date.dayOfMonth,
+                    date.monthValue,
+                    date.year,
                     expense.dataChanged,
                     cardId,
                 )
@@ -47,7 +48,7 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
     suspend fun updateAll(expense: Expense, expenseList: List<Expense>) {
         // TODO: 11.10.2022 update ederken yeniden expense oluşturuyor,çünkü sıfırdan id üretiyor, gelir kısmı da böyle,düzelt 
-        if (expense.getCardType() == ExpenseCardSituation.ONCE) {
+        if (expense.getCardType() == ExpenseSituation.ONCE) {
             repository.update(expense)
         }
         else {
@@ -63,7 +64,9 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
                         exExpense.repetition,
                         expense.deleted,
                         exExpense.type,
-                        exExpense.dateLong,
+                        exExpense.day,
+                        exExpense.month,
+                        exExpense.year,
                         exExpense.dataChanged,
                         exExpense.cardId,
                         exExpense.id
@@ -81,7 +84,9 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
                         exExpense.repetition,
                         expense.deleted,
                         exExpense.type,
-                        exExpense.dateLong,
+                        exExpense.day,
+                        exExpense.month,
+                        exExpense.year,
                         exExpense.dataChanged,
                         exExpense.cardId,
                         exExpense.id
@@ -93,7 +98,7 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
     }
 
     suspend fun delete(expense: Expense, expenseList: List<Expense> = emptyList()) {
-        if (expense.deleted || expense.getCardType() == ExpenseCardSituation.ONCE) {
+        if (expense.deleted || expense.getCardType() == ExpenseSituation.ONCE) {
             repository.delete(expense)
             // TODO: 22.09.2022  message.infoDeletedCard()
         }
@@ -111,9 +116,11 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
     val readAllData: LiveData<List<Expense>> = repository.readAllData
 
-    fun readSelectedData(context: Context): List<Expense> {
+    fun getReadSelectedData(context: Context): LiveData<List<Expense>> = repository.getReadSelectedData(context)
+
+   /* fun readSelectedData(context: Context): List<Expense> {
         return readAllData.value?.filter { expense -> expense.isSelected(context) } ?: emptyList()
-    }
+    }*/
 
     fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = expenseDao.readDataByCardId(cardId)
 

@@ -1,6 +1,6 @@
 package com.example.gelirgideruygulamas.main.common.constant
 
-enum class ExpenseCardSituation {
+enum class ExpenseSituation {
     DONE,
     UNDONE,
     ONCE

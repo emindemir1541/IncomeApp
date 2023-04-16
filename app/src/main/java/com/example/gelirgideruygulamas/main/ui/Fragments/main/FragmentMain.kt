@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.gelirgideruygulamas.R
 import com.example.gelirgideruygulamas.main.common.calculation.MonthlyCalculator
-import com.example.gelirgideruygulamas.main.common.constant.Money
+import com.example.gelirgideruygulamas.main.common.constant.Currency
 import com.example.gelirgideruygulamas.main.data.expense.Expense
 import com.example.gelirgideruygulamas.main.data.expense.ExpenseViewModel
 import com.example.gelirgideruygulamas.main.data.income.Income
@@ -67,8 +67,8 @@ class FragmentMain(private val mContext: Context) : Fragment() {
         incomeViewModel.readAllData.observe(viewLifecycleOwner, Observer { incomeList ->
             this.incomeList = incomeList
             val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
-            binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome.clearZero() + Money.TL
-            binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Money.TL
+            binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome.clearZero() + Currency.TL
+            binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
             updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
 
             Toast.makeText(mContext, SavedMoney(mContext).getTemporary().toString() + " " + SavedMoney(mContext).getPermanent().toString(), Toast.LENGTH_SHORT).show()
@@ -78,9 +78,9 @@ class FragmentMain(private val mContext: Context) : Fragment() {
         expenseViewModel.readAllData.observe(viewLifecycleOwner, Observer { expenseList ->
             this.expenseList = expenseList
             val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
-            binding.fragmentMainPaidExpense.text = monthlyCalculator.paidExpense.clearZero() + Money.TL
-            binding.fragmentMainPotentialExpense.text = monthlyCalculator.potentialExpense.clearZero() + Money.TL
-            binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Money.TL
+            binding.fragmentMainPaidExpense.text = monthlyCalculator.paidExpense.clearZero() + Currency.TL
+            binding.fragmentMainPotentialExpense.text = monthlyCalculator.potentialExpense.clearZero() + Currency.TL
+            binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
             updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
 
             Toast.makeText(mContext, SavedMoney(mContext).getTemporary().toString() + " " + SavedMoney(mContext).getPermanent().toString(), Toast.LENGTH_SHORT).show()
@@ -112,6 +112,6 @@ class FragmentMain(private val mContext: Context) : Fragment() {
 
     private fun updateProgressBar(income: Float, remainedMoney: Float) {
         binding.fragmentMainProgressbar.progress = ((remainedMoney * 100) / income).toInt()
-        binding.fragmentMainProgressbarTextview.text = remainedMoney.clearZero() + Money.TL
+        binding.fragmentMainProgressbarTextview.text = remainedMoney.clearZero() + Currency.TL
     }
 }

@@ -1,4 +1,4 @@
-package com.example.gelirgideruygulamas.main.Fragments.expense
+package com.example.gelirgideruygulamas.main.ui.Fragments.expense
 
 import android.app.Dialog
 import android.content.Context
@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -24,10 +25,9 @@ import com.example.gelirgideruygulamas.databinding.LayoutAddExpenseBinding
 import com.example.gelirgideruygulamas.fragments.expense.ExpenseAdapter
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
-import com.example.gelirgideruygulamas.main.common.constant.ExpenseCardSituation
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.test
 import com.example.gelirgideruygulamas.main.common.constant.ExpenseType
 import com.example.gelirgideruygulamas.main.common.util.Message
-import com.example.gelirgideruygulamas.main.common.util.getCardType
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -37,9 +37,9 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
 
     private lateinit var binding: FragmentExpenseBinding
     private lateinit var bindingDialog: LayoutAddExpenseBinding
-    private lateinit var expenseUndoneList: ArrayList<Expense>
-    private lateinit var expenseDoneList: ArrayList<Expense>
-    private lateinit var expenseList: ArrayList<Expense>
+    private var datePicker: MaterialDatePicker<Long>? = null
+
+    private val statedDate = StatedDate(mContext)
     private lateinit var adapter: ExpenseAdapter
     private var fullScreenDialog: Dialog? = null
     private lateinit var expenseViewModel: ExpenseViewModel
@@ -57,36 +57,41 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
 
         setFabButton()
         setRvExpense()
+        setDateTimePicker()
 
-        try {
-            val message = "Welcome to Kotlin Tutorials"
-            message.toInt()
-        } catch (e: java.lang.NumberFormatException) {
-            Log.e("aa", e.message.toString())
-        }
+
 
     }
 
+    private fun setDateTimePicker() {
+        cardDateToday(statedDate.isToday)
+        binding.cardDateButton.setOnClickListener {
+            statedDate.setToday()
+            cardDateToday(statedDate.isToday)
+            getData()
+        }
+        binding.cardDateButtonSelected.setOnClickListener() {
+            setDateTimePickerCard(binding.cardDateButton)
+        }
+        binding.cardDateRightArrow.setOnClickListener {
+            statedDate.addMonth()
+            cardDateToday(statedDate.isToday)
+            getData()
+
+        }
+        binding.cardDateLeftArrow.setOnClickListener {
+            statedDate.subtractMonth()
+            cardDateToday(statedDate.isToday)
+            getData()
+        }
+    }
 
     private fun setRvExpense() {
 
         binding.rvExpense.setHasFixedSize(true)
         binding.rvExpense.layoutManager = LinearLayoutManager(mContext)
 
-        expenseList = ArrayList()
-        expenseUndoneList = ArrayList()
-        expenseDoneList = ArrayList()
-
-        // expenseViewModel.add(Expense("asd", 24f, DateHelper.currentTime, false, false, null, null, false, Expense.NEED, DateHelper.currentTime, DateHelper.currentTime, 1))
-
-        //   Log.e("aa","")
-
-        expenseViewModel.readAllData.observe(viewLifecycleOwner, Observer {
-
-            extractList(expenseViewModel.readSelectedData(mContext))
-            adapter.setData(expenseDoneList, expenseUndoneList, expenseList)
-
-        })
+        getData()
 
         adapter = ExpenseAdapter(
             mContext,
@@ -97,6 +102,12 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
         binding.rvExpense.adapter = adapter
     }
 
+    private fun getData() {
+        expenseViewModel.getReadSelectedData(mContext).observe(viewLifecycleOwner, Observer { selectedExpenseList ->
+            adapter.setData(selectedExpenseList)
+        })
+    }
+
     private fun setFabButton() {
         // fab_add.animate(R.layout.layout_add_expense)
         fab_add.setOnClickListener {
@@ -105,6 +116,31 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
             setFullScreenDialogExpense()
 
         }
+    }
+
+    private fun setDateTimePickerCard(button: Button) {
+
+        if (datePicker == null) {
+            datePicker = MaterialDatePicker.Builder.datePicker().setSelection(statedDate.dateLong).build()
+            datePicker!!.show(mAppCompatActivity.supportFragmentManager, "tag")
+        }
+
+        datePicker!!.addOnPositiveButtonClickListener { timeInMillis ->
+            statedDate.setDate(timeInMillis)
+            button.text = statedDate.month
+        }
+
+        datePicker!!.addOnCancelListener {
+            datePicker = null
+        }
+
+    }
+
+    private fun cardDateToday(isToday: Boolean) {
+        binding.cardDateButton.isVisible = !isToday
+        binding.cardDateButtonSelected.isVisible = isToday
+        binding.cardDateButton.text = StatedDate(mContext).month
+        binding.cardDateButtonSelected.text = StatedDate(mContext).month
     }
 
     private fun setFullScreenDialogExpense() {
@@ -118,8 +154,8 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
                 Dialog(mContext, android.R.style.Theme_Material_Light_NoActionBar)
             }
 
-            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).getDateLong()).build()
-            var mTimeInMillis: Long = StatedDate(mContext).getDateLong()
+            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
+            var mTimeInMillis: Long = StatedDate(mContext).dateLong
 
             bindingDialog = LayoutAddExpenseBinding.inflate(LayoutInflater.from(mContext))
 
@@ -209,6 +245,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
 
             bindingDialog.layoutExpenseAddSave.setOnClickListener {
                 if (emptySafe()) {
+                    val date = DateUtil.convertToDateTime(mTimeInMillis)
                     val expense = Expense(
                         bindingDialog.layoutExpenseAddExpenseName.text.toString(),
                         bindingDialog.layoutExpenseAddAmount.text.toString().toFloat(),
@@ -219,7 +256,9 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
                         if (bindingDialog.layoutExpenseAddRepetationType2.isChecked) null else bindingDialog.layoutExpenseAddRepetation.text.toString().toInt(),
                         false,
                         if (bindingDialog.layoutExpenseAddTypeNeed.isChecked) ExpenseType.NEED else if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) ExpenseType.DEBT else ExpenseType.WANT,
-                        mTimeInMillis
+                        date.dayOfMonth,
+                        date.monthValue,
+                        date.year
                     )
                     expenseViewModel.add(expense)
                     fullScreenDialog?.cancel()
@@ -237,23 +276,5 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
         }
     }
 
-    private fun extractList(expenseList: List<Expense>) {
-        expenseDoneList.clear()
-        expenseUndoneList.clear()
-        this.expenseList.clear()
 
-        for (expense in expenseList) {
-            when {
-                expense.getCardType() == ExpenseCardSituation.ONCE -> {
-                    this.expenseList.add(expense)
-                }
-                expense.getCardType() == ExpenseCardSituation.DONE -> {
-                    expenseDoneList.add(expense)
-                }
-                else -> {
-                    expenseUndoneList.add(expense)
-                }
-            }
-        }
-    }
 }

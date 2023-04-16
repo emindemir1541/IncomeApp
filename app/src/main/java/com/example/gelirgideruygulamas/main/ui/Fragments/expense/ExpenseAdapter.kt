@@ -17,17 +17,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gelirgideruygulamas.R
 import com.example.gelirgideruygulamas.main.data.expense.Expense
 import com.example.gelirgideruygulamas.main.data.expense.ExpenseViewModel
-import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.LayoutAddExpenseBinding
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.clearZero
+import com.example.gelirgideruygulamas.main.common.constant.Currency
 import com.example.gelirgideruygulamas.main.common.constant.ExpenseCardType
-import com.example.gelirgideruygulamas.main.common.constant.ExpenseType
+import com.example.gelirgideruygulamas.main.common.constant.ExpenseSituation
+import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
+import com.example.gelirgideruygulamas.main.common.util.getCardType
 import com.example.gelirgideruygulamas.main.common.util.remainingDay
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ExpenseAdapter(
@@ -39,16 +40,14 @@ class ExpenseAdapter(
 
     private lateinit var bindingDialog: LayoutAddExpenseBinding
     private var fullScreenDialog: Dialog? = null
-    private var datePicker: MaterialDatePicker<Long>? = null
-    private var expenseItems = emptyList<Expense>()
-    private var expenseUndoneItems = emptyList<Expense>()
-    private var expenseDoneItems = emptyList<Expense>()
+    private var expenseListSelected = emptyList<TaggedCard<Expense>>()
     private var expenseListAll = emptyList<Expense>()
     private fun expenseListByCardId(cardId: Long, _expenseListAll: List<Expense>) = _expenseListAll.filter { expense -> expense.cardId == cardId }
 
     private lateinit var expenseViewModel: ExpenseViewModel
 
-    inner class DateCard(view: View) : RecyclerView.ViewHolder(view) {
+
+    /*inner class Date"Card(view: View) : RecyclerView.ViewHolder(view) {
         var cardView: MaterialCardView
         var leftArrow: FrameLayout
         var rightArrow: FrameLayout
@@ -62,7 +61,7 @@ class ExpenseAdapter(
             dateButton = view.findViewById(R.id.card_date_button)
             selectedDateButton = view.findViewById(R.id.card_date_button_selected)
         }
-    }
+    }*/
 
     inner class ExpenseCardUndone(view: View) : RecyclerView.ViewHolder(view) {
         var cardView: MaterialCardView
@@ -140,20 +139,11 @@ class ExpenseAdapter(
 
 
     override fun getItemViewType(position: Int): Int {
-        return when {
-            card0(position) -> ExpenseCardType.DATE_CARD
-            card1(position) -> ExpenseCardType.EXPENSE_UNDONE_CARD
-            card2(position) -> ExpenseCardType.LINE_CARD
-            card3(position) -> ExpenseCardType.EXPENSE_DONE_CARD
-            card4(position) -> ExpenseCardType.EXPENSE_CARD
-            else -> ExpenseCardType.INVISIBLE_CARD
-        }
+        return expenseListSelected[position].tag
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        val mDateCard =
-            DateCard(LayoutInflater.from(mContext).inflate(R.layout.card_date, parent, false))
         val mExpenseCardUndone = ExpenseCardUndone(
             LayoutInflater.from(mContext).inflate(R.layout.card_expense_undone, parent, false)
         )
@@ -169,11 +159,10 @@ class ExpenseAdapter(
         )
 
         return when (viewType) {
-            ExpenseCardType.DATE_CARD -> mDateCard
             ExpenseCardType.EXPENSE_UNDONE_CARD -> mExpenseCardUndone
             ExpenseCardType.LINE_CARD -> mLineCard
             ExpenseCardType.EXPENSE_DONE_CARD -> mExpenseCardDone
-            ExpenseCardType.EXPENSE_CARD -> mExpenseCard
+            ExpenseCardType.EXPENSE_DAILY_CARD -> mExpenseCard
             else -> mInvisibleCard
         }
     }
@@ -183,15 +172,18 @@ class ExpenseAdapter(
         expenseViewModel.readAllData.observe(mFragment.viewLifecycleOwner, Observer {
             expenseListAll = it
         })
-
-        return expenseUndoneItems.size + expenseDoneItems.size + expenseItems.size + 3
+        return expenseListSelected.size
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val expense = expenseListSelected[position].card
 
-        when {
-            card0(position) -> {//Tarih kartı
+        if (expense != null) {
+
+            when (expenseListSelected[position].tag) {
+
+                /*      card0(position) -> {//Tarih kartı
 
                 val cardDate = holder as DateCard
 
@@ -225,101 +217,88 @@ class ExpenseAdapter(
                     cardDateToday(StatedDate(mContext).isToday())
                     refreshData()
                 }
-            }
-            card1(position) -> { //Expense Undone Kartı
+            }*/
 
-                val cardExpenseUndone = holder as ExpenseCardUndone
-                val expense = expenseUndoneItems[position - 1]
+                ExpenseCardType.EXPENSE_UNDONE_CARD -> {
 
-                cardExpenseUndone.expenseID.text = expense.id.toString()
-                cardExpenseUndone.expenseID.isVisible = false
-                cardExpenseUndone.expenseName.text = expense.name
-                cardExpenseUndone.expenseAmount.text = expense.amount.clearZero() + "₺"
-                cardExpenseUndone.expenseDate.text = DateUtil.convertToString(expense.date)
-                cardExpenseUndone.expenseRemainingDay.text = expense.remainingDay(mContext)
-                cardExpenseUndone.expenseCheckBox.isChecked = expense.completed
-                if (expense.itsTime) {
-                    cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.yellow_warning))
-                }
-                else {
-                    cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.black))
+                    val cardExpenseUndone = holder as ExpenseCardUndone
 
-                }
-                cardExpenseUndone.expenseUndone_debt.isVisible = expense.debt
-                if (expense.debt) {
-                    cardExpenseUndone.expenseUndone_debt.text = expense.lender
-                }
-                cardExpenseUndone.cardView.setOnLongClickListener {
-                    setFullScreenDialogExpense(false, expense)
-                    false
-                }
-                cardExpenseUndone.expenseCheckBox.setOnClickListener {
-                    if (cardExpenseUndone.expenseCheckBox.isChecked) {
-                        expense.completed = true
-                        expenseViewModel.updateOne(expense)
+                    cardExpenseUndone.expenseID.text = expense.id.toString()
+                    cardExpenseUndone.expenseID.isVisible = false
+                    cardExpenseUndone.expenseName.text = expense.name
+                    cardExpenseUndone.expenseAmount.text = expense.amount.clearZero() + Currency.TL
+                    cardExpenseUndone.expenseDate.text = DateUtil.convertToString(expense.date)
+                    cardExpenseUndone.expenseRemainingDay.text = expense.remainingDay(mContext)
+                    cardExpenseUndone.expenseCheckBox.isChecked = expense.completed
+                    if (expense.itsTime) {
+                        cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.yellow_warning))
+                    }
+                    else {
+                        cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.black))
+
+                    }
+                    cardExpenseUndone.expenseUndone_debt.isVisible = expense.debt
+                    if (expense.debt) {
+                        cardExpenseUndone.expenseUndone_debt.text = expense.lender
+                    }
+                    cardExpenseUndone.cardView.setOnLongClickListener {
+                        setFullScreenDialogExpense(false, expense)
+                        false
+                    }
+                    cardExpenseUndone.expenseCheckBox.setOnClickListener {
+                        if (cardExpenseUndone.expenseCheckBox.isChecked) {
+                            expense.completed = true
+                            expenseViewModel.updateOne(expense)
+                        }
                     }
                 }
-            }
-            card2(position) -> { //LineCard
+                ExpenseCardType.EXPENSE_DONE_CARD -> {
+                    val cardExpenseDone = holder as ExpenseCardDone
 
-            }
-            card3(position) -> { //ExpenseCardDone
-                val cardExpenseDone = holder as ExpenseCardDone
-                val expense = expenseDoneItems[position - (expenseUndoneItems.size + 2)]
-
-                cardExpenseDone.expenseID.text = expense.id.toString()
-                cardExpenseDone.expenseID.isVisible = false
-                cardExpenseDone.expenseName.text = expense.name
-                cardExpenseDone.expenseAmount.text = expense.amount.clearZero() + "₺"
-                cardExpenseDone.expenseDate.text = DateUtil.convertToString(expense.date)
-                cardExpenseDone.expenseDone_debt.isVisible = expense.debt
-                cardExpenseDone.expenseRemainingDay.text = expense.remainingDay(mContext)
-                cardExpenseDone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.dark_green_warning))
-                if (expense.debt) {
-                    cardExpenseDone.expenseDone_debt.text = expense.lender
+                    cardExpenseDone.expenseID.text = expense.id.toString()
+                    cardExpenseDone.expenseID.isVisible = false
+                    cardExpenseDone.expenseName.text = expense.name
+                    cardExpenseDone.expenseAmount.text = expense.amount.clearZero() + Currency.TL
+                    cardExpenseDone.expenseDate.text = DateUtil.convertToString(expense.date)
+                    cardExpenseDone.expenseDone_debt.isVisible = expense.debt
+                    cardExpenseDone.expenseRemainingDay.text = expense.remainingDay(mContext)
+                    cardExpenseDone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.dark_green_warning))
+                    if (expense.debt) {
+                        cardExpenseDone.expenseDone_debt.text = expense.lender
+                    }
+                    cardExpenseDone.cardView.setOnLongClickListener {
+                        setFullScreenDialogExpense(true, expense)
+                        false
+                    }
                 }
-                cardExpenseDone.cardView.setOnLongClickListener {
-                    setFullScreenDialogExpense(true, expense)
-                    false
+                ExpenseCardType.EXPENSE_DAILY_CARD -> {
+                    val cardExpense = holder as ExpenseCard
+                    cardExpense.expenseID.text = expense.id.toString()
+                    cardExpense.expenseID.isVisible = false
+                    cardExpense.expenseAmount.text = expense.amount.clearZero() + Currency.TL
+                    cardExpense.expenseDate.text = DateUtil.convertToString(expense.date)
+                    cardExpense.expenseName.text = expense.name
+                    cardExpense.cardView.setOnLongClickListener {
+                        setFullScreenDialogExpense(false, expense)
+                        false
+                    }
+                }
+
+            }
+        }
+        else {
+            when (expenseListSelected[position].tag) {
+                ExpenseCardType.INVISIBLE_CARD -> {
+                    val cardInvisible = holder as InvisibleCard
+                    cardInvisible.mLayout.isVisible = expenseListSelected.isNotEmpty()
+                }
+                ExpenseCardType.LINE_CARD -> {
+                    val cardLine = holder as LineCard
+                    cardLine.mLayout.isVisible = true
+                    // TODO: make an algorithm
                 }
             }
-            card4(position) -> { //ExpenseCard
-                val cardExpense = holder as ExpenseCard
-                val expense = expenseItems[position - (expenseUndoneItems.size + expenseDoneItems.size + 2)]
-                cardExpense.expenseID.text = expense.id.toString()
-                cardExpense.expenseID.isVisible = false
-                cardExpense.expenseAmount.text = expense.amount.clearZero() + "₺"
-                cardExpense.expenseDate.text = DateUtil.convertToString(expense.date)
-                cardExpense.expenseName.text = expense.name
-                cardExpense.cardView.setOnLongClickListener {
-                    setFullScreenDialogExpense(false, expense)
-                    false
-                }
-            }
-            else -> { //InvisibleCard
-                val cardInvisible = holder as InvisibleCard
-                cardInvisible.mLayout.isVisible = expenseUndoneItems.isNotEmpty()
-            }
         }
-    }
-
-    private fun setDateTimePickerCard(button: Button) {
-
-        if (datePicker == null) {
-            datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).getDateLong()).build()
-            datePicker!!.show(mAppCompatActivity.supportFragmentManager, "tag")
-        }
-
-        datePicker!!.addOnPositiveButtonClickListener { timeInMillis ->
-            StatedDate(mContext).setDate(timeInMillis)
-            button.text = StatedDate(mContext).getMonth()
-            refreshData()
-        }
-
-        datePicker!!.addOnCancelListener {
-            datePicker = null
-        }
-
     }
 
 
@@ -380,7 +359,9 @@ class ExpenseAdapter(
                         oldExpense.repetition,
                         oldExpense.deleted,
                         oldExpense.type,
-                        oldExpense.dateLong,
+                        oldExpense.day,
+                        oldExpense.month,
+                        oldExpense.year,
                         DateUtil.currentTime,
                         oldExpense.cardId,
                         oldExpense.id,
@@ -409,24 +390,42 @@ class ExpenseAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(expenseDoneItems: List<Expense>, expenseUndoneItems: List<Expense>, expenseItems: List<Expense>) {
-        this.expenseDoneItems = expenseDoneItems
-        this.expenseUndoneItems = expenseUndoneItems
-        this.expenseItems = expenseItems
+    fun setData(expenseList: List<Expense>) {
+        this.expenseListSelected = formatList(expenseList)
         notifyDataSetChanged()
     }
 
-    private fun refreshData() {
-        expenseViewModel.refreshData()
+    private fun formatList(expenseList: List<Expense>): ArrayList<TaggedCard<Expense>> {
+        val formattedExpenseCardList = ArrayList<TaggedCard<Expense>>()
+        val expenseUndoneCardList = ArrayList<TaggedCard<Expense>>()
+        val expenseDoneCardList = ArrayList<TaggedCard<Expense>>()
+        val expenseCardListDaily = ArrayList<TaggedCard<Expense>>()
+
+        for (expense in expenseList) {
+            when {
+                expense.getCardType() == ExpenseSituation.ONCE -> {
+                    expenseCardListDaily.add(TaggedCard(ExpenseCardType.EXPENSE_DAILY_CARD, expense))
+                }
+                expense.getCardType() == ExpenseSituation.DONE -> {
+                    expenseDoneCardList.add(TaggedCard(ExpenseCardType.EXPENSE_DONE_CARD, expense))
+                }
+                else -> {
+                    expenseUndoneCardList.add(TaggedCard(ExpenseCardType.EXPENSE_UNDONE_CARD, expense))
+                }
+            }
+        }
+
+        formattedExpenseCardList.addAll(expenseUndoneCardList)
+        formattedExpenseCardList.add(TaggedCard(ExpenseCardType.LINE_CARD))
+        formattedExpenseCardList.addAll(expenseDoneCardList)
+        formattedExpenseCardList.addAll(expenseCardListDaily)
+        formattedExpenseCardList.add(TaggedCard(ExpenseCardType.INVISIBLE_CARD))
+        return formattedExpenseCardList
     }
 
-    //liste bu kart aralıklarında ise true döndürür
-    private fun card0(position: Int): Boolean = position == 0 //DateCard
-    private fun card1(position: Int): Boolean = position > 0 && position <= expenseUndoneItems.size //ExpenseUndoneCard
-    private fun card2(position: Int): Boolean = position == expenseUndoneItems.size + 1 //LineCard
-    private fun card3(position: Int): Boolean = position > expenseUndoneItems.size + 1 && position <= expenseUndoneItems.size + 1 + expenseDoneItems.size //ExpenseCardDone
-    private fun card4(position: Int): Boolean = position > expenseUndoneItems.size + 1 + expenseDoneItems.size && position <= expenseUndoneItems.size + 1 + expenseDoneItems.size + expenseItems.size //ExpenseCard
-
+    private fun List<TaggedCard<Expense>>.getList(tag:Int): List<TaggedCard<Expense>> {
+       return this.filter { taggedCard -> taggedCard.tag == tag } ?: emptyList()
+    }
     private fun exitFullScreen() {
         fullScreenDialog?.cancel()
         fullScreenDialog = null

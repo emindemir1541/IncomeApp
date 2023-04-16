@@ -143,15 +143,15 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
             fun cardDateToday(isToday: Boolean) {
                 cardDate.dateButton.isVisible = !isToday
                 cardDate.selectedDateButton.isVisible = isToday
-                cardDate.dateButton.text = StatedDate(mContext).getMonth()
-                cardDate.selectedDateButton.text = StatedDate(mContext).getMonth()
+                cardDate.dateButton.text = StatedDate(mContext).month
+                cardDate.selectedDateButton.text = StatedDate(mContext).month
             }
-            cardDateToday(StatedDate(mContext).isToday())
+            cardDateToday(StatedDate(mContext).isToday)
 
             //Tarihi burada ayarla
             cardDate.dateButton.setOnClickListener {
                 StatedDate(mContext).setToday()
-                cardDateToday(StatedDate(mContext).isToday())
+                cardDateToday(StatedDate(mContext).isToday)
                 incomeViewModel.refreshData()
             }
             cardDate.selectedDateButton.setOnClickListener() {
@@ -160,13 +160,13 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
             cardDate.leftArrow.setOnClickListener {
                 val statedDate = StatedDate(mContext)
                 statedDate.subtractMonth()
-                cardDateToday(statedDate.isToday())
+                cardDateToday(statedDate.isToday)
                 incomeViewModel.refreshData()
             }
             cardDate.rightArrow.setOnClickListener {
                 val statedDate = StatedDate(mContext)
                 statedDate.addMonth()
-                cardDateToday(statedDate.isToday())
+                cardDateToday(statedDate.isToday)
                 incomeViewModel.refreshData()
             }
         }
@@ -240,7 +240,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
             }
 
             val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(income.dateLong).build()
-            var mTimeInMillis: Long = StatedDate(mContext).getDateLong()
+            var mTimeInMillis: Long = StatedDate(mContext).dateLong
 
             bindingDialog = LayoutAddIncomeBinding.inflate(LayoutInflater.from(mContext))
 
@@ -398,7 +398,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
     private fun setDateTimePicker(button: Button) {
 
         if (datePicker == null) {
-            datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).getDateLong()).build()
+            datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
 
             datePicker!!.show(mAppCompatActivity.supportFragmentManager, "tag")
         }
@@ -406,7 +406,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
 
         datePicker!!.addOnPositiveButtonClickListener { timeInMillis ->
             StatedDate(mContext).setDate(timeInMillis)
-            button.text = StatedDate(mContext).getMonth()
+            button.text = StatedDate(mContext).month
             incomeViewModel.refreshData()
         }
 

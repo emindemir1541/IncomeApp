@@ -5,8 +5,6 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.checkMonthAndYear
-import com.example.gelirgideruygulamas.main.common.constant.ExpenseCardSituation
 import com.example.gelirgideruygulamas.main.common.constant.ExpenseType
 import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
@@ -24,7 +22,9 @@ data class Expense(
     var repetition: Int?,
     var deleted: Boolean,
     var type: ExpenseType,
-    var dateLong: Long,
+    var day: Int,
+    var month: Int,
+    var year: Int,
     var dataChanged: Long = DateUtil.currentTime, //livedatanın çalışması için datayı değiştiriyor
     var cardId: Long = DateUtil.currentTime,
     @PrimaryKey(autoGenerate = true)
@@ -35,21 +35,14 @@ data class Expense(
     @Ignore
     var startedDate: LocalDate = DateUtil.convertToDateTime(startedDateLong).toLocalDate()
 
-    @IgnoredOnParcel
-    @Ignore
-    var date: LocalDate = DateUtil.convertToDateTime(dateLong).toLocalDate()
-
     @Ignore
     @IgnoredOnParcel
-    val itsTime = (date.dayOfMonth <= DateUtil.currentDateTime.dayOfMonth && date.checkMonthAndYear(DateUtil.currentDateTime)) || completed
+    val itsTime = (day <= DateUtil.currentDateTime.dayOfMonth && DateUtil.currentDateTime.dayOfMonth == day && DateUtil.currentDateTime.monthValue == month) || completed
 
-
-
-
+    @IgnoredOnParcel
+    @Ignore
+    var date: LocalDate = DateUtil.convertToDateTime(year,month,day).toLocalDate()
 }
-
-
-
 
 
 /*    fun getCard(cardId: Int): ExpenseCardTable {

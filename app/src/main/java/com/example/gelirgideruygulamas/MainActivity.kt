@@ -3,9 +3,8 @@ package com.example.gelirgideruygulamas
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.gelirgideruygulamas.main.data.sharedPreference.PageLocation
-import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.ActivityMainBinding
-import com.example.gelirgideruygulamas.main.Fragments.expense.FragmentExpense
+import com.example.gelirgideruygulamas.main.ui.Fragments.expense.FragmentExpense
 import com.example.gelirgideruygulamas.fragments.income.FragmentIncome
 import com.example.gelirgideruygulamas.fragments.main.FragmentMain
 
@@ -34,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        StatedDate(this).setToday()
+       // StatedDate(this).setToday()
 
     }
 

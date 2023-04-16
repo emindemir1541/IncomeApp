@@ -4,58 +4,58 @@ import android.content.Context
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
+import com.example.gelirgideruygulamas.main.common.constant.SharedPrefFileNames
+import com.example.gelirgideruygulamas.main.common.constant.SharedPrefStatedDate
 import java.time.LocalDateTime
-
-private const val SAVED_DATE = "SAVED_DATE"
-private const val DATE_IN_MILLIS = "DATE_IN_MILLIS"
 
 class StatedDate(private val context: Context) {
 
     private val repository = SharedPreferenceRepository(context)
 
     fun setDate(value: Long) {
-        repository.setLong(SAVED_DATE, DATE_IN_MILLIS, value)
+        repository.setLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS, value)
     }
 
     fun setDate(dateTime: LocalDateTime) {
-        repository.setLong(SAVED_DATE, DATE_IN_MILLIS, dateTime.toLong())
+        repository.setLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS, dateTime.toLong())
     }
 
     fun setToday(): String {
         setDate(DateUtil.currentTime)
-        return getMonth()
+        return month
     }
 
-    fun getDateLong(): Long {
-        return repository.getLong(SAVED_DATE, DATE_IN_MILLIS)
-    }
+    val dateLong: Long
+        get() {
+            return repository.getLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS)
+        }
 
-    fun getDateString(): String {
-        return DateUtil.convertToString(getDateLong())
-    }
+    val dateString: String
+        get() {
+            return DateUtil.convertToString(dateLong)
+        }
 
-    fun getDateTime(): LocalDateTime {
-        return DateUtil.convertToDateTime(repository.getLong(SAVED_DATE, DATE_IN_MILLIS))
-    }
+    val dateTime: LocalDateTime
+        get() {
+            return DateUtil.convertToDateTime(repository.getLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS))
+        }
 
-    fun getMonth(): String {
-        return DateUtil.getMonth(repository.getLong(SAVED_DATE, DATE_IN_MILLIS))
-    }
+    val month: String
+        get() {
+            return DateUtil.getMonth(repository.getLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS))
+        }
 
     fun addMonth() {
-        setDate(DateUtil.plusMonth(getDateTime(), 1))
+        setDate(DateUtil.plusMonth(dateTime, 1))
     }
 
     fun subtractMonth() {
-        setDate(DateUtil.minusMonth(getDateTime(), 1))
+        setDate(DateUtil.minusMonth(dateTime, 1))
     }
 
-    fun isToday():Boolean{
-        return getDateTime().checkMonthAndYear(DateUtil.currentDateTime)
-    }
-
-    fun dateChanged(){
-
-    }
+    val isToday: Boolean
+        get() {
+            return dateTime.checkMonthAndYear(DateUtil.currentDateTime)
+        }
 
 }

@@ -1,6 +1,6 @@
 package com.example.gelirgideruygulamas.main.common.constant
 
-object Money {
+object Currency {
     const val TL = "₺"
-    const val DOLAR = "$"
+    const val DOLLAR = "$"
 }

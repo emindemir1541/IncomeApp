@@ -44,7 +44,9 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
 
     fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = repository.readDataByCardId(cardId)
 
-    fun readSelectedData(context: Context): List<Expense> = repository.readSelectedData(context)
+    //fun readSelectedData(context: Context): List<Expense> = repository.readSelectedData(context)
+
+    fun getReadSelectedData(context: Context) = repository.getReadSelectedData(context)
 
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {

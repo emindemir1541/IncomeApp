@@ -47,7 +47,7 @@ data class Income(
 
     fun isSelected(context: Context): Boolean {
         //cart StatedDate de kaydedilen tarihle uyuşuyor mu
-        return StatedDate(context).getDateTime().checkMonthAndYear(date)
+        return StatedDate(context).dateTime.checkMonthAndYear(date)
     }
 
   /*  fun createIncome(incomeList:List<Income>){
