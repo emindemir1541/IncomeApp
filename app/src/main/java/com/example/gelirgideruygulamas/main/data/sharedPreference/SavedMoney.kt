@@ -4,45 +4,46 @@ import android.content.Context
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
+import com.example.gelirgideruygulamas.main.common.constant.SharedPrefFileNames
+import com.example.gelirgideruygulamas.main.common.constant.SharedPrefSavedMoney
 import java.time.LocalDateTime
 
-private const val SAVED_MONEY = "SAVED_MONEY"
-private const val SAVED_MONEY_TEMPORARY = "SAVED_MONEY_TEMPORARY"
-private const val SAVED_MONEY_PERMANENT = "SAVED_MONEY_PERMANENT"
-private const val SAVED_MONEY_DATE = "SAVED_MONEY_DATE"
 
-class SavedMoney(private val mContext: Context) {
 
-    private val repository = SharedPreferenceRepository(mContext)
+class SavedMoney(context: Context) {
+
+    private val repository = SharedPreferenceRepository(context)
 
     fun setTemporary(money: Float, date: LocalDateTime) {
-        repository.setLong(SAVED_MONEY, SAVED_MONEY_DATE, date.toLong())
-        repository.setFloat(SAVED_MONEY, SAVED_MONEY_TEMPORARY, money)
+        repository.setLong(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_DATE, date.toLong())
+        repository.setFloat(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_TEMPORARY, money)
         // TODO: iki kayıt yapmıyor
     }
 
     fun setPermanent(money: Float) {
-        repository.setFloat(SAVED_MONEY, SAVED_MONEY_PERMANENT, money)
+        repository.setFloat(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_PERMANENT, money)
     }
 
-    fun getTemporary() = repository.getFloat(SAVED_MONEY, SAVED_MONEY_TEMPORARY)
+    val temporaryMoney get() = repository.getFloat(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_TEMPORARY)
 
-    fun getPermanent()=repository.getFloat(SAVED_MONEY, SAVED_MONEY_PERMANENT)
 
-    fun getDate() = DateUtil.convertToDateTime(repository.getLong(SAVED_MONEY, SAVED_MONEY_DATE))
+    //That is the money which remained from last month
+    val permanentMoney get() = repository.getFloat(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_PERMANENT)
 
-    fun resetTemporary()= setTemporary(0f, DateUtil.currentDateTime)
+    val savedDate get() = DateUtil.convertToDateTime(repository.getLong(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_DATE))
 
-    fun checkDate() = !getDate().checkMonthAndYear(DateUtil.currentDateTime)
+    val resetTemporary get() = setTemporary(0f, DateUtil.currentDateTime)
+
+    val checkDate get() = !savedDate.checkMonthAndYear(DateUtil.currentDateTime)
 
     fun resetPermanent() = setPermanent(0f)
 
-    fun isPermanentEmpty() = getPermanent() == 0f
+    val isPermanentEmpty get() = permanentMoney == 0f
 
     fun transferCheck() {
-        if (checkDate()) {
-            setPermanent(getTemporary())
-            resetTemporary()
+        if (checkDate) {
+            setPermanent(temporaryMoney)
+            resetTemporary
         }
     }
 

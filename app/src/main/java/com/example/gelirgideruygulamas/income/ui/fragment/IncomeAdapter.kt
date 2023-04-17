@@ -24,8 +24,11 @@ import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.monthString
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.clearZero
+import com.example.gelirgideruygulamas.income.common.IncomeCardType
+import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,8 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class IncomeAdapter(private val mContext: Context, private val mAppCompatActivity: AppCompatActivity, private val mFragment: Fragment, private val fab_add: FloatingActionButton) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var incomeRepeatList = emptyList<Income>()
-    private var incomeOnceList = emptyList<Income>()
+    private var incomeSelectedList = emptyList<TaggedCard<Income>>()
     private var incomeListAll = emptyList<Income>()
     private lateinit var incomeViewModel: IncomeViewModel
     private var datePicker: MaterialDatePicker<Long>? = null
@@ -103,127 +105,119 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when {
-            card0(position) -> 0
-            card1(position) -> 1
-            card2(position) -> 2
-            card3(position) -> 2
-            else -> 3
-        }
+        return incomeSelectedList[position].tag
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val mDateCard = DateCard(LayoutInflater.from(mContext).inflate(R.layout.card_date, parent, false))
         val mIncomeCardBig = IncomeCardBig(LayoutInflater.from(mContext).inflate(R.layout.card_income_big, parent, false))
         val mIncomeCardSmall = IncomeCardSmall(LayoutInflater.from(mContext).inflate(R.layout.card_income_small, parent, false))
         val mInvisibleCard = InvisibleCard(LayoutInflater.from(mContext).inflate(R.layout.card_invisible, parent, false))
         return when (viewType) {
-            0 -> mDateCard
-            1 -> mIncomeCardBig
-            2 -> mIncomeCardSmall
+            IncomeCardType.REPEATABLE_CARD -> mIncomeCardBig
+            IncomeCardType.ONCE_CARD -> mIncomeCardSmall
+            IncomeCardType.PERMANENT_CARD -> mIncomeCardSmall
             else -> mInvisibleCard
         }
     }
 
     override fun getItemCount(): Int {
         incomeViewModel = ViewModelProvider(mAppCompatActivity)[IncomeViewModel::class.java]
-        incomeViewModel.readAllData.observe(mFragment.viewLifecycleOwner, Observer { incomeList ->
+        incomeViewModel.readAllData.observe(mFragment.viewLifecycleOwner) { incomeList ->
             incomeListAll = incomeList
-        })
-        savedMoney = SavedMoney(mContext)
-        //fazladan bir dateLong kardı ve bir görünmez kart var
-        return if (savedMoney.isPermanentEmpty()) incomeRepeatList.size + incomeOnceList.size + 2 else incomeRepeatList.size + incomeOnceList.size + 3
+        }
+        return incomeSelectedList.size
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = when {
-        card0(position) -> {
-            val cardDate = holder as DateCard
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val income = incomeSelectedList[position].card
+        if (income != null) {
 
-            fun cardDateToday(isToday: Boolean) {
-                cardDate.dateButton.isVisible = !isToday
-                cardDate.selectedDateButton.isVisible = isToday
-                cardDate.dateButton.text = StatedDate(mContext).month
-                cardDate.selectedDateButton.text = StatedDate(mContext).month
+            when (incomeSelectedList[position].tag) {/*     {
+                          val cardDate = holder as DateCard
+
+                          fun cardDateToday(isToday: Boolean) {
+                              cardDate.dateButton.isVisible = !isToday
+                              cardDate.selectedDateButton.isVisible = isToday
+                              cardDate.dateButton.text = StatedDate(mContext).month
+                              cardDate.selectedDateButton.text = StatedDate(mContext).month
+                          }
+                          cardDateToday(StatedDate(mContext).isToday)
+
+                          //Tarihi burada ayarla
+                          cardDate.dateButton.setOnClickListener {
+                              StatedDate(mContext).setToday()
+                              cardDateToday(StatedDate(mContext).isToday)
+                              incomeViewModel.refreshData()
+                          }
+                          cardDate.selectedDateButton.setOnClickListener() {
+                              setDateTimePicker(cardDate.dateButton)
+                          }
+                          cardDate.leftArrow.setOnClickListener {
+                              val statedDate = StatedDate(mContext)
+                              statedDate.subtractMonth()
+                              cardDateToday(statedDate.isToday)
+                              incomeViewModel.refreshData()
+                          }
+                          cardDate.rightArrow.setOnClickListener {
+                              val statedDate = StatedDate(mContext)
+                              statedDate.addMonth()
+                              cardDateToday(statedDate.isToday)
+                              incomeViewModel.refreshData()
+                          }
+                      }*/
+
+                IncomeCardType.REPEATABLE_CARD -> {
+                    val cardIncome = holder as IncomeCardBig
+                    cardIncome.incomeID.text = income.id.toString()
+                    cardIncome.incomeID.isVisible = false
+                    cardIncome.incomeRemainingDay.text = income.remainingDay(mContext)
+                    cardIncome.incomeName.text = income.name
+                    if (income.itsTime) cardIncome.incomeRemainingDay.setTextColor(mContext.getColor(R.color.dark_green_warning))
+                    else cardIncome.incomeRemainingDay.setTextColor(mContext.getColor(R.color.black))
+                    cardIncome.incomeDate.text = DateUtil.convertToString(income.date.dayOfMonth, income.date.monthValue, income.date.year)
+                    cardIncome.incomeAmount.text = income.amount.clearZero() + "₺"
+
+                    //cardview basılı tutunca seçme
+                    cardIncome.cardView.setOnLongClickListener {
+                        setFullScreenDialogIncome(income)
+                        true
+                    }
+                }
+
+                IncomeCardType.ONCE_CARD -> {
+                    val cardIncome = holder as IncomeCardSmall
+                    cardIncome.incomeID.text = income.id.toString()
+                    cardIncome.incomeID.isVisible = false
+                    cardIncome.incomeName.text = income.name
+                    cardIncome.incomeDate.text = DateUtil.convertToString(income.date.dayOfMonth, income.date.monthValue, income.date.year)
+                    cardIncome.incomeAmount.text = income.amount.clearZero() + "₺"
+
+                    cardIncome.cardView.setOnLongClickListener {
+                        setFullScreenDialogIncome(income)
+                        true
+                    }
+
+
+                }
+
+                IncomeCardType.PERMANENT_CARD -> {
+                    val cardIncome = holder as IncomeCardSmall
+                    val date = DateUtil.currentDateTime.minusMonths(1)
+                    val savedMoney = SavedMoney(mContext).permanentMoney
+                    cardIncome.incomeID.isVisible = false
+                    cardIncome.incomeName.text = mContext.getString(R.string.money_in_cache)
+                    cardIncome.incomeDate.text = date.monthString() + " " + date.year.toString()
+                    cardIncome.incomeAmount.text = savedMoney.toString() + "₺"
+
+                    cardIncome.cardView.setOnLongClickListener {
+
+                        setFullScreenDialogRemainingMoney()
+                        true
+                    }
+                }
+
             }
-            cardDateToday(StatedDate(mContext).isToday)
-
-            //Tarihi burada ayarla
-            cardDate.dateButton.setOnClickListener {
-                StatedDate(mContext).setToday()
-                cardDateToday(StatedDate(mContext).isToday)
-                incomeViewModel.refreshData()
-            }
-            cardDate.selectedDateButton.setOnClickListener() {
-                setDateTimePicker(cardDate.dateButton)
-            }
-            cardDate.leftArrow.setOnClickListener {
-                val statedDate = StatedDate(mContext)
-                statedDate.subtractMonth()
-                cardDateToday(statedDate.isToday)
-                incomeViewModel.refreshData()
-            }
-            cardDate.rightArrow.setOnClickListener {
-                val statedDate = StatedDate(mContext)
-                statedDate.addMonth()
-                cardDateToday(statedDate.isToday)
-                incomeViewModel.refreshData()
-            }
-        }
-        card1(position) -> {
-            val cardIncome = holder as IncomeCardBig
-            val card = incomeRepeatList[position - 1]
-            cardIncome.incomeID.text = card.id.toString()
-            cardIncome.incomeID.isVisible = false
-            cardIncome.incomeRemainingDay.text = card.remainingDay(mContext)
-            cardIncome.incomeName.text = card.name
-            if (card.itsTime) cardIncome.incomeRemainingDay.setTextColor(mContext.getColor(R.color.dark_green_warning))
-            else cardIncome.incomeRemainingDay.setTextColor(mContext.getColor(R.color.black))
-            cardIncome.incomeDate.text = DateUtil.convertToString(card.date.dayOfMonth, card.date.monthValue, card.date.year)
-            cardIncome.incomeAmount.text = card.amount.clearZero() + "₺"
-
-            //cardview basılı tutunca seçme
-            cardIncome.cardView.setOnLongClickListener {
-                setFullScreenDialogIncome(card)
-                true
-            }
-        }
-        card2(position) -> {
-            val cardIncome = holder as IncomeCardSmall
-            val card = incomeOnceList[position - (incomeRepeatList.size + 1)]
-            cardIncome.incomeID.text = card.id.toString()
-            cardIncome.incomeID.isVisible = false
-            cardIncome.incomeName.text = card.name
-            cardIncome.incomeDate.text = DateUtil.convertToString(card.date.dayOfMonth, card.date.monthValue, card.date.year)
-            cardIncome.incomeAmount.text = card.amount.clearZero() + "₺"
-
-            //cardview basılı tutunca seçme
-            cardIncome.cardView.setOnLongClickListener {
-                setFullScreenDialogIncome(card)
-                true
-            }
-
-
-        }
-        card3(position) -> {
-            val cardIncome = holder as IncomeCardSmall
-            val date = DateUtil.currentDateTime.minusMonths(1)
-            val savedMoney = SavedMoney(mContext).getPermanent()
-            cardIncome.incomeID.isVisible = false
-            cardIncome.incomeName.text = mContext.getString(R.string.money_in_cache)
-            cardIncome.incomeDate.text = date.monthString() + " " + date.year.toString()
-            cardIncome.incomeAmount.text = savedMoney.toString() + "₺"
-
-            cardIncome.cardView.setOnLongClickListener {
-
-                setFullScreenDialogRemainingMoney()
-                true
-            }
-        }
-
-        else -> {
-            // val cardInvisible = holder as InvisibleCard
-
 
         }
     }
@@ -239,7 +233,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
                 Dialog(mContext, android.R.style.Theme_Material_Light_NoActionBar)
             }
 
-            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(income.dateLong).build()
+            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(income.date.toLong()).build()
             var mTimeInMillis: Long = StatedDate(mContext).dateLong
 
             bindingDialog = LayoutAddIncomeBinding.inflate(LayoutInflater.from(mContext))
@@ -253,8 +247,8 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
             //başlangıçta yapılanlar
             bindingDialog.layoutIncomeAddDelete.isVisible = true
             bindingDialog.layoutIncomeAddRepetationType.isVisible = false
-            bindingDialog.layoutIncomeAddMonthlyView.isVisible = income.repetation
-            if (income.repetation) {
+            bindingDialog.layoutIncomeAddMonthlyView.isVisible = income.isRepeatable
+            if (income.isRepeatable) {
                 bindingDialog.layoutIncomeAddDate.text = DateUtil.convertToString(income.date)
             }
             bindingDialog.layoutIncomeAddIncomeName.setText(income.name)
@@ -303,7 +297,14 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
 
                 if (emptySafe()) {
 
-                    val newIncome = Income(bindingDialog.layoutIncomeAddIncomeName.text.toString(), bindingDialog.layoutIncomeAddAmount.text.toString().toFloat(), income.startedDateLong, mTimeInMillis, false, income.repetation, income.dataChanged, income.cardId, income.id)
+                    val date = DateUtil.convertToDateTime(mTimeInMillis)
+                    val newIncome = income.copy(
+                        name = bindingDialog.layoutIncomeAddIncomeName.text.toString(),
+                        amount = bindingDialog.layoutIncomeAddAmount.text.toString().toFloat(),
+                        day = date.dayOfMonth,
+                        month = date.monthValue,
+                        year = date.year
+                    )
                     incomeViewModel.updateAll(newIncome, incomeListByCardId(newIncome.cardId, incomeListAll))
                     fullScreenDialog?.cancel()
                     fullScreenDialog = null
@@ -354,7 +355,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
             bindingDialog.layoutIncomeAddRepetationType.isVisible = false
             bindingDialog.layoutIncomeAddMonthlyView.isVisible = false
             bindingDialog.layoutIncomeAddIncomeName.setText(mContext.getString(R.string.money_in_cache))
-            bindingDialog.layoutIncomeAddAmount.setText(savedMoney.getPermanent().toString())
+            bindingDialog.layoutIncomeAddAmount.setText(savedMoney.permanentMoney.toString())
 
 
             fun emptySafe(): Boolean {
@@ -395,36 +396,10 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
         }
     }
 
-    private fun setDateTimePicker(button: Button) {
-
-        if (datePicker == null) {
-            datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
-
-            datePicker!!.show(mAppCompatActivity.supportFragmentManager, "tag")
-        }
-
-
-        datePicker!!.addOnPositiveButtonClickListener { timeInMillis ->
-            StatedDate(mContext).setDate(timeInMillis)
-            button.text = StatedDate(mContext).month
-            incomeViewModel.refreshData()
-        }
-
-        datePicker!!.addOnCancelListener {
-            datePicker = null
-        }
-    }
-
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(incomeListOnce: List<Income>, incomeListRepeatable: List<Income>) {
-        this.incomeOnceList = incomeListOnce
-        this.incomeRepeatList = incomeListRepeatable
+    fun setData(incomeList: List<TaggedCard<Income>>) {
+        incomeSelectedList = incomeList
         notifyDataSetChanged()
     }
 
-    //liste bu kart aralıklarında ise true döndürür
-    private fun card0(position: Int): Boolean = position == 0
-    private fun card1(position: Int): Boolean = position > 0 && position <= incomeRepeatList.size
-    private fun card2(position: Int): Boolean = position > incomeRepeatList.size && position <= incomeRepeatList.size + incomeOnceList.size
-    private fun card3(position: Int): Boolean = (!savedMoney.isPermanentEmpty()) && incomeRepeatList.size + incomeOnceList.size + 1 == position
 }

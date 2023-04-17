@@ -380,9 +380,9 @@ class ExpenseAdapter(
         return formattedExpenseCardList
     }
 
- /*   private fun List<TaggedCard<Expense>>.getList(tag: Int): List<TaggedCard<Expense>> {
-        return this.filter { taggedCard -> taggedCard.tag == tag }
-    }*/
+    /*   private fun List<TaggedCard<Expense>>.getList(tag: Int): List<TaggedCard<Expense>> {
+           return this.filter { taggedCard -> taggedCard.tag == tag }
+       }*/
 
     private fun exitFullScreen() {
         fullScreenDialog?.cancel()

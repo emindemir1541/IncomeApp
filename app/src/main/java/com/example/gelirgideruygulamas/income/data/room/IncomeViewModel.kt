@@ -45,24 +45,6 @@ class IncomeViewModel(application: Application) : AndroidViewModel(application) 
 
     fun readSelectedData(context: Context) = repository.readSelectedData(context)
 
-    fun refreshData() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.refreshData(DateUtil.currentTime)
-        }
-    }
 
 }
 
-/* fun updateIncome(income: Income) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateAll(income)
-        }
-    }*/
-
-/*fun readDataByDate(dateLong: String): LiveData<List<Income>> = repository.readDataByDate(dateLong)*/
-
-/*   fun deleteAllIncome() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteAll()
-        }
-    }*/

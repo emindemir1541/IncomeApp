@@ -13,18 +13,17 @@ class IncomeCreator(private val incomeDao: IncomeDao) {
 
     suspend fun add(income: Income) {
         val cardId = DateUtil.currentTime
-        if (income.repetation) {
+        if (income.isRepeatable) {
 
             repeat(24) {
-                var newIncome = Income(
-                    income.name,
-                    income.amount,
-                    income.startedDateLong,
-                    income.startedDate.plusMonths(it.toLong()).toLong(),
-                    false,
-                    income.repetation,
-                    income.dataChanged,
-                    cardId,
+                val date = income.startedDate.plusMonths(it.toLong())
+
+                val newIncome = income.copy(
+                    day = date.dayOfMonth,
+                    month = date.monthValue,
+                    year = date.year,
+                    deleted = false,
+                    cardId = cardId
                 )
                 repository.add(newIncome)
 
@@ -40,33 +39,18 @@ class IncomeCreator(private val incomeDao: IncomeDao) {
     }
 
     suspend fun updateAll(income: Income, incomeList: List<Income>) {
-        if (income.repetation) {
+        if (income.isRepeatable) {
             incomeList.forEach { exIncome ->
                 if (income.date >= DateUtil.currentDateTime.toLocalDate()) {
-                    val newIncome = Income(
-                        income.name,
-                        income.amount,
-                        exIncome.startedDateLong,
-                        exIncome.dateLong,
-                        exIncome.deleted,
-                        exIncome.repetation,
-                        exIncome.dataChanged,
-                        exIncome.cardId,
-                        exIncome.id
+                    val newIncome = exIncome.copy(
+                        name = income.name,
+                        amount = income.amount
                     )
                     repository.update(newIncome)
                 }
                 else {
-                    val newIncome = Income(
-                        income.name,
-                        exIncome.amount,
-                        exIncome.startedDateLong,
-                        exIncome.dateLong,
-                        exIncome.deleted,
-                        exIncome.repetation,
-                        exIncome.dataChanged,
-                        exIncome.cardId,
-                        exIncome.id
+                    val newIncome = exIncome.copy(
+                        name = income.name
                     )
                     repository.update(newIncome)
                 }
@@ -79,7 +63,7 @@ class IncomeCreator(private val incomeDao: IncomeDao) {
     }
 
     suspend fun delete(income: Income, incomeList: List<Income>) {
-        if (income.deleted || !income.repetation) {
+        if (income.deleted || !income.isRepeatable) {
             repository.delete(income)
             // TODO: 22.09.2022  message.infoDeletedCard()
         }
@@ -101,7 +85,6 @@ class IncomeCreator(private val incomeDao: IncomeDao) {
         return readAllData.value?.filter { income -> income.isSelected(context) } ?: emptyList()
     }
 
-    fun refreshData(dataChanged: Long) = incomeDao.refreshData(dataChanged)
 
 }
 

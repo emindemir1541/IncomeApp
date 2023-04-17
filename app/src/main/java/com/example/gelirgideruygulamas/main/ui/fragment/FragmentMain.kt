@@ -71,7 +71,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
             binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
             updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
 
-            Toast.makeText(mContext, SavedMoney(mContext).getTemporary().toString() + " " + SavedMoney(mContext).getPermanent().toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, SavedMoney(mContext).temporaryMoney.toString() + " " + SavedMoney(mContext).permanentMoney.toString(), Toast.LENGTH_SHORT).show()
 
         })
 
@@ -83,7 +83,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
             binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
             updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
 
-            Toast.makeText(mContext, SavedMoney(mContext).getTemporary().toString() + " " + SavedMoney(mContext).getPermanent().toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, SavedMoney(mContext).temporaryMoney.toString() + " " + SavedMoney(mContext).permanentMoney.toString(), Toast.LENGTH_SHORT).show()
 
         })
     }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,7 +21,11 @@ import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.FragmentIncomeBinding
 import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
+import com.example.gelirgideruygulamas.income.common.IncomeCardType
+import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
+import com.example.gelirgideruygulamas.main.data.sharedPreference.SavedMoney
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -30,11 +35,13 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     private lateinit var incomeViewModel: IncomeViewModel
     private lateinit var binding: FragmentIncomeBinding
     private lateinit var bindingDialog: LayoutAddIncomeBinding
-    private var incomeRepeatList = ArrayList<Income>()
-    private var incomeOnceList = ArrayList<Income>()
     private var incomeListAll = emptyList<Income>()
     private lateinit var adapter: IncomeAdapter
     private var fullScreenDialog: Dialog? = null
+    private val savedMoney = SavedMoney(mContext)
+    private val statedDate = StatedDate(mContext)
+    private var datePicker: MaterialDatePicker<Long>? = null
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentIncomeBinding.bind(inflater.inflate(R.layout.fragment_income, container, false))
@@ -53,10 +60,11 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
 
         setFabButton()
 
-        incomeViewModel.readAllData.observe(this.viewLifecycleOwner, Observer {
-            incomeListAll = incomeViewModel.readSelectedData(mContext)
-        })
+        setDateTimePicker()
 
+        incomeViewModel.readAllData.observe(this.viewLifecycleOwner) {
+            incomeListAll = incomeViewModel.readSelectedData(mContext)
+        }
 
 
     }
@@ -65,12 +73,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         binding.rvIncome.setHasFixedSize(true)
         binding.rvIncome.layoutManager = LinearLayoutManager(mContext)
 
-        incomeViewModel.readAllData.observe(viewLifecycleOwner, Observer {
-            extractList(incomeViewModel.readSelectedData(mContext))
-            adapter.setData(incomeOnceList, incomeRepeatList)
-
-
-        })
+        getData()
 
         adapter =
             IncomeAdapter(
@@ -82,12 +85,63 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         binding.rvIncome.adapter = adapter
 
     }
+    private fun setDateTimePicker() {
+        cardDateToday(statedDate.isToday)
+        binding.cardDateButton.setOnClickListener {
+            statedDate.setToday()
+            cardDateToday(statedDate.isToday)
+            getData()
+        }
+        binding.cardDateButtonSelected.setOnClickListener() {
+            setDateTimePickerCard(binding.cardDateButton)
+        }
+        binding.cardDateRightArrow.setOnClickListener {
+            statedDate.addMonth()
+            cardDateToday(statedDate.isToday)
+            getData()
 
+        }
+        binding.cardDateLeftArrow.setOnClickListener {
+            statedDate.subtractMonth()
+            cardDateToday(statedDate.isToday)
+            getData()
+        }
+    }
+
+    private fun getData() {
+        incomeViewModel.readAllData.observe(viewLifecycleOwner) {
+            adapter.setData(sortListIncome(incomeViewModel.readSelectedData(mContext)))
+        }
+    }
+
+    private fun setDateTimePickerCard(button: Button) {
+
+        if (datePicker == null) {
+            datePicker = MaterialDatePicker.Builder.datePicker().setSelection(statedDate.dateLong).build()
+            datePicker!!.show(mAppCompatActivity.supportFragmentManager, "tag")
+        }
+
+        datePicker!!.addOnPositiveButtonClickListener { timeInMillis ->
+            statedDate.setDate(timeInMillis)
+            button.text = statedDate.month
+        }
+
+        datePicker!!.addOnCancelListener {
+            datePicker = null
+        }
+
+    }
     private fun setFabButton() {
         fab_add.setOnClickListener {
             if (PageLocation(mContext).getValue() == R.id.itemIncome)
                 setFullScreenDialogIncome()
         }
+    }
+    private fun cardDateToday(isToday: Boolean) {
+        binding.cardDateButton.isVisible = !isToday
+        binding.cardDateButtonSelected.isVisible = isToday
+        binding.cardDateButton.text = StatedDate(mContext).month
+        binding.cardDateButtonSelected.text = StatedDate(mContext).month
     }
 
     /* private fun setAlertDialogIncome() {
@@ -211,12 +265,14 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
             bindingDialog.layoutIncomeAddSave.setOnClickListener {
 
                 if (emptySafe()) {
-
+                    val date = DateUtil.convertToDateTime(mTimeInMillis)
                     val income = Income(
                         bindingDialog.layoutIncomeAddIncomeName.text.toString(),
                         bindingDialog.layoutIncomeAddAmount.text.toString().toFloat(),
                         mTimeInMillis,
-                        mTimeInMillis,
+                        date.dayOfMonth,
+                        date.monthValue,
+                        date.year,
                         false,
                         bindingDialog.layoutIncomeAddRepetationType1.isChecked,
                     )
@@ -258,18 +314,27 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
 
     }
 
-    private fun extractList(incomeList: List<Income>) {
-        incomeOnceList.clear()
-        incomeRepeatList.clear()
+    private fun sortListIncome(incomeList: List<Income>): ArrayList<TaggedCard<Income>> {
+        val formattedIncomeList = ArrayList<TaggedCard<Income>>()
+        val incomeOnceList = ArrayList<TaggedCard<Income>>()
+        val incomeRepeatList = ArrayList<TaggedCard<Income>>()
 
         for (income in incomeList) {
-            if (income.repetation) {
-                incomeRepeatList.add(income)
+            if (income.isRepeatable) {
+                incomeRepeatList.add(TaggedCard(IncomeCardType.REPEATABLE_CARD, income))
             }
             else {
-                incomeOnceList.add(income)
+                incomeOnceList.add(TaggedCard(IncomeCardType.ONCE_CARD, income))
             }
         }
+        formattedIncomeList.addAll(incomeRepeatList)
+        formattedIncomeList.addAll(incomeOnceList)
+        if (!savedMoney.isPermanentEmpty) {
+            val date = savedMoney.savedDate
+            formattedIncomeList.add(TaggedCard(IncomeCardType.PERMANENT_CARD, Income("Money From Last Month", savedMoney.permanentMoney, savedMoney.savedDate.toLong(), date.dayOfMonth,date.monthValue,date.year, deleted = false, isRepeatable = false))) // TODO: make special card for Permenant money
+        }
+        formattedIncomeList.add(TaggedCard(IncomeCardType.INVISIBLE_CARD))
+        return formattedIncomeList
     }
 
 

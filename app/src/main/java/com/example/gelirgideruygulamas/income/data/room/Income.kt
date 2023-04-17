@@ -19,10 +19,11 @@ data class Income(
     val name: String?,
     val amount: Float,
     val startedDateLong: Long,
-    var dateLong: Long,
+    var day:Int,
+    var month:Int,
+    var year:Int,
     var deleted: Boolean,
-    var repetation: Boolean,
-    var dataChanged: Long = DateUtil.currentTime, //livedatanın çalışması için datayı değiştiriyor
+    var isRepeatable: Boolean,
     var cardId:Long= DateUtil.currentTime,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -34,7 +35,7 @@ data class Income(
 
     @IgnoredOnParcel
     @Ignore
-    var date: LocalDate = DateUtil.convertToDateTime(dateLong).toLocalDate()
+    var date: LocalDate = DateUtil.convertToDateTime(year,month,day).toLocalDate()
 
     fun remainingDay(mContext:Context): String = if (itsTime) mContext.getString(R.string.paid) else (DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate())).toString() +" "+ mContext.getString(R.string.day_remained)
 
@@ -51,7 +52,7 @@ data class Income(
     }
 
   /*  fun createIncome(incomeList:List<Income>){
-        if (!incomeList[incomeList.size-1].getDate.checkMonthAndYear(getDate))
+        if (!incomeList[incomeList.size-1].getSavedDate.checkMonthAndYear(getSavedDate))
             DateHelper
     }*/
 }

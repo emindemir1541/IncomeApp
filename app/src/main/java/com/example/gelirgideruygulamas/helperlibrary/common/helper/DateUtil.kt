@@ -33,7 +33,7 @@ object DateUtil {
     fun convertToDateTime(dateTime: Long): LocalDateTime = Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime()
     fun convertToDateTime(date: LocalDate, time: LocalTime = LocalTime.of(0, 0, 0)): LocalDateTime = LocalDateTime.of(date, time)
 
-    /*fun convertToDateTime(getDate:String)=*/
+    /*fun convertToDateTime(getSavedDate:String)=*/
     fun convertToDateTime(year: Int, month: Int, dayOfMonth: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, nanoOfSecond: Int = 0): LocalDateTime =
         LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(ZoneId.systemDefault()).toLocalDateTime()
 
@@ -73,7 +73,7 @@ object DateUtil {
     fun LocalDate.toDateTime(): LocalDateTime = convertToDateTime(this)
 
 
-    //difference between two getDate
+    //difference between two getSavedDate
     fun dayBetweenTwoDate(dateTimeA: LocalDateTime, dateTimeB: LocalDateTime) = java.util.concurrent.TimeUnit.DAYS.convert(dateTimeA.toLong() - dateTimeB.toLong(), java.util.concurrent.TimeUnit.MILLISECONDS)
     fun dayBetweenTwoDate(dateTimeA: LocalDate, dateTimeB: LocalDate) = java.util.concurrent.TimeUnit.DAYS.convert(dateTimeA.toLong() - dateTimeB.toLong(), java.util.concurrent.TimeUnit.MILLISECONDS)
     fun dayBetweenTwoDate(dateTimeA: Long, dateTimeB: Long) = java.util.concurrent.TimeUnit.DAYS.convert(dateTimeA - dateTimeB, java.util.concurrent.TimeUnit.MILLISECONDS)

@@ -28,7 +28,6 @@ class IncomeRepository(private val incomeDao: IncomeDao) {
         return readAllData.value?.filter { income -> income.isSelected(context) } ?: emptyList()
     }
 
-    fun refreshData(dataChanged: Long) = incomeDao.refreshData(dataChanged)
 
 }
 

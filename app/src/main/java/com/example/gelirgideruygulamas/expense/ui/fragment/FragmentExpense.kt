@@ -98,8 +98,8 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
     }
 
     private fun getData() {
-        expenseViewModel.readSelectedData.observe(viewLifecycleOwner) { selectedExpenseList ->
-            adapter.setData(selectedExpenseList)
+        expenseViewModel.readAllData.observe(viewLifecycleOwner) { selectedExpenseList ->
+            adapter.setData(expenseViewModel.readSelectedData.value ?: emptyList())
         }
     }
 
