@@ -1,18 +1,18 @@
 package com.example.gelirgideruygulamas.main.data.sharedPreference
 
 import android.content.Context
+import com.example.gelirgideruygulamas.main.common.constant.SharedPrefFileNames
+import com.example.gelirgideruygulamas.main.common.constant.SharedPrefPageLocation
 
-private const val PAGE_LOCATION = "PAGE_LOCATION"
-private const val ID = "ID"
 
 class PageLocation(private val context: Context) {
 
     fun setValue(value: Int) {
-        SharedPreferenceRepository(context).setInt(PAGE_LOCATION, ID, value)
+        SharedPreferenceRepository(context).setInt(SharedPrefFileNames.PAGE_LOCATION, SharedPrefPageLocation.LOCATION_KEY, value)
     }
 
     fun getValue(): Int {
-        return SharedPreferenceRepository(context).getInt(PAGE_LOCATION, ID)
+        return SharedPreferenceRepository(context).getInt(SharedPrefFileNames.PAGE_LOCATION, SharedPrefPageLocation.LOCATION_KEY)
     }
 
 }

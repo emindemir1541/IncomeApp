@@ -46,22 +46,6 @@ class ExpenseAdapter(
     private lateinit var expenseViewModel: ExpenseViewModel
 
 
-    /*inner class Date"Card(view: View) : RecyclerView.ViewHolder(view) {
-        var cardView: MaterialCardView
-        var leftArrow: FrameLayout
-        var rightArrow: FrameLayout
-        var dateButton: Button
-        var selectedDateButton: Button
-
-        init {
-            cardView = view.findViewById(R.id.card_date_mcard)
-            leftArrow = view.findViewById(R.id.card_date_left_arrow)
-            rightArrow = view.findViewById(R.id.card_date_right_arrow)
-            dateButton = view.findViewById(R.id.card_date_button)
-            selectedDateButton = view.findViewById(R.id.card_date_button_selected)
-        }
-    }*/
-
     inner class ExpenseCardUndone(view: View) : RecyclerView.ViewHolder(view) {
         var cardView: MaterialCardView
         var expenseID: TextView
