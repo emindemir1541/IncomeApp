@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gelirgideruygulamas.R
@@ -169,9 +168,9 @@ class ExpenseAdapter(
 
     override fun getItemCount(): Int {
         expenseViewModel = ViewModelProvider(mAppCompatActivity)[ExpenseViewModel::class.java]
-        expenseViewModel.readAllData.observe(mFragment.viewLifecycleOwner, Observer {
+        expenseViewModel.readAllData.observe(mFragment.viewLifecycleOwner) {
             expenseListAll = it
-        })
+        }
         return expenseListSelected.size
     }
 
@@ -182,42 +181,6 @@ class ExpenseAdapter(
         if (expense != null) {
 
             when (expenseListSelected[position].tag) {
-
-                /*      card0(position) -> {//Tarih kartı
-
-                val cardDate = holder as DateCard
-
-
-                fun cardDateToday(isToday: Boolean) {
-                    cardDate.dateButton.isVisible = !isToday
-                    cardDate.selectedDateButton.isVisible = isToday
-                    cardDate.dateButton.text = StatedDate(mContext).getMonth()
-                    cardDate.selectedDateButton.text = StatedDate(mContext).getMonth()
-                }
-
-                cardDateToday(StatedDate(mContext).isToday())
-
-                //Tarihi burada ayarla
-                cardDate.dateButton.setOnClickListener {
-                    StatedDate(mContext).setToday()
-                    cardDateToday(StatedDate(mContext).isToday())
-                    refreshData()
-                }
-                cardDate.selectedDateButton.setOnClickListener() {
-                    setDateTimePickerCard(cardDate.dateButton)
-                }
-                cardDate.rightArrow.setOnClickListener {
-                    StatedDate(mContext).addMonth()
-                    cardDateToday(StatedDate(mContext).isToday())
-
-                    refreshData()
-                }
-                cardDate.leftArrow.setOnClickListener {
-                    StatedDate(mContext).subtractMonth()
-                    cardDateToday(StatedDate(mContext).isToday())
-                    refreshData()
-                }
-            }*/
 
                 ExpenseCardType.EXPENSE_UNDONE_CARD -> {
 
@@ -252,6 +215,7 @@ class ExpenseAdapter(
                         }
                     }
                 }
+
                 ExpenseCardType.EXPENSE_DONE_CARD -> {
                     val cardExpenseDone = holder as ExpenseCardDone
 
@@ -271,6 +235,7 @@ class ExpenseAdapter(
                         false
                     }
                 }
+
                 ExpenseCardType.EXPENSE_DAILY_CARD -> {
                     val cardExpense = holder as ExpenseCard
                     cardExpense.expenseID.text = expense.id.toString()
@@ -292,6 +257,7 @@ class ExpenseAdapter(
                     val cardInvisible = holder as InvisibleCard
                     cardInvisible.mLayout.isVisible = expenseListSelected.isNotEmpty()
                 }
+
                 ExpenseCardType.LINE_CARD -> {
                     val cardLine = holder as LineCard
                     cardLine.mLayout.isVisible = true
@@ -349,23 +315,12 @@ class ExpenseAdapter(
 
             bindingDialog.layoutExpenseAddSave.setOnClickListener {
                 if (emptySafe()) {
-                    val newExpense = Expense(
-                        bindingDialog.layoutExpenseAddExpenseName.text.toString(),
-                        bindingDialog.layoutExpenseAddAmount.text.toString().toFloat(),
-                        oldExpense.startedDateLong,
-                        oldExpense.completed,
-                        oldExpense.debt,
-                        oldExpense.lender,
-                        oldExpense.repetition,
-                        oldExpense.deleted,
-                        oldExpense.type,
-                        oldExpense.day,
-                        oldExpense.month,
-                        oldExpense.year,
-                        DateUtil.currentTime,
-                        oldExpense.cardId,
-                        oldExpense.id,
+
+                    val newExpense = oldExpense.copy(
+                        name = bindingDialog.layoutExpenseAddExpenseName.text.toString(),
+                        amount = bindingDialog.layoutExpenseAddAmount.text.toString().toFloat()
                     )
+
                     expenseViewModel.updateAll(newExpense, expenseListByCardId(newExpense.cardId, expenseListAll))
                     exitFullScreen()
                 }
@@ -391,11 +346,11 @@ class ExpenseAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(expenseList: List<Expense>) {
-        this.expenseListSelected = formatList(expenseList)
+        this.expenseListSelected = sortExpenseList(expenseList)
         notifyDataSetChanged()
     }
 
-    private fun formatList(expenseList: List<Expense>): ArrayList<TaggedCard<Expense>> {
+    private fun sortExpenseList(expenseList: List<Expense>): ArrayList<TaggedCard<Expense>> {
         val formattedExpenseCardList = ArrayList<TaggedCard<Expense>>()
         val expenseUndoneCardList = ArrayList<TaggedCard<Expense>>()
         val expenseDoneCardList = ArrayList<TaggedCard<Expense>>()
@@ -406,9 +361,11 @@ class ExpenseAdapter(
                 expense.getCardType() == ExpenseSituation.ONCE -> {
                     expenseCardListDaily.add(TaggedCard(ExpenseCardType.EXPENSE_DAILY_CARD, expense))
                 }
+
                 expense.getCardType() == ExpenseSituation.DONE -> {
                     expenseDoneCardList.add(TaggedCard(ExpenseCardType.EXPENSE_DONE_CARD, expense))
                 }
+
                 else -> {
                     expenseUndoneCardList.add(TaggedCard(ExpenseCardType.EXPENSE_UNDONE_CARD, expense))
                 }
@@ -423,9 +380,10 @@ class ExpenseAdapter(
         return formattedExpenseCardList
     }
 
-    private fun List<TaggedCard<Expense>>.getList(tag:Int): List<TaggedCard<Expense>> {
-       return this.filter { taggedCard -> taggedCard.tag == tag } ?: emptyList()
-    }
+ /*   private fun List<TaggedCard<Expense>>.getList(tag: Int): List<TaggedCard<Expense>> {
+        return this.filter { taggedCard -> taggedCard.tag == tag }
+    }*/
+
     private fun exitFullScreen() {
         fullScreenDialog?.cancel()
         fullScreenDialog = null

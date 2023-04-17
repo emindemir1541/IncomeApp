@@ -1,0 +1,17 @@
+firebase connect:
+    firestore for resource
+    remote config for version check
+
+start page for compose
+
+error managment:
+ see where is error actually,
+    get all info about it, device infos
+    send notification about it
+    see all the error in one place
+    write errors to txt file
+locker
+
+
+toMainactivity
+    startupProcess()

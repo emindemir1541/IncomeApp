@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 
-class ExpenseRepository(private val expenseDao: ExpenseDao) {
+class ExpenseRepository(private val context: Context) {
+
+    private val expenseDao:ExpenseDao = ExpenseDatabase.getDatabase(context).expenseDao()
 
     suspend fun add(expense: Expense) {
         expenseDao.add(expense)
@@ -18,25 +20,27 @@ class ExpenseRepository(private val expenseDao: ExpenseDao) {
         expenseDao.delete(expense)
     }
 
-    suspend fun deleteByCardId(expense: Expense) {
+  /*  suspend fun deleteByCardId(expense: Expense) {
         expenseDao.deleteByCardId(expense.cardId)
-    }
+    }*/
 
     val readAllData: LiveData<List<Expense>> = expenseDao.readData()
 
-    fun getReadSelectedData(context: Context): LiveData<List<Expense>> {
-        val currentDate = StatedDate(context).dateTime
-        return expenseDao.readSelectedData(currentDate.monthValue, currentDate.year)
-    }
+    val readSelectedData: LiveData<List<Expense>>
+        get() {
+            val currentDate = StatedDate(context).dateTime
+            return expenseDao.readSelectedData(currentDate.monthValue, currentDate.year)
+        }
 
-    /*fun readSelectedData(context: Context): List<Expense> {
-        return readAllData.value?.filter { expense -> expense.isSelected(context) } ?: emptyList()
-    }*/
 
-    fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = expenseDao.readDataByCardId(cardId)
 
-    suspend fun refreshData(dataChanged: Long) = expenseDao.refreshData(dataChanged)
+    /*fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = expenseDao.readDataByCardId(cardId)*/
+
 
 }
+
+/*fun readSelectedData(context: Context): List<Expense> {
+    return readAllData.value?.filter { expense -> expense.isSelected(context) } ?: emptyList()
+}*/
 
 // val readSavedData: LiveData<List<SavedDate>> = expenseDao.readSavedData()

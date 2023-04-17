@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gelirgideruygulamas.R
@@ -57,7 +56,6 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
         setDateTimePicker()
 
 
-
     }
 
     private fun setDateTimePicker() {
@@ -100,9 +98,9 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
     }
 
     private fun getData() {
-        expenseViewModel.getReadSelectedData(mContext).observe(viewLifecycleOwner, Observer { selectedExpenseList ->
+        expenseViewModel.readSelectedData.observe(viewLifecycleOwner) { selectedExpenseList ->
             adapter.setData(selectedExpenseList)
-        })
+        }
     }
 
     private fun setFabButton() {
@@ -162,7 +160,6 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
             fullScreenDialog?.show()
 
 
-            //başlangıçta yapılanlar
             bindingDialog.layoutExpenseAddRepetationType2.isChecked = true
             bindingDialog.layoutExpenseAddLenderView.isVisible = false
             bindingDialog.layoutExpenseAddMonthlyView.isVisible = false
@@ -212,9 +209,11 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
                     bindingDialog.layoutExpenseAddTypeNeed.isChecked -> {
                         bindingDialog.layoutExpenseAddLenderView.isVisible = false
                     }
+
                     bindingDialog.layoutExpenseAddTypeWant.isChecked -> {
                         bindingDialog.layoutExpenseAddLenderView.isVisible = false
                     }
+
                     bindingDialog.layoutExpenseAddTypeDebt.isChecked -> {
                         bindingDialog.layoutExpenseAddLenderView.isVisible = true
                     }

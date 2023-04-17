@@ -1,11 +1,9 @@
 package com.example.gelirgideruygulamas.expense.data.room
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -14,8 +12,7 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
     val readAllData: LiveData<List<Expense>>
 
     init {
-        val expenseDao = ExpenseDatabase.getDatabase(application).expenseDao()
-        repository = ExpenseCreator(expenseDao)
+        repository = ExpenseCreator(application)
         readAllData = repository.readAllData
     }
 
@@ -30,33 +27,24 @@ class ExpenseViewModel(application: Application) : AndroidViewModel(application)
             repository.updateOne(expense)
         }
     }
-    fun updateAll(expense: Expense,expenseList: List<Expense>){
-        viewModelScope.launch(Dispatchers.IO){
-            repository.updateAll(expense,expenseList)
-        }
-    }
 
-    fun delete(expense: Expense,expenseList: List<Expense>) {
+    fun updateAll(expense: Expense, expenseList: List<Expense>) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.delete(expense,expenseList)
+            repository.updateAll(expense, expenseList)
         }
     }
 
-    fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = repository.readDataByCardId(cardId)
-
-    //fun readSelectedData(context: Context): List<Expense> = repository.readSelectedData(context)
-
-    fun getReadSelectedData(context: Context) = repository.getReadSelectedData(context)
-
-    fun refreshData() {
+    fun delete(expense: Expense, expenseList: List<Expense>) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.refreshData(DateUtil.currentTime)
+            repository.delete(expense, expenseList)
         }
     }
+
+    /*fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = repository.readDataByCardId(cardId)*/
+    val readSelectedData get() = repository.readSelectedData
+
 }
 
-/*  fun deleteAllExpense() {
-      viewModelScope.launch(Dispatchers.IO) {
-          repository.deleteAll()
-      }
-  }*/
+
+//fun readSelectedData(context: Context): List<Expense> = repository.readSelectedData(context)
+

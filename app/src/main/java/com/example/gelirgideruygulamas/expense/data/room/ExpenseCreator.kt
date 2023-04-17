@@ -6,9 +6,9 @@ import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseSituation
 import com.example.gelirgideruygulamas.expense.common.util.getCardType
 
-class ExpenseCreator(private val expenseDao: ExpenseDao) {
+class ExpenseCreator(context: Context) {
 
-    private val repository = ExpenseRepository(expenseDao)
+    private val repository = ExpenseRepository(context)
 
     suspend fun add(expense: Expense) {
 
@@ -17,22 +17,8 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
             repeat(expense.repetition!!) {
                 val date = expense.startedDate.plusMonths(it.toLong())
-                val newExpense = Expense(
-                    expense.name,
-                    expense.amount,
-                    expense.startedDateLong,
-                    expense.completed,
-                    expense.debt,
-                    expense.lender,
-                    expense.repetition,
-                    expense.deleted,
-                    expense.type,
-                    date.dayOfMonth,
-                    date.monthValue,
-                    date.year,
-                    expense.dataChanged,
-                    cardId,
-                )
+
+                val newExpense = expense.copy(day = date.dayOfMonth, month = date.monthValue, year = date.year, cardId = cardId)
                 repository.add(newExpense)
 
             }
@@ -54,43 +40,15 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
         else {
             expenseList.forEach { exExpense ->
                 if (expense.date >= DateUtil.currentDateTime.toLocalDate()) {
-                    val newExpense = Expense(
-                        expense.name,
-                        expense.amount,
-                        exExpense.startedDateLong,
-                        exExpense.completed,
-                        exExpense.debt,
-                        exExpense.lender,
-                        exExpense.repetition,
-                        expense.deleted,
-                        exExpense.type,
-                        exExpense.day,
-                        exExpense.month,
-                        exExpense.year,
-                        exExpense.dataChanged,
-                        exExpense.cardId,
-                        exExpense.id
-                    )
+
+                    val newExpense = exExpense.copy(name = expense.name, amount = expense.amount, deleted = expense.deleted)
+
                     repository.update(newExpense)
                 }
                 else {
-                    val newExpense = Expense(
-                        expense.name,
-                        exExpense.amount,
-                        exExpense.startedDateLong,
-                        exExpense.completed,
-                        exExpense.debt,
-                        exExpense.lender,
-                        exExpense.repetition,
-                        expense.deleted,
-                        exExpense.type,
-                        exExpense.day,
-                        exExpense.month,
-                        exExpense.year,
-                        exExpense.dataChanged,
-                        exExpense.cardId,
-                        exExpense.id
-                    )
+
+                    val newExpense = exExpense.copy(name = expense.name, amount = expense.amount, deleted = expense.deleted)
+
                     repository.update(newExpense)
                 }
             }
@@ -116,13 +74,13 @@ class ExpenseCreator(private val expenseDao: ExpenseDao) {
 
     val readAllData: LiveData<List<Expense>> = repository.readAllData
 
-    fun getReadSelectedData(context: Context): LiveData<List<Expense>> = repository.getReadSelectedData(context)
+    val readSelectedData: LiveData<List<Expense>>
+        get() = repository.readSelectedData
 
-   /* fun readSelectedData(context: Context): List<Expense> {
-        return readAllData.value?.filter { expense -> expense.isSelected(context) } ?: emptyList()
-    }*/
+    /*fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = repository.readDataByCardId(cardId)*/
 
-    fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = expenseDao.readDataByCardId(cardId)
-
-    suspend fun refreshData(dataChanged: Long) = expenseDao.refreshData(dataChanged)
 }
+
+/* fun readSelectedData(context: Context): List<Expense> {
+         return readAllData.value?.filter { expense -> expense.isSelected(context) } ?: emptyList()
+     }*/

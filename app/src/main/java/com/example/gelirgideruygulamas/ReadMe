@@ -2,6 +2,7 @@
 // TODO: tarihi geçen gelir gider kartlarındaki kalan günün eksiye düşmesini önle
 // TODO: shared preference iki öge kaydetmiyor
 // TODO: saved money çalışmıyor
+todo: şuanki tarihten öncesi için kart üretmesine izin verme
 
 // TODO: karanlık temadaki sıkıntıları düzelt
 // TODO: zamanı geçen giderlerin checkbox unu kırmızı yap,text renklerini değiştir
@@ -13,6 +14,7 @@
 // TODO: 11.10.2022 uygulama açılırken güzel bir başlangıç yapsın
 // TODO: 11.10.2022 döviz bilgilerini internettten çek
 // TODO: telefona bildirim gönder
+
 
 // TODO: KÜTÜPHANE
 // TODO: update sınıfı

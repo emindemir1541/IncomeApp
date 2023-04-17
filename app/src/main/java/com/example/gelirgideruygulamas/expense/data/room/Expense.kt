@@ -6,8 +6,8 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseType
-import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
 @Entity(tableName = "table_expense")
@@ -25,7 +25,6 @@ data class Expense(
     var day: Int,
     var month: Int,
     var year: Int,
-    var dataChanged: Long = DateUtil.currentTime, //livedatanın çalışması için datayı değiştiriyor
     var cardId: Long = DateUtil.currentTime,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
@@ -43,12 +42,3 @@ data class Expense(
     @Ignore
     var date: LocalDate = DateUtil.convertToDateTime(year,month,day).toLocalDate()
 }
-
-
-/*    fun getCard(cardId: Int): ExpenseCardTable {
-        return monthlyCard.single { it.cardId == cardId }
-    }
-
-    fun getCard(dateLong: Date): ExpenseCardTable {
-        return monthlyCard.single { it.month == dateLong.month && it.year == dateLong.year }
-    }*/
