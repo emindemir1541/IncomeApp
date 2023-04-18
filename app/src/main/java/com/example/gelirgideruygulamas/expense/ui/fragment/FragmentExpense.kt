@@ -24,6 +24,7 @@ import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseType
 import com.example.gelirgideruygulamas.expense.common.util.Message
 import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
+import com.example.gelirgideruygulamas.main.ui.component.CalendarUtil.setMinDateNow
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -144,7 +145,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
 
             fullScreenDialog =DialogUtil.materialThemeDialog(mContext)
 
-            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
+            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).setMinDateNow().build()
             var mTimeInMillis: Long = StatedDate(mContext).dateLong
 
             bindingDialog = LayoutAddExpenseBinding.inflate(LayoutInflater.from(mContext))

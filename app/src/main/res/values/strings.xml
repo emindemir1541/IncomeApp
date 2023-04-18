@@ -65,6 +65,7 @@
     <string name="warning_character_much"> Karakterden Fazla Girmeyin</string>
     <string name="warning_character_less"> Karakterden Az Girmeyin</string>
     <string name="warning_after_dat">Noktadan Sonra</string>
+    <string name="warning_invalid_date">Lütfen gelecekten bir tarih seçiniz</string>
 
     <!--info-->
     <string name="info_deleted_after_now"> sonrası silindi</string>

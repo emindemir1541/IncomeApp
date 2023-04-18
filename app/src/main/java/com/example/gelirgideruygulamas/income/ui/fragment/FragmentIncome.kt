@@ -19,12 +19,15 @@ import com.example.gelirgideruygulamas.main.data.sharedPreference.PageSettings
 import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.FragmentIncomeBinding
 import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
+import com.example.gelirgideruygulamas.expense.common.util.Message
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
 import com.example.gelirgideruygulamas.income.common.IncomeCardType
 import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
 import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
 import com.example.gelirgideruygulamas.main.data.sharedPreference.SavedMoney
+import com.example.gelirgideruygulamas.main.ui.component.CalendarUtil.setMinDate
+import com.example.gelirgideruygulamas.main.ui.component.CalendarUtil.setMinDateNow
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -38,6 +41,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     private var fullScreenDialog: Dialog? = null
     private val savedMoney = SavedMoney(mContext)
     private val statedDate = StatedDate(mContext)
+    private val message = Message(mContext)
     private var datePicker: MaterialDatePicker<Long>? = null
 
 
@@ -103,7 +107,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     }
 
     private fun getData() {
-        incomeViewModel.readSelectedData.observe(viewLifecycleOwner) {incomeList->
+        incomeViewModel.readSelectedData.observe(viewLifecycleOwner) { incomeList ->
             adapter.setData(sortListIncome(incomeList))
         }
     }
@@ -115,9 +119,10 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
             datePicker!!.show(mAppCompatActivity.supportFragmentManager, "tag")
         }
 
+
         datePicker!!.addOnPositiveButtonClickListener { timeInMillis ->
-            statedDate.setDate(timeInMillis)
-            button.text = statedDate.month
+                statedDate.setDate(timeInMillis)
+                button.text = statedDate.month
         }
 
         datePicker!!.addOnCancelListener {
@@ -141,7 +146,6 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     }
 
 
-
     private fun setFullScreenDialogIncome() {
         if (fullScreenDialog == null) {
 
@@ -149,7 +153,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
             fullScreenDialog = DialogUtil.materialThemeDialog(mContext)
 
             var isDateSelected = false
-            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
+            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).setMinDateNow().build()
             var mTimeInMillis: Long = StatedDate(mContext).dateLong
 
             bindingDialog = LayoutAddIncomeBinding.inflate(LayoutInflater.from(mContext))

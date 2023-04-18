@@ -14,6 +14,10 @@ class Message(private val context: Context) {
         messageToast(characterLength.toString() + " " + res(R.string.warning_character_much))
     }
 
+    fun warningInvalidDate() {
+        messageToast(res(R.string.warning_invalid_date))
+    }
+
     fun warningMuchCharacterAfterDat(characterLength: Int){
         messageToast(res(R.string.warning_after_dat)+ " "+characterLength.toString()+" "+res(R.string.warning_character_much))
     }
