@@ -1,7 +1,5 @@
-// TODO: tarihi geçen gelir gider kartlarındaki kalan günün eksiye düşmesini önle
 // TODO: shared preference iki öge kaydetmiyor
 // TODO: saved money çalışmıyor
-todo: şuanki tarihten öncesi için kart üretmesine izin verme
 
 // TODO: karanlık temadaki renk sıkıntıları düzelt
 // TODO: karanlık temaya geçerken kapanmayı düzelt

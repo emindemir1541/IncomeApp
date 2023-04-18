@@ -34,7 +34,6 @@
 
 
 
-
     <!--Dark Mode-->
 
     <color name="Primary50">#9CD67E</color>
@@ -66,6 +65,7 @@
     <color name="yellow3">#8BC34A</color>
     <color name="yellow4">#4CAF50</color>
 
+    <color name="background">#FF386A20</color>
 
     <!--Warnings-->
     <color name="dark_green_warning">#339900</color>
