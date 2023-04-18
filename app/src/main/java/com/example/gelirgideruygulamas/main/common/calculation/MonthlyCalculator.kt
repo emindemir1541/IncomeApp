@@ -2,17 +2,17 @@ package com.example.gelirgideruygulamas.main.common.calculation
 
 import android.content.Context
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
-import com.example.gelirgideruygulamas.expense.common.util.isSelected
 import com.example.gelirgideruygulamas.expense.data.room.Expense
+import com.example.gelirgideruygulamas.income.common.isSelected
 import com.example.gelirgideruygulamas.income.data.room.Income
 import com.example.gelirgideruygulamas.main.data.sharedPreference.SavedMoney
 
-class MonthlyCalculator(private val incomeList: List<Income>, private val expenseList: List<Expense>, private val mContext: Context) {
+class MonthlyCalculator(private val selectedIncomeList: List<Income>, private val selectedExpenseList: List<Expense>, private val mContext: Context) {
 
     val totalIncome: Float
         get() {
             var totalIncome = 0f
-            incomeList.forEach { income ->
+            selectedIncomeList.forEach { income ->
                 if (income.isSelected(mContext) && income.itsTime)
                     totalIncome += income.amount
             }
@@ -22,8 +22,8 @@ class MonthlyCalculator(private val incomeList: List<Income>, private val expens
     val paidExpense: Float
         get() {
             var totalExpense = 0f
-            expenseList.forEach { expense ->
-                if (expense.isSelected(mContext) && expense.itsTime && expense.completed)
+            selectedExpenseList.forEach { expense ->
+                if ( expense.completed || expense.repetition == null)
                     totalExpense += expense.amount
             }
             return totalExpense
@@ -32,8 +32,7 @@ class MonthlyCalculator(private val incomeList: List<Income>, private val expens
     val potentialExpense: Float
         get() {
             var totalExpense = 0f
-            expenseList.forEach { expense ->
-                if (expense.isSelected(mContext) && expense.itsTime)
+            selectedExpenseList.forEach { expense ->
                     totalExpense += expense.amount
             }
             return totalExpense

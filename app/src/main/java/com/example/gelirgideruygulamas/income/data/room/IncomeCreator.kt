@@ -4,11 +4,10 @@ package com.example.gelirgideruygulamas.income.data.room
 import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
 
-class IncomeCreator(private val incomeDao: IncomeDao) {
+class IncomeCreator(context: Context) {
 
-    private val repository = IncomeRepository(incomeDao)
+    private val repository = IncomeRepository(context)
 
 
     suspend fun add(income: Income) {
@@ -79,13 +78,13 @@ class IncomeCreator(private val incomeDao: IncomeDao) {
         }
     }
 
-    val readAllData: LiveData<List<Income>> = incomeDao.readAllData()
+    val readAllData: LiveData<List<Income>> = repository.readAllData
 
-    fun readSelectedData(context: Context): List<Income> {
+    val readSelectedData:LiveData<List<Income>> = repository.readSelectedData
+
+/*    fun readSelectedData(context: Context): List<Income> {
         return readAllData.value?.filter { income -> income.isSelected(context) } ?: emptyList()
-    }
+    }*/
 
 
 }
-
-/*fun readDataByDate(dateLong:String):LiveData<List<Income>> = incomeDao.readDataByDate(dateLong)*/

@@ -16,14 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gelirgideruygulamas.R
 import com.example.gelirgideruygulamas.expense.data.room.Expense
 import com.example.gelirgideruygulamas.expense.data.room.ExpenseViewModel
-import com.example.gelirgideruygulamas.main.data.sharedPreference.PageLocation
+import com.example.gelirgideruygulamas.main.data.sharedPreference.PageSettings
 import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.FragmentExpenseBinding
 import com.example.gelirgideruygulamas.databinding.LayoutAddExpenseBinding
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseType
 import com.example.gelirgideruygulamas.expense.common.util.Message
+import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -106,7 +106,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
     private fun setFabButton() {
         // fab_add.animate(R.layout.layout_add_expense)
         fab_add.setOnClickListener {
-            if (PageLocation(mContext).getValue() == R.id.itemExpense)
+            if (PageSettings(mContext).pageLocation == R.id.itemExpense)
                 fab_add.hide()
             setFullScreenDialogExpense()
 
@@ -142,12 +142,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
         if (fullScreenDialog == null) {
 
 
-            fullScreenDialog = if (Helper.isDarkThemeOn(mContext)) {
-                Dialog(mContext, android.R.style.Theme_Material_NoActionBar)
-            }
-            else {
-                Dialog(mContext, android.R.style.Theme_Material_Light_NoActionBar)
-            }
+            fullScreenDialog =DialogUtil.materialThemeDialog(mContext)
 
             val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
             var mTimeInMillis: Long = StatedDate(mContext).dateLong

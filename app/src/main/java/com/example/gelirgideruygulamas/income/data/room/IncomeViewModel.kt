@@ -1,11 +1,9 @@
 package com.example.gelirgideruygulamas.income.data.room
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -14,8 +12,7 @@ class IncomeViewModel(application: Application) : AndroidViewModel(application) 
     private val repository: IncomeCreator
 
     init {
-        val incomeDao = IncomeDatabase.getDatabase(application).incomeDao()
-        repository = IncomeCreator(incomeDao)
+        repository = IncomeCreator(application)
         readAllData = repository.readAllData
     }
 
@@ -43,7 +40,7 @@ class IncomeViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun readSelectedData(context: Context) = repository.readSelectedData(context)
+    val readSelectedData get() = repository.readSelectedData
 
 
 }

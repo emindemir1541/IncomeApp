@@ -2,7 +2,6 @@ package com.example.gelirgideruygulamas.income.data.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.gelirgideruygulamas.expense.data.room.Expense
 
 @Dao
 interface IncomeDao {
@@ -22,8 +21,8 @@ interface IncomeDao {
     @Query("select * from table_income order by id asc")
     fun readAllData(): LiveData<List<Income>>
 
-   /* @Query("select * from table_expense where month =:month and year=:year order by id asc")
-    fun readSelectedData(month: Int,year: Int):LiveData<List<Expense>>*/
+    @Query("select * from table_income where month =:month and year=:year order by id asc")
+    fun readSelectedData(month: Int,year: Int):LiveData<List<Income>>
 
     @Query("select * from table_income where cardId =:cardId order by id asc")
     fun readCardData(cardId:Long):LiveData<List<Income>>

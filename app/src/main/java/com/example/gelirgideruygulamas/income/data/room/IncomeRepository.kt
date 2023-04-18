@@ -2,11 +2,12 @@ package com.example.gelirgideruygulamas.income.data.room
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 
-class IncomeRepository(private val incomeDao: IncomeDao) {
+class IncomeRepository(private val context: Context) {
 
+    private val incomeDao = IncomeDatabase.getDatabase(context).incomeDao()
     suspend fun add(income: Income) {
-
         incomeDao.add(income)
     }
 
@@ -18,16 +19,13 @@ class IncomeRepository(private val incomeDao: IncomeDao) {
         incomeDao.delete(income.id)
     }
 
-    suspend fun deleteAll() {
-        incomeDao.deleteAll()
-    }
-
     val readAllData: LiveData<List<Income>> = incomeDao.readAllData()
 
-    fun readSelectedData(context: Context): List<Income> {
-        return readAllData.value?.filter { income -> income.isSelected(context) } ?: emptyList()
-    }
-
+    val readSelectedData:LiveData<List<Income>>
+        get() {
+            val currentDate =StatedDate(context).dateTime
+            return incomeDao.readSelectedData(currentDate.monthValue,currentDate.year)
+        }
 
 }
 

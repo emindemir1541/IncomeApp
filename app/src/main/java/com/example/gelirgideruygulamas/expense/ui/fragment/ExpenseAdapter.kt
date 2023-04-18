@@ -18,7 +18,6 @@ import com.example.gelirgideruygulamas.expense.data.room.Expense
 import com.example.gelirgideruygulamas.expense.data.room.ExpenseViewModel
 import com.example.gelirgideruygulamas.databinding.LayoutAddExpenseBinding
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.clearZero
 import com.example.gelirgideruygulamas.main.common.constant.Currency
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseCardType
@@ -26,6 +25,7 @@ import com.example.gelirgideruygulamas.expense.common.constant.ExpenseSituation
 import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
 import com.example.gelirgideruygulamas.expense.common.util.getCardType
 import com.example.gelirgideruygulamas.expense.common.util.remainingDay
+import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -259,12 +259,7 @@ class ExpenseAdapter(
         if (fullScreenDialog == null) {
 
 
-            fullScreenDialog = if (Helper.isDarkThemeOn(mContext)) {
-                Dialog(mContext, android.R.style.Theme_Material_NoActionBar)
-            }
-            else {
-                Dialog(mContext, android.R.style.Theme_Material_Light_NoActionBar)
-            }
+            fullScreenDialog = DialogUtil.materialThemeDialog(mContext)
 
             bindingDialog = LayoutAddExpenseBinding.inflate(LayoutInflater.from(mContext))
             fullScreenDialog?.setContentView(bindingDialog.root)

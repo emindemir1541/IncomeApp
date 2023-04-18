@@ -57,10 +57,9 @@ object Helper {
 
     fun String.cleanBlanks(): String = this.replace(" ", "")
 
-    fun isDarkThemeOn(mContext: Context): Boolean {
-        return mContext.resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-    }
+    val Context.isDarkThemeOn: Boolean get() =
+         this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+
 
     fun Float.clearZero(): String {
         val splitValue = this.toString().split(".")

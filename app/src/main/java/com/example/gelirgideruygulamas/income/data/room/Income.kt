@@ -1,16 +1,13 @@
 package com.example.gelirgideruygulamas.income.data.room
 
-import android.content.Context
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.example.gelirgideruygulamas.R
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.checkMonthAndYear
-import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
-import kotlinx.android.parcel.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
 @Entity(tableName = "table_income")
@@ -37,7 +34,6 @@ data class Income(
     @Ignore
     var date: LocalDate = DateUtil.convertToDateTime(year,month,day).toLocalDate()
 
-    fun remainingDay(mContext:Context): String = if (itsTime) mContext.getString(R.string.paid) else (DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate())).toString() +" "+ mContext.getString(R.string.day_remained)
 
 
     //para yattı mı
@@ -46,14 +42,5 @@ data class Income(
     val itsTime = date.dayOfMonth <= DateUtil.currentDateTime.dayOfMonth && date.checkMonthAndYear(DateUtil.currentDateTime)
 
 
-    fun isSelected(context: Context): Boolean {
-        //cart StatedDate de kaydedilen tarihle uyuşuyor mu
-        return StatedDate(context).dateTime.checkMonthAndYear(date)
-    }
-
-  /*  fun createIncome(incomeList:List<Income>){
-        if (!incomeList[incomeList.size-1].getSavedDate.checkMonthAndYear(getSavedDate))
-            DateHelper
-    }*/
 }
 

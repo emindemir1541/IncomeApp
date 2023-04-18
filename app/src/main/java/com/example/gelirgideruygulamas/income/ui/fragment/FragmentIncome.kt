@@ -10,20 +10,19 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gelirgideruygulamas.R
 import com.example.gelirgideruygulamas.income.data.room.Income
 import com.example.gelirgideruygulamas.income.data.room.IncomeViewModel
-import com.example.gelirgideruygulamas.main.data.sharedPreference.PageLocation
+import com.example.gelirgideruygulamas.main.data.sharedPreference.PageSettings
 import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.FragmentIncomeBinding
 import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
 import com.example.gelirgideruygulamas.income.common.IncomeCardType
+import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
 import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
 import com.example.gelirgideruygulamas.main.data.sharedPreference.SavedMoney
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -35,7 +34,6 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     private lateinit var incomeViewModel: IncomeViewModel
     private lateinit var binding: FragmentIncomeBinding
     private lateinit var bindingDialog: LayoutAddIncomeBinding
-    private var incomeListAll = emptyList<Income>()
     private lateinit var adapter: IncomeAdapter
     private var fullScreenDialog: Dialog? = null
     private val savedMoney = SavedMoney(mContext)
@@ -62,11 +60,6 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
 
         setDateTimePicker()
 
-        incomeViewModel.readAllData.observe(this.viewLifecycleOwner) {
-            incomeListAll = incomeViewModel.readSelectedData(mContext)
-        }
-
-
     }
 
     private fun setRvIncome() {
@@ -85,6 +78,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         binding.rvIncome.adapter = adapter
 
     }
+
     private fun setDateTimePicker() {
         cardDateToday(statedDate.isToday)
         binding.cardDateButton.setOnClickListener {
@@ -109,8 +103,8 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     }
 
     private fun getData() {
-        incomeViewModel.readAllData.observe(viewLifecycleOwner) {
-            adapter.setData(sortListIncome(incomeViewModel.readSelectedData(mContext)))
+        incomeViewModel.readSelectedData.observe(viewLifecycleOwner) {incomeList->
+            adapter.setData(sortListIncome(incomeList))
         }
     }
 
@@ -131,12 +125,14 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         }
 
     }
+
     private fun setFabButton() {
         fab_add.setOnClickListener {
-            if (PageLocation(mContext).getValue() == R.id.itemIncome)
+            if (PageSettings(mContext).pageLocation == R.id.itemIncome)
                 setFullScreenDialogIncome()
         }
     }
+
     private fun cardDateToday(isToday: Boolean) {
         binding.cardDateButton.isVisible = !isToday
         binding.cardDateButtonSelected.isVisible = isToday
@@ -144,64 +140,13 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         binding.cardDateButtonSelected.text = StatedDate(mContext).month
     }
 
-    /* private fun setAlertDialogIncome() {
 
-
-
-         bindingDialog = LayoutAddIncomeBinding.inflate(LayoutInflater.from(context))
-
-         val alertDialogBuilder = MaterialAlertDialogBuilder(mContext)
-         alertDialogBuilder.setView(bindingDialog.root)
-         val alertDialog = alertDialogBuilder.create()
-         alertDialog.show()
-
-
-         bindingDialog.incomeAddPageIncomeDate.addTextChangedListener {
-             val incomeDate = bindingDialog.incomeAddPageIncomeDate
-             if (incomeDate.text!!.isNotEmpty() && incomeDate.text.toString().toInt() > 31) {
-                 incomeDate.text!!.clear()
-                 Message(mContext).warningMuchCharacter(31)
-             }
-         }
-
-         bindingDialog.incomeAddPageAddButton.setOnClickListener {
-
-             fun emptySafe(): Boolean {
-                 return bindingDialog.incomeAddPageIncomeName.text.toString().isNotEmpty() && bindingDialog.incomeAddPageIncomeDate.text.toString().isNotEmpty() && bindingDialog.incomeAddPageIncomeAmount.text.toString().isNotEmpty()
-             }
-
-             if (emptySafe()) {
-                 val statedDateTime = StatedDate(mContext).getDateTime()
-                 incomeViewModel.addIncome(
-                     Income
-                         (
-                         bindingDialog.incomeAddPageIncomeName.text.toString(),
-                         bindingDialog.incomeAddPageIncomeAmount.text.toString().toFloat(),
-                         StatedDate(mContext).getDateLong(),
-                         DateHelper.toLong(statedDateTime.year, statedDateTime.monthValue, bindingDialog.incomeAddPageIncomeDate.text.toString().toInt(), statedDateTime.hour, statedDateTime.minute, statedDateTime.second, statedDateTime.nano),
-                         false
-                     )
-                 )
-                 alertDialog.dismiss()
-             }
-             else {
-                 Message(mContext).warningEmpty()
-             }
-
-         }
-
-     }*/
 
     private fun setFullScreenDialogIncome() {
         if (fullScreenDialog == null) {
 
 
-            fullScreenDialog = if (Helper.isDarkThemeOn(mContext)) {
-                Dialog(mContext, android.R.style.Theme_Material_NoActionBar)
-            }
-            else {
-                Dialog(mContext, android.R.style.Theme_Material_Light_NoActionBar)
-            }
+            fullScreenDialog = DialogUtil.materialThemeDialog(mContext)
 
             var isDateSelected = false
             val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
@@ -331,7 +276,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         formattedIncomeList.addAll(incomeOnceList)
         if (!savedMoney.isPermanentEmpty) {
             val date = savedMoney.savedDate
-            formattedIncomeList.add(TaggedCard(IncomeCardType.PERMANENT_CARD, Income("Money From Last Month", savedMoney.permanentMoney, savedMoney.savedDate.toLong(), date.dayOfMonth,date.monthValue,date.year, deleted = false, isRepeatable = false))) // TODO: make special card for Permenant money
+            formattedIncomeList.add(TaggedCard(IncomeCardType.PERMANENT_CARD, Income("Money From Last Month", savedMoney.permanentMoney, savedMoney.savedDate.toLong(), date.dayOfMonth, date.monthValue, date.year, deleted = false, isRepeatable = false))) // TODO: make special card for Permenant money
         }
         formattedIncomeList.add(TaggedCard(IncomeCardType.INVISIBLE_CARD))
         return formattedIncomeList

@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gelirgideruygulamas.R
@@ -25,9 +24,10 @@ import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.monthString
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.clearZero
 import com.example.gelirgideruygulamas.income.common.IncomeCardType
+import com.example.gelirgideruygulamas.income.common.remainingDay
+import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
 import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -39,28 +39,11 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
     private var incomeSelectedList = emptyList<TaggedCard<Income>>()
     private var incomeListAll = emptyList<Income>()
     private lateinit var incomeViewModel: IncomeViewModel
-    private var datePicker: MaterialDatePicker<Long>? = null
     private var fullScreenDialog: Dialog? = null
     private lateinit var bindingDialog: LayoutAddIncomeBinding
     private lateinit var savedMoney: SavedMoney
     private fun incomeListByCardId(cardId: Long, _incomeListAll: List<Income>) = _incomeListAll.filter { income -> income.cardId == cardId }
 
-
-    inner class DateCard(view: View) : RecyclerView.ViewHolder(view) {
-        var cardView: MaterialCardView
-        var leftArrow: FrameLayout
-        var rightArrow: FrameLayout
-        var dateButton: Button
-        var selectedDateButton: Button
-
-        init {
-            cardView = view.findViewById(R.id.card_date_mcard)
-            leftArrow = view.findViewById(R.id.card_date_left_arrow)
-            rightArrow = view.findViewById(R.id.card_date_right_arrow)
-            dateButton = view.findViewById(R.id.card_date_button)
-            selectedDateButton = view.findViewById(R.id.card_date_button_selected)
-        }
-    }
 
     inner class IncomeCardBig(view: View) : RecyclerView.ViewHolder(view) {
         var cardView: MaterialCardView
@@ -133,39 +116,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
         val income = incomeSelectedList[position].card
         if (income != null) {
 
-            when (incomeSelectedList[position].tag) {/*     {
-                          val cardDate = holder as DateCard
-
-                          fun cardDateToday(isToday: Boolean) {
-                              cardDate.dateButton.isVisible = !isToday
-                              cardDate.selectedDateButton.isVisible = isToday
-                              cardDate.dateButton.text = StatedDate(mContext).month
-                              cardDate.selectedDateButton.text = StatedDate(mContext).month
-                          }
-                          cardDateToday(StatedDate(mContext).isToday)
-
-                          //Tarihi burada ayarla
-                          cardDate.dateButton.setOnClickListener {
-                              StatedDate(mContext).setToday()
-                              cardDateToday(StatedDate(mContext).isToday)
-                              incomeViewModel.refreshData()
-                          }
-                          cardDate.selectedDateButton.setOnClickListener() {
-                              setDateTimePicker(cardDate.dateButton)
-                          }
-                          cardDate.leftArrow.setOnClickListener {
-                              val statedDate = StatedDate(mContext)
-                              statedDate.subtractMonth()
-                              cardDateToday(statedDate.isToday)
-                              incomeViewModel.refreshData()
-                          }
-                          cardDate.rightArrow.setOnClickListener {
-                              val statedDate = StatedDate(mContext)
-                              statedDate.addMonth()
-                              cardDateToday(statedDate.isToday)
-                              incomeViewModel.refreshData()
-                          }
-                      }*/
+            when (incomeSelectedList[position].tag) {
 
                 IncomeCardType.REPEATABLE_CARD -> {
                     val cardIncome = holder as IncomeCardBig
@@ -226,12 +177,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
         if (fullScreenDialog == null) {
 
 
-            fullScreenDialog = if (Helper.isDarkThemeOn(mContext)) {
-                Dialog(mContext, android.R.style.Theme_Material_NoActionBar)
-            }
-            else {
-                Dialog(mContext, android.R.style.Theme_Material_Light_NoActionBar)
-            }
+            fullScreenDialog = DialogUtil.materialThemeDialog(mContext)
 
             val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(income.date.toLong()).build()
             var mTimeInMillis: Long = StatedDate(mContext).dateLong
@@ -329,17 +275,11 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setFullScreenDialogRemainingMoney() {
-        val savedMoney = SavedMoney(mContext)
 
         if (fullScreenDialog == null) {
 
 
-            fullScreenDialog = if (Helper.isDarkThemeOn(mContext)) {
-                Dialog(mContext, android.R.style.Theme_Material_NoActionBar)
-            }
-            else {
-                Dialog(mContext, android.R.style.Theme_Material_Light_NoActionBar)
-            }
+            fullScreenDialog = DialogUtil.materialThemeDialog(mContext)
 
 
             bindingDialog = LayoutAddIncomeBinding.inflate(LayoutInflater.from(mContext))
@@ -350,7 +290,6 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
             fullScreenDialog?.show()
 
 
-            //başlangıçta yapılanlar
             bindingDialog.layoutIncomeAddDelete.isVisible = true
             bindingDialog.layoutIncomeAddRepetationType.isVisible = false
             bindingDialog.layoutIncomeAddMonthlyView.isVisible = false

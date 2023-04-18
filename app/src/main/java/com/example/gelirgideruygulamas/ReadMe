@@ -1,10 +1,11 @@
-// TODO: 11.10.2022 Float E hatası, gelir gider sınır
 // TODO: tarihi geçen gelir gider kartlarındaki kalan günün eksiye düşmesini önle
 // TODO: shared preference iki öge kaydetmiyor
 // TODO: saved money çalışmıyor
 todo: şuanki tarihten öncesi için kart üretmesine izin verme
 
-// TODO: karanlık temadaki sıkıntıları düzelt
+// TODO: karanlık temadaki renk sıkıntıları düzelt
+// TODO: karanlık temaya geçerken kapanmayı düzelt
+// TODO: arkaplan resmini sil
 // TODO: zamanı geçen giderlerin checkbox unu kırmızı yap,text renklerini değiştir
 // TODO: telefoındaki navigasyon çubuğunun rengini değiştir
 // TODO: gelir ekle layoutundaki arkaplan renklerini değiştir

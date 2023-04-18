@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.gelirgideruygulamas.R
 import com.example.gelirgideruygulamas.main.common.calculation.MonthlyCalculator
@@ -34,7 +33,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
     private var expenseList: List<Expense> = emptyList()
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMainBinding.bind(inflater.inflate(R.layout.fragment_main, container, false))
         return binding.root
     }
@@ -64,7 +63,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun calculator() {
-        incomeViewModel.readAllData.observe(viewLifecycleOwner, Observer { incomeList ->
+        incomeViewModel.readAllData.observe(viewLifecycleOwner) { incomeList ->
             this.incomeList = incomeList
             val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
             binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome.clearZero() + Currency.TL
@@ -73,9 +72,9 @@ class FragmentMain(private val mContext: Context) : Fragment() {
 
             Toast.makeText(mContext, SavedMoney(mContext).temporaryMoney.toString() + " " + SavedMoney(mContext).permanentMoney.toString(), Toast.LENGTH_SHORT).show()
 
-        })
+        }
 
-        expenseViewModel.readAllData.observe(viewLifecycleOwner, Observer { expenseList ->
+        expenseViewModel.readSelectedData.observe(viewLifecycleOwner) { expenseList ->
             this.expenseList = expenseList
             val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
             binding.fragmentMainPaidExpense.text = monthlyCalculator.paidExpense.clearZero() + Currency.TL
@@ -85,7 +84,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
 
             Toast.makeText(mContext, SavedMoney(mContext).temporaryMoney.toString() + " " + SavedMoney(mContext).permanentMoney.toString(), Toast.LENGTH_SHORT).show()
 
-        })
+        }
     }
 
     private fun setGraphDialog(graphData: Array<DataPoint>) {
@@ -110,6 +109,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
            alertDialog.show()
        }*/
 
+    @SuppressLint("SetTextI18n")
     private fun updateProgressBar(income: Float, remainedMoney: Float) {
         binding.fragmentMainProgressbar.progress = ((remainedMoney * 100) / income).toInt()
         binding.fragmentMainProgressbarTextview.text = remainedMoney.clearZero() + Currency.TL
