@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.GelirGiderUygulaması" parent="Theme.Material3.DayNight.NoActionBar">
 
-        <item name="colorPrimary">@color/Primary50</item>
+        <item name="colorPrimary">#386A20</item>
         <item name="colorOnPrimary">@color/Primary60</item>
         <item name="colorPrimaryContainer">@color/Primary70</item>
         <item name="colorOnPrimaryContainer">@color/Primary30</item>
@@ -28,7 +28,7 @@
 
 
         <!--todo gece temasını değiştir-->
-        <item name="android:navigationBarColor">@color/Navigation_Light</item>
+        <item name="android:navigationBarColor">#1A1C18</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
     </style>
 
