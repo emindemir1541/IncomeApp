@@ -22,12 +22,12 @@ import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
 import com.example.gelirgideruygulamas.expense.common.util.Message
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.logTest
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.test
 import com.example.gelirgideruygulamas.income.common.IncomeCardType
 import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
 import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
 import com.example.gelirgideruygulamas.main.data.sharedPreference.SavedMoney
-import com.example.gelirgideruygulamas.main.ui.component.CalendarUtil.setMinDate
-import com.example.gelirgideruygulamas.main.ui.component.CalendarUtil.setMinDateNow
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -121,8 +121,8 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
 
 
         datePicker!!.addOnPositiveButtonClickListener { timeInMillis ->
-                statedDate.setDate(timeInMillis)
-                button.text = statedDate.month
+            statedDate.setDate(timeInMillis)
+            button.text = statedDate.month
         }
 
         datePicker!!.addOnCancelListener {
@@ -153,7 +153,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
             fullScreenDialog = DialogUtil.materialThemeDialog(mContext)
 
             var isDateSelected = false
-            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).setMinDateNow().build()
+            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
             var mTimeInMillis: Long = StatedDate(mContext).dateLong
 
             bindingDialog = LayoutAddIncomeBinding.inflate(LayoutInflater.from(mContext))

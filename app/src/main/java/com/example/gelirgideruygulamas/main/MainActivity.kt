@@ -36,9 +36,6 @@ class MainActivity : AppCompatActivity() {
         mainViewModel._isLoading.value = false
 
 
-
-
-
     }
 
 

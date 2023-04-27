@@ -30,6 +30,7 @@
     <string name="edit">Düzenle</string>
     <string name="add">Ekle</string>
     <string name="cancel">İptal</string>
+    <string name="ok">Tamam</string>
 
     <string name="total_income">Toplam Gelir</string>
     <string name="potential_expense">Potansiyel Gider</string>

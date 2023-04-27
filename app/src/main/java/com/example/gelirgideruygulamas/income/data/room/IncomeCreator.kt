@@ -80,7 +80,7 @@ class IncomeCreator(context: Context) {
 
     val readAllData: LiveData<List<Income>> = repository.readAllData
 
-    val readSelectedData:LiveData<List<Income>> = repository.readSelectedData
+    val readSelectedData:LiveData<List<Income>> get() = repository.readSelectedData
 
 /*    fun readSelectedData(context: Context): List<Income> {
         return readAllData.value?.filter { income -> income.isSelected(context) } ?: emptyList()

@@ -14,17 +14,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.gelirgideruygulamas.R
-import com.example.gelirgideruygulamas.expense.data.room.Expense
-import com.example.gelirgideruygulamas.expense.data.room.ExpenseViewModel
-import com.example.gelirgideruygulamas.main.data.sharedPreference.PageSettings
-import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.example.gelirgideruygulamas.databinding.FragmentExpenseBinding
 import com.example.gelirgideruygulamas.databinding.LayoutAddExpenseBinding
-import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseType
 import com.example.gelirgideruygulamas.expense.common.util.Message
+import com.example.gelirgideruygulamas.expense.data.room.Expense
+import com.example.gelirgideruygulamas.expense.data.room.ExpenseViewModel
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
-import com.example.gelirgideruygulamas.main.ui.component.CalendarUtil.setMinDateNow
+import com.example.gelirgideruygulamas.main.data.sharedPreference.PageSettings
+import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -130,6 +129,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
             datePicker = null
         }
 
+
     }
 
     private fun cardDateToday(isToday: Boolean) {
@@ -143,9 +143,9 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
         if (fullScreenDialog == null) {
 
 
-            fullScreenDialog =DialogUtil.materialThemeDialog(mContext)
+            fullScreenDialog = DialogUtil.materialThemeDialog(mContext)
 
-            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).setMinDateNow().build()
+            val datePicker = MaterialDatePicker.Builder.datePicker().setSelection(StatedDate(mContext).dateLong).build()
             var mTimeInMillis: Long = StatedDate(mContext).dateLong
 
             bindingDialog = LayoutAddExpenseBinding.inflate(LayoutInflater.from(mContext))
