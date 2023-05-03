@@ -13,7 +13,7 @@ class MonthlyCalculator(private val selectedIncomeList: List<Income>, private va
         get() {
             var totalIncome = 0f
             selectedIncomeList.forEach { income ->
-                if (income.isSelected(mContext) && income.itsTime)
+                if (income.itsTime)
                     totalIncome += income.amount
             }
             return totalIncome

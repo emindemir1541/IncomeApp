@@ -255,9 +255,10 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
                     expenseViewModel.add(expense)
                     fullScreenDialog?.cancel()
                     fullScreenDialog = null
+                    getData()
                 }
                 else {
-                    getString(R.string.warning_empty)
+                    message.warningEmpty
                 }
             }
 

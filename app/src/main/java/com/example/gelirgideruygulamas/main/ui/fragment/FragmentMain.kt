@@ -18,7 +18,10 @@ import com.example.gelirgideruygulamas.income.data.room.Income
 import com.example.gelirgideruygulamas.income.data.room.IncomeViewModel
 import com.example.gelirgideruygulamas.main.data.sharedPreference.SavedMoney
 import com.example.gelirgideruygulamas.databinding.FragmentMainBinding
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.clearZero
+import com.example.gelirgideruygulamas.income.common.isSelected
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
@@ -54,15 +57,15 @@ class FragmentMain(private val mContext: Context) : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun calculator() {
         incomeViewModel.readAllData.observe(viewLifecycleOwner) { incomeList ->
-            this.incomeList = incomeList
+            this.incomeList = incomeList.filter { expense-> expense.date.checkMonthAndYear(DateUtil.currentDateTime) }
             val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
             binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome.clearZero() + Currency.TL
             binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
             updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
         }
 
-        expenseViewModel.readSelectedData.observe(viewLifecycleOwner) { expenseList ->
-            this.expenseList = expenseList
+        expenseViewModel.readAllData.observe(viewLifecycleOwner) { expenseList ->
+            this.expenseList = expenseList.filter { expense-> expense.date.checkMonthAndYear(DateUtil.currentDateTime) }
             val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
             binding.fragmentMainPaidExpense.text = monthlyCalculator.paidExpense.clearZero() + Currency.TL
             binding.fragmentMainPotentialExpense.text = monthlyCalculator.potentialExpense.clearZero() + Currency.TL

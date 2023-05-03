@@ -357,7 +357,8 @@ class ExpenseAdapter(
         }
 
         formattedExpenseCardList.addAll(expenseUndoneCardList)
-        formattedExpenseCardList.add(TaggedCard(ExpenseCardType.LINE_CARD))
+        if (expenseUndoneCardList.isNotEmpty() && expenseDoneCardList.isNotEmpty() || expenseUndoneCardList.isNotEmpty() && expenseCardListDaily.isNotEmpty())
+            formattedExpenseCardList.add(TaggedCard(ExpenseCardType.LINE_CARD))
         formattedExpenseCardList.addAll(expenseDoneCardList)
         formattedExpenseCardList.addAll(expenseCardListDaily)
         formattedExpenseCardList.add(TaggedCard(ExpenseCardType.INVISIBLE_CARD))
