@@ -54,6 +54,8 @@
 
 
     <string name="day_remained">Gün Kaldı</string>
+    <string name="day_passed">Gün Geçti</string>
+
 
     <string name="money_in_cache">Zuladaki Para</string>
     <string name="need">İhtiyaç</string>

@@ -3,12 +3,15 @@ package com.example.gelirgideruygulamas.income.data.room
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import com.example.gelirgideruygulamas.expense.common.util.Message
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class IncomeCreator(context: Context) {
 
     private val repository = IncomeRepository(context)
-
+    private val message = Message(context)
 
     suspend fun add(income: Income) {
         val cardId = DateUtil.currentTime
@@ -64,7 +67,9 @@ class IncomeCreator(context: Context) {
     suspend fun delete(income: Income, incomeList: List<Income>) {
         if (income.deleted || !income.isRepeatable) {
             repository.delete(income)
-            // TODO: 22.09.2022  message.infoDeletedCard()
+            withContext(Dispatchers.Main) {
+                message.infoDeletedCard()
+            }
         }
         else {
             incomeList.forEach { exIncome ->
@@ -74,13 +79,15 @@ class IncomeCreator(context: Context) {
                     repository.delete(exIncome)
                 }
             }
-            // TODO: 22.09.2022  message.infoDeletedAfterNow()
+            withContext(Dispatchers.Main) {
+                message.infoDeletedAfterNow()
+            }
         }
     }
 
     val readAllData: LiveData<List<Income>> = repository.readAllData
 
-    val readSelectedData:LiveData<List<Income>> get() = repository.readSelectedData
+    val readSelectedData: LiveData<List<Income>> get() = repository.readSelectedData
 
 /*    fun readSelectedData(context: Context): List<Income> {
         return readAllData.value?.filter { income -> income.isSelected(context) } ?: emptyList()

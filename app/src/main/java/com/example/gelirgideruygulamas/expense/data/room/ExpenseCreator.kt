@@ -4,11 +4,15 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseSituation
+import com.example.gelirgideruygulamas.expense.common.util.Message
 import com.example.gelirgideruygulamas.expense.common.util.getCardType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ExpenseCreator(context: Context) {
 
     private val repository = ExpenseRepository(context)
+    private val message = Message(context)
 
     suspend fun add(expense: Expense) {
 
@@ -33,7 +37,6 @@ class ExpenseCreator(context: Context) {
     }
 
     suspend fun updateAll(expense: Expense, expenseList: List<Expense>) {
-        // TODO: 11.10.2022 update ederken yeniden expense oluşturuyor,çünkü sıfırdan id üretiyor, gelir kısmı da böyle,düzelt 
         if (expense.getCardType() == ExpenseSituation.ONCE) {
             repository.update(expense)
         }
@@ -58,7 +61,9 @@ class ExpenseCreator(context: Context) {
     suspend fun delete(expense: Expense, expenseList: List<Expense> = emptyList()) {
         if (expense.deleted || expense.getCardType() == ExpenseSituation.ONCE) {
             repository.delete(expense)
-            // TODO: 22.09.2022  message.infoDeletedCard()
+            withContext(Dispatchers.Main){
+                message.infoDeletedCard()
+            }
         }
         else {
             expenseList.forEach { exExpense: Expense ->
@@ -68,7 +73,9 @@ class ExpenseCreator(context: Context) {
                     repository.delete(exExpense)
                 }
             }
-            // TODO: 22.09.2022  message.infoDeletedAfterNow()
+            withContext(Dispatchers.Main){
+                message.infoDeletedAfterNow()
+            }
         }
     }
 

@@ -1,14 +1,15 @@
 package com.example.gelirgideruygulamas.expense.common.util
 
 import android.content.Context
-import com.example.gelirgideruygulamas.R
+import com.example.gelirgideruygulamas.expense.common.constant.ExpenseDaySituation
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseSituation
 import com.example.gelirgideruygulamas.expense.data.room.Expense
 import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
 
-fun Expense.remainingDay(mContext: Context): String {
+/*fun Expense.remainingDay(mContext: Context): String {
+    val remainingDay = (DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate()))
     return if (completed) {
         mContext.getString(R.string.expense_paid)
     }
@@ -16,8 +17,27 @@ fun Expense.remainingDay(mContext: Context): String {
         mContext.getString(R.string.payment_time)
     }
     else {
-        (DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate())).toString() + " " + mContext.getString(R.string.day_remained)
+        if (remainingDay > 0)
+            remainingDay.toString() + " " + mContext.getString(R.string.day_remained)
+        else
+            abs(remainingDay).toString() + " " + mContext.getString(R.string.day_passed)
     }
+}*/
+
+val Expense.remainingDay: Long
+    get() = DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate())
+
+fun Expense.daySituation(context: Context): ExpenseDaySituation {
+    return if (completed) {
+        ExpenseDaySituation.Paid(context)
+    }
+    else if (itsTime) {
+        ExpenseDaySituation.Today(context)
+    }
+    else if (remainingDay >= 0)
+        ExpenseDaySituation.DayRemained(this, context)
+    else
+        ExpenseDaySituation.DayPassed(this, context)
 }
 
 fun Expense.isSelected(context: Context): Boolean {

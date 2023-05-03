@@ -35,10 +35,8 @@ class SharedPreferenceRepository(private val mContext: Context) {
          base.editor(fileName).putString(key,value)
     }
 
-    fun getString(fileName: String, key: String): String {
-        //todo düzelt
-        val aa = base.preferences(fileName).getString(key, "")
-        return if(aa==null) "" else aa
+    fun getString(fileName: String, key: String,defaultKey:String): String {
+        return base.preferences(fileName).getString(key, "") ?: defaultKey
     }
 
 

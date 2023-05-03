@@ -27,7 +27,7 @@ class Message(private val context: Context) {
     }
 
     fun infoDeletedAfterNow() {
-        messageToast(StatedDate(context).month + res(R.string.info_deleted_after_now))
+        messageToast(StatedDate(context).month +" "+res(R.string.info_deleted_after_now))
     }
 
     fun infoDeletedCard(){

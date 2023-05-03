@@ -44,19 +44,9 @@ class FragmentMain(private val mContext: Context) : Fragment() {
         expenseViewModel = ViewModelProvider(this)[ExpenseViewModel::class.java]
         incomeViewModel = ViewModelProvider(this)[IncomeViewModel::class.java]
 
-
-
+        //incomeGraph()
         calculator()
-        /* val myData = ArrayList<DataPoint>()
-         for (i in 1..25) {
-             myData.add(DataPoint(i.toDouble(), i.toDouble()))
-         }
 
-
-
-         binding.fragmentMainCardTotalIncome.setOnClickListener {
-             setGraphDialog(myData.toTypedArray())
-         }*/
 
     }
 
@@ -69,9 +59,6 @@ class FragmentMain(private val mContext: Context) : Fragment() {
             binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome.clearZero() + Currency.TL
             binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
             updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
-
-            Toast.makeText(mContext, SavedMoney(mContext).temporaryMoney.toString() + " " + SavedMoney(mContext).permanentMoney.toString(), Toast.LENGTH_SHORT).show()
-
         }
 
         expenseViewModel.readSelectedData.observe(viewLifecycleOwner) { expenseList ->
@@ -82,10 +69,30 @@ class FragmentMain(private val mContext: Context) : Fragment() {
             binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
             updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
 
-            Toast.makeText(mContext, SavedMoney(mContext).temporaryMoney.toString() + " " + SavedMoney(mContext).permanentMoney.toString(), Toast.LENGTH_SHORT).show()
 
         }
     }
+
+    /*private fun incomeGraph() {
+        calculator()
+        val incomeDataList = ArrayList<DataPoint>()
+        for (i in 1..25) {
+            incomeDataList.add(DataPoint(i.toDouble(), i.toDouble()))
+        }
+
+        // TODO: eski tarihe para ekleyince göstermiyor 
+        // TODO: grafikler düzgün çalışmıyor
+
+        incomeList.forEach { income ->
+            incomeDataList.add(DataPoint(income.month.toDouble(), income.amount.toDouble()))
+        }
+
+
+
+        binding.fragmentMainCardTotalIncome.setOnClickListener {
+            setGraphDialog(incomeDataList.toTypedArray())
+        }
+    }*/
 
     private fun setGraphDialog(graphData: Array<DataPoint>) {
         val alertDialogBuilder = MaterialAlertDialogBuilder(mContext)
@@ -102,12 +109,12 @@ class FragmentMain(private val mContext: Context) : Fragment() {
     }
 
 
-    /*   fun SetAlertDialogInvestiment() {
-           val alertDialogBuilder = MaterialAlertDialogBuilder(mContext)
-           alertDialogBuilder.setView(R.layout.layout_graph_investment)
-           val alertDialog = alertDialogBuilder.create()
-           alertDialog.show()
-       }*/
+    /* fun SetAlertDialogInvestiment() {
+         val alertDialogBuilder = MaterialAlertDialogBuilder(mContext)
+         alertDialogBuilder.setView(R.layout.layout_graph_investment)
+         val alertDialog = alertDialogBuilder.create()
+         alertDialog.show()
+     }*/
 
     @SuppressLint("SetTextI18n")
     private fun updateProgressBar(income: Float, remainedMoney: Float) {

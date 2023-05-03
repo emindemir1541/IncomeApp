@@ -21,10 +21,11 @@ import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.clearZero
 import com.example.gelirgideruygulamas.main.common.constant.Currency
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseCardType
+import com.example.gelirgideruygulamas.expense.common.constant.ExpenseDaySituation
 import com.example.gelirgideruygulamas.expense.common.constant.ExpenseSituation
+import com.example.gelirgideruygulamas.expense.common.util.daySituation
 import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
 import com.example.gelirgideruygulamas.expense.common.util.getCardType
-import com.example.gelirgideruygulamas.expense.common.util.remainingDay
 import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -175,14 +176,19 @@ class ExpenseAdapter(
                     cardExpenseUndone.expenseName.text = expense.name
                     cardExpenseUndone.expenseAmount.text = expense.amount.clearZero() + Currency.TL
                     cardExpenseUndone.expenseDate.text = DateUtil.convertToString(expense.date)
-                    cardExpenseUndone.expenseRemainingDay.text = expense.remainingDay(mContext)
+                    cardExpenseUndone.expenseRemainingDay.text = expense.daySituation(mContext).situation
                     cardExpenseUndone.expenseCheckBox.isChecked = expense.completed
-                    if (expense.itsTime) {
-                        cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.yellow_warning))
-                    }
-                    else {
-                        cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.black))
-
+                    when (expense.daySituation(mContext)) {
+                        is ExpenseDaySituation.DayPassed -> {
+                            cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.red_warning))
+                        }
+                        is ExpenseDaySituation.DayRemained -> {
+                            cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.black))
+                        }
+                        is ExpenseDaySituation.Today -> {
+                            cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.yellow_warning))
+                        }
+                        is ExpenseDaySituation.Paid -> {}
                     }
                     cardExpenseUndone.expenseUndone_debt.isVisible = expense.debt
                     if (expense.debt) {
@@ -209,7 +215,7 @@ class ExpenseAdapter(
                     cardExpenseDone.expenseAmount.text = expense.amount.clearZero() + Currency.TL
                     cardExpenseDone.expenseDate.text = DateUtil.convertToString(expense.date)
                     cardExpenseDone.expenseDone_debt.isVisible = expense.debt
-                    cardExpenseDone.expenseRemainingDay.text = expense.remainingDay(mContext)
+                    cardExpenseDone.expenseRemainingDay.text = expense.daySituation(mContext).situation
                     cardExpenseDone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.dark_green_warning))
                     if (expense.debt) {
                         cardExpenseDone.expenseDone_debt.text = expense.lender
@@ -250,7 +256,6 @@ class ExpenseAdapter(
             }
         }
     }
-
 
     private fun setFullScreenDialogExpense(checkButtonExists: Boolean, expense: Expense) {
 
@@ -359,12 +364,12 @@ class ExpenseAdapter(
         return formattedExpenseCardList
     }
 
-    /*   private fun List<TaggedCard<Expense>>.getList(tag: Int): List<TaggedCard<Expense>> {
-           return this.filter { taggedCard -> taggedCard.tag == tag }
-       }*/
-
     private fun exitFullScreen() {
         fullScreenDialog?.cancel()
         fullScreenDialog = null
     }
 }
+
+/*   private fun List<TaggedCard<Expense>>.getList(tag: Int): List<TaggedCard<Expense>> {
+          return this.filter { taggedCard -> taggedCard.tag == tag }
+      }*/
