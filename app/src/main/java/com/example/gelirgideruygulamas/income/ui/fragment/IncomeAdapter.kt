@@ -24,10 +24,13 @@ import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.monthString
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.clearZero
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.isDarkThemeOn
 import com.example.gelirgideruygulamas.income.common.IncomeCardType
 import com.example.gelirgideruygulamas.income.common.remainingDay
 import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
+import com.example.gelirgideruygulamas.main.common.constant.Currency
 import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -125,11 +128,15 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
                     cardIncome.incomeRemainingDay.text = income.remainingDay(mContext)
                     cardIncome.incomeName.text = income.name
                     if (income.itsTime) cardIncome.incomeRemainingDay.setTextColor(mContext.getColor(R.color.dark_green_warning))
-                    else cardIncome.incomeRemainingDay.setTextColor(mContext.getColor(R.color.black))
-                    cardIncome.incomeDate.text = DateUtil.convertToString(income.date.dayOfMonth, income.date.monthValue, income.date.year)
-                    cardIncome.incomeAmount.text = income.amount.clearZero() + "₺"
+                    else
+                        if(mContext.isDarkThemeOn)
+                            cardIncome.incomeRemainingDay.setTextColor(mContext.getColor(R.color.white))
+                        else
+                            cardIncome.incomeRemainingDay.setTextColor(mContext.getColor(R.color.black))
 
-                    //cardview basılı tutunca seçme
+                    cardIncome.incomeDate.text = DateUtil.convertToString(income.date.dayOfMonth, income.date.monthValue, income.date.year)
+                    cardIncome.incomeAmount.text = income.amount.clearZero() + Currency.TL
+
                     cardIncome.cardView.setOnLongClickListener {
                         setFullScreenDialogIncome(income)
                         true
@@ -142,7 +149,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
                     cardIncome.incomeID.isVisible = false
                     cardIncome.incomeName.text = income.name
                     cardIncome.incomeDate.text = DateUtil.convertToString(income.date.dayOfMonth, income.date.monthValue, income.date.year)
-                    cardIncome.incomeAmount.text = income.amount.clearZero() + "₺"
+                    cardIncome.incomeAmount.text = income.amount.clearZero() + Currency.TL
 
                     cardIncome.cardView.setOnLongClickListener {
                         setFullScreenDialogIncome(income)
@@ -159,7 +166,7 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
                     cardIncome.incomeID.isVisible = false
                     cardIncome.incomeName.text = mContext.getString(R.string.money_in_cache)
                     cardIncome.incomeDate.text = date.monthString() + " " + date.year.toString()
-                    cardIncome.incomeAmount.text = savedMoney.toString() + "₺"
+                    cardIncome.incomeAmount.text = savedMoney.toString() + Currency.TL
 
                     cardIncome.cardView.setOnLongClickListener {
 

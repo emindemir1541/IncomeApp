@@ -26,6 +26,7 @@ import com.example.gelirgideruygulamas.expense.common.constant.ExpenseSituation
 import com.example.gelirgideruygulamas.expense.common.util.daySituation
 import com.example.gelirgideruygulamas.main.common.constant.TaggedCard
 import com.example.gelirgideruygulamas.expense.common.util.getCardType
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.isDarkThemeOn
 import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -183,7 +184,11 @@ class ExpenseAdapter(
                             cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.red_warning))
                         }
                         is ExpenseDaySituation.DayRemained -> {
-                            cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.black))
+                            if (mContext.isDarkThemeOn)
+                                cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.white))
+                            else
+                                cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.black))
+
                         }
                         is ExpenseDaySituation.Today -> {
                             cardExpenseUndone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.yellow_warning))

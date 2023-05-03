@@ -2,6 +2,7 @@ package com.example.gelirgideruygulamas.income.ui.fragment
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import com.example.gelirgideruygulamas.databinding.LayoutAddIncomeBinding
 import com.example.gelirgideruygulamas.expense.common.util.Message
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.isDarkThemeOn
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.logTest
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.test
 import com.example.gelirgideruygulamas.income.common.IncomeCardType
@@ -41,7 +43,6 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     private var fullScreenDialog: Dialog? = null
     private val savedMoney = SavedMoney(mContext)
     private val statedDate = StatedDate(mContext)
-    private val message = Message(mContext)
     private var datePicker: MaterialDatePicker<Long>? = null
 
 
@@ -57,8 +58,6 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         super.onViewCreated(view, savedInstanceState)
 
         setRvIncome()
-
-        scrollSettings()
 
         setFabButton()
 
@@ -143,6 +142,8 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         binding.cardDateButtonSelected.isVisible = isToday
         binding.cardDateButton.text = StatedDate(mContext).month
         binding.cardDateButtonSelected.text = StatedDate(mContext).month
+        if (mContext.isDarkThemeOn)
+        binding.cardDateButtonSelected.setTextColor(Color.WHITE)
     }
 
 
@@ -164,11 +165,12 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
             fullScreenDialog?.show()
 
 
-            //başlangıçta yapılanlar
             bindingDialog.layoutIncomeAddRepetationType2.isChecked = true
             bindingDialog.layoutIncomeAddMonthlyView.isVisible = false
             bindingDialog.layoutIncomeAddDelete.isVisible = false
             bindingDialog.layoutIncomeAddDate.text = mContext.getString(R.string.income_day)
+            if(mContext.isDarkThemeOn)
+                bindingDialog.layoutIncomeAddDate.setTextColor(Color.WHITE)
 
 
             fun emptySafe(): Boolean {
@@ -188,7 +190,6 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
                         isDateSelected = true
                     }
                 }
-                // TODO: 7.08.2022 datetime pickerde geçmiş aylar seçilmesin
             }
 
 
@@ -228,6 +229,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
                     incomeViewModel.add(income)
                     fullScreenDialog?.cancel()
                     fullScreenDialog = null
+                    getData()
                 }
                 else {
                     getString(R.string.warning_empty)
@@ -240,28 +242,6 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
         }
     }
 
-    private fun scrollSettings() {
-
-        // TODO: 17.03.2022 HATA
-
-        /*    rv_income.viewTreeObserver.addOnScrollChangedListener() {
-
-                Log.e("aa", rv_income.scrollX.toString())
-
-                Log.e("X", rv_income.scrollY.toString())
-
-                Log.e("Y", rv_income.scaleY.toString())
-
-
-                if (rv_income.scrollY == 0) {
-                    fab_add.show()
-                } else {
-                    fab_add.hide()
-                }
-            }*/
-
-
-    }
 
     private fun sortListIncome(incomeList: List<Income>): ArrayList<TaggedCard<Income>> {
         val formattedIncomeList = ArrayList<TaggedCard<Income>>()

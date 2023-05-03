@@ -2,6 +2,7 @@ package com.example.gelirgideruygulamas.expense.ui.fragment
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import com.example.gelirgideruygulamas.expense.common.util.Message
 import com.example.gelirgideruygulamas.expense.data.room.Expense
 import com.example.gelirgideruygulamas.expense.data.room.ExpenseViewModel
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
+import com.example.gelirgideruygulamas.helperlibrary.common.helper.Helper.isDarkThemeOn
 import com.example.gelirgideruygulamas.income.ui.component.DialogUtil
 import com.example.gelirgideruygulamas.main.data.sharedPreference.PageSettings
 import com.example.gelirgideruygulamas.main.data.sharedPreference.StatedDate
@@ -137,6 +139,8 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
         binding.cardDateButtonSelected.isVisible = isToday
         binding.cardDateButton.text = StatedDate(mContext).month
         binding.cardDateButtonSelected.text = StatedDate(mContext).month
+        if (mContext.isDarkThemeOn)
+        binding.cardDateButtonSelected.setTextColor(Color.WHITE)
     }
 
     private fun setFullScreenDialogExpense() {
@@ -165,6 +169,8 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
             bindingDialog.layoutExpenseAddTypeWant.isChecked = true
             bindingDialog.layoutExpenseAddLenderView.isVisible = false
             bindingDialog.layoutExpenseAddDate.text = mContext.getString(R.string.expense_day)
+            if(mContext.isDarkThemeOn)
+                bindingDialog.layoutExpenseAddDate.setTextColor(Color.WHITE)
 
 
             fun emptySafe(): Boolean {
