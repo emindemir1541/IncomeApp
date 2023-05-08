@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
+import com.example.gelirgideruygulamas.helperlibrary.data.sharedpreference.SharedPreferenceRepository
 import com.example.gelirgideruygulamas.main.common.constant.SharedPrefFileNames
 import com.example.gelirgideruygulamas.main.common.constant.SharedPrefSavedMoney
 import java.time.LocalDateTime
@@ -30,7 +31,7 @@ class SavedMoney(context: Context) {
     //That is the money which remained from last month
     val permanentMoney get() = repository.getFloat(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_PERMANENT)
 
-    val savedDate get() = DateUtil.convertToDateTime(repository.getLong(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_DATE))
+    val savedDate get() = DateUtil.convertToDateTime(repository.getLong(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_DATE,0))
 
     val resetTemporary get() = setTemporary(0f, DateUtil.currentDateTime)
 

@@ -1,11 +1,9 @@
 package com.example.gelirgideruygulamas.helperlibrary.data.sharedpreference
 
-
 import android.content.Context
-import com.example.gelirgideruygulamas.helperlibrary.data.sharedpreference.SharedPreferenceBase
 
 
-class SharedPreferenceRepository(private val mContext: Context) {
+class SharedPreferenceRepository(mContext: Context) {
 
     private val base = SharedPreferenceBase(mContext)
 
@@ -26,19 +24,19 @@ class SharedPreferenceRepository(private val mContext: Context) {
     }
 
     fun setFloat(fileName: String, key: String, value: Float) {
-        base.editor(fileName).putFloat(key, value).apply()
+        base.editor(fileName).putFloat(key, value)
     }
 
-    fun getFloat(fileName: String, key: String, defValue: Float): Float {
-        return base.preferences(fileName).getFloat(key, defValue)
+    fun getFloat(fileName: String, key: String): Float {
+        return base.preferences(fileName).getFloat(key, 0f)
     }
 
-    fun setString(fileName: String, key: String, value: String) {
-        base.editor(fileName).putString(key, value).apply()
+    fun setString(fileName: String,key: String,value:String){
+         base.editor(fileName).putString(key,value)
     }
 
-    fun getString(fileName: String, key: String, defValue: String): String? {
-        return base.preferences(fileName).getString(key, defValue)
+    fun getString(fileName: String, key: String,defaultKey:String): String {
+        return base.preferences(fileName).getString(key, "") ?: defaultKey
     }
 
     fun setBoolean(fileName: String, key: String, value: Boolean) {
@@ -48,6 +46,8 @@ class SharedPreferenceRepository(private val mContext: Context) {
     fun getBoolean(fileName: String, key: String, defValue: Boolean): Boolean {
         return base.preferences(fileName).getBoolean(key, defValue)
     }
+
+
 
 
 }

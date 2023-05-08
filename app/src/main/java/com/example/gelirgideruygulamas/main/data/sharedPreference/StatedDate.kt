@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.example.gelirgideruygulamas.helperlibrary.common.helper.DateUtil.toLong
+import com.example.gelirgideruygulamas.helperlibrary.data.sharedpreference.SharedPreferenceRepository
 import com.example.gelirgideruygulamas.main.common.constant.SharedPrefFileNames
 import com.example.gelirgideruygulamas.main.common.constant.SharedPrefStatedDate
 import java.time.LocalDateTime
@@ -27,7 +28,7 @@ class StatedDate(private val context: Context) {
 
     val dateLong: Long
         get() {
-            return repository.getLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS)
+            return repository.getLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS,DateUtil.currentTime)
         }
 
     val dateString: String
@@ -37,12 +38,12 @@ class StatedDate(private val context: Context) {
 
     val dateTime: LocalDateTime
         get() {
-            return DateUtil.convertToDateTime(repository.getLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS))
+            return DateUtil.convertToDateTime(repository.getLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS,DateUtil.currentTime))
         }
 
     val month: String
         get() {
-            return DateUtil.getMonth(repository.getLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS))
+            return DateUtil.getMonth(repository.getLong(SharedPrefFileNames.STATED_DATE, SharedPrefStatedDate.DATE_IN_MILLIS,DateUtil.currentTime))
         }
 
     fun addMonth() {

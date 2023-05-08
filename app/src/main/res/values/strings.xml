@@ -63,6 +63,13 @@
 
     <string name="save">Kaydet</string>
 
+    <!--remote-->
+    <string name="locked">Locked !!</string>
+    <string name="locked_content">App has locked by Admin, Please try again later</string>
+    <string name="update">Update</string>
+    <string name="update_content">We have update for you, you can update from Google Play</string>
+    <string name="update_force_content">We have update for you, please update from Google Play Store to continue</string>
+
     <!--warnings-->
     <string name="warning_empty">Lütfen Boş Bırakmayın</string>
     <string name="warning_character_much"> Karakterden Fazla Girmeyin</string>
