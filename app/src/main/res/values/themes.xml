@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.GelirGiderUygulaması" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.ExpenseTodoListMainTheme" parent="Theme.Material3.Light.NoActionBar">
 
         <!--green theme-->
         <item name="colorPrimary">@color/Primary10</item>
