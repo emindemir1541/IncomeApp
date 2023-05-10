@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gelir Gider Uygulaması</string>
+    <string name="app_name">Gelir Gider Yapılacaklar Listesi</string>
     <string name="income">Gelir</string>
     <string name="expense">Gider</string>
     <string name="home">Ev</string>
@@ -64,11 +64,16 @@
     <string name="save">Kaydet</string>
 
     <!--remote-->
-    <string name="locked">Locked !!</string>
-    <string name="locked_content">App has locked by Admin, Please try again later</string>
-    <string name="update">Update</string>
-    <string name="update_content">We have update for you, you can update from Google Play</string>
-    <string name="update_force_content">We have update for you, please update from Google Play Store to continue</string>
+    <!--<string name="locked">Locked !!</string>-->
+    <string name="locked">Kilitlendi !!</string>
+    <!--<string name="locked_content">App has locked by Admin, Please try again later</string>-->
+    <string name="locked_content">Uygulama yönetici tarafından kilitlendi, lütfen daha sonra tekrar deneyin</string>
+    <!--<string name="update">Update</string>-->
+    <string name="update">Güncelleme</string>
+    <!--<string name="update_content">We have update for you, you can update from Google Play</string>-->
+    <string name="update_content">Sizin için bir güncellememiz var, Play store üzeinden uygulamayı güncelleyebilirsiniz</string>
+    <!--<string name="update_force_content">We have update for you, please update from Google Play Store to continue</string>-->
+    <string name="update_force_content">Sizin için bir güncellememiz var, uygulamayı kullanmaya devam etmek için lütfen uygulamayı güncelleyin</string>
 
     <!--warnings-->
     <string name="warning_empty">Lütfen Boş Bırakmayın</string>

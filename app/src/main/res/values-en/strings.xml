@@ -1,0 +1,119 @@
+<resources>
+    <string name="app_name">Expense Todo List</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="home">Home</string>
+
+    <string name="income_name">Income Name</string>
+    <string name="income_add">Add Income</string>
+    <string name="income_day">Income Day</string>
+    <string name="income_amount">Income Amount</string>
+
+
+    <string name="expense_add">Add Expense</string>
+    <string name="remaining_day">Remaining Day</string>
+    <string name="date">Date</string>
+    <string name="expense_name">Expense Name</string>
+    <string name="expense_amount">Expense Amount</string>
+    <string name="expense_date">Expense Date</string>
+    <string name="debt">Debt</string>
+    <string name="lender">Lender</string>
+    <string name="expense_day">Choose Expense Day</string>
+
+    <string name="expense_monthly">Monthly</string>
+    <string name="expense_forOnce">For Once</string>
+    <string name="expense_repetition">Repetation(Month)</string>
+    <string name="every_month">Every Month</string>
+    <string name="expense_thisMonth">Expense This Month</string>
+
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+
+    <string name="total_income">Total Income</string>
+    <string name="potential_expense">Potential Expense</string>
+    <string name="paid_expense">Paid Expense</string>
+    <string name="total_expense">Total Expense</string>
+    <string name="avarage_income">Avarage Income</string>
+    <string name="avarage_expense">Avarage Expense</string>
+    <string name="remaining_money">Remained Money </string>
+    <string name="undo_complete">Undo Complete</string>
+    <string name="income_forOnce">For Once</string>
+    <string name="income_monthly">Monthly</string>
+    <string name="investment">Investment</string>
+    <string name="income_date">Choose Income Date</string>
+
+    <string name="income_this_month">Income This Month</string>
+    <string name="percentage_of_increase">Percentage Of Increase</string>
+
+    <string name="payment_time">Payment Time</string>
+    <string name="paid">Paid</string>
+    <string name="expense_paid">Paid</string>
+
+
+    <string name="day_remained">Day Remained</string>
+    <string name="day_passed">Dat Passed</string>
+
+
+    <string name="money_in_cache">Money In Cache</string>
+    <string name="need">Requirement</string>
+    <string name="want">Wish</string>
+
+    <string name="save">Save</string>
+
+    <!--remote-->
+    <string name="locked">Locked !!</string>
+    <string name="locked_content">App has locked by Admin, Please try again later</string>
+    <string name="update">Update</string>
+    <string name="update_content">We have update for you, you can update from Google Play</string>
+    <string name="update_force_content">We have update for you, please update from Google Play Store to continue</string>
+
+    <!--warnings-->
+    <string name="warning_empty">Please do not leave blank</string>
+    <string name="warning_character_much"> character and more not accepted</string>
+    <string name="warning_character_less"> character and less not accepted</string>
+    <string name="warning_after_dat">After Dat</string>
+    <string name="warning_invalid_date">Please select a future date</string>
+
+    <!--info-->
+    <string name="info_deleted_after_now">\'s after deleted</string>
+    <string name="info_deleted_card">Current Card deleted</string>
+
+
+    <string-array name="days">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+
+    </string-array>
+</resources>
