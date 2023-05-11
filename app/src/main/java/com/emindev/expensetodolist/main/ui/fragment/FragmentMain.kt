@@ -6,10 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.emindev.expensetodolist.R
-import com.emindev.expensetodolist.main.common.calculation.MonthlyCalculator
+import com.emindev.expensetodolist.main.common.calculation.Calculator
 import com.emindev.expensetodolist.main.common.constant.Currency
 import com.emindev.expensetodolist.expense.data.room.Expense
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
@@ -19,12 +20,15 @@ import com.emindev.expensetodolist.databinding.FragmentMainBinding
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.emindev.expensetodolist.helperlibrary.common.helper.Helper.clearZero
+import com.emindev.expensetodolist.main.ui.page.MainPage
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 
 class FragmentMain(private val mContext: Context) : Fragment() {
+
+    private lateinit var composeView:ComposeView
 
     private lateinit var binding: FragmentMainBinding
     private lateinit var expenseViewModel: ExpenseViewModel
@@ -35,14 +39,22 @@ class FragmentMain(private val mContext: Context) : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMainBinding.bind(inflater.inflate(R.layout.fragment_main, container, false))
-        return binding.root
+        return ComposeView(requireContext()).also {
+            composeView = it
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         expenseViewModel = ViewModelProvider(this)[ExpenseViewModel::class.java]
         incomeViewModel = ViewModelProvider(this)[IncomeViewModel::class.java]
+
+        composeView.setContent {
+           // MainPage()
+        }
 
         //incomeGraph()
         calculator()
@@ -55,7 +67,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
     private fun calculator() {
         incomeViewModel.readAllData.observe(viewLifecycleOwner) { incomeList ->
             this.incomeList = incomeList.filter { expense-> expense.date.checkMonthAndYear(DateUtil.currentDateTime) }
-            val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
+            val monthlyCalculator = Calculator(incomeList, expenseList, mContext)
             binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome.clearZero() + Currency.TL
             binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
             updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
@@ -63,7 +75,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
 
         expenseViewModel.readAllData.observe(viewLifecycleOwner) { expenseList ->
             this.expenseList = expenseList.filter { expense-> expense.date.checkMonthAndYear(DateUtil.currentDateTime) }
-            val monthlyCalculator = MonthlyCalculator(incomeList, expenseList, mContext)
+            val monthlyCalculator = Calculator(incomeList, expenseList, mContext)
             binding.fragmentMainPaidExpense.text = monthlyCalculator.paidExpense.clearZero() + Currency.TL
             binding.fragmentMainPotentialExpense.text = monthlyCalculator.potentialExpense.clearZero() + Currency.TL
             binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
