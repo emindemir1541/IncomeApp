@@ -53,7 +53,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
         incomeViewModel = ViewModelProvider(this)[IncomeViewModel::class.java]
 
         composeView.setContent {
-           // MainPage()
+            MainPage(incomeViewModel,expenseViewModel)
         }
 
         //incomeGraph()
