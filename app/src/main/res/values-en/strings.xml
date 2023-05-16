@@ -54,7 +54,7 @@
 
 
     <string name="day_remained">Day Remained</string>
-    <string name="day_passed">Dat Passed</string>
+    <string name="day_passed">Day Passed</string>
 
 
     <string name="money_in_cache">Money In Cache</string>
@@ -79,7 +79,7 @@
 
     <!--info-->
     <string name="info_deleted_after_now">\'s after deleted</string>
-    <string name="info_deleted_card">Current Card deleted</string>
+    <string name="info_deleted_card">Current Card Deleted</string>
 
 
     <string-array name="days">
