@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
         SystemInfo.PACKAGE_NAME = packageName
 
         binding = ActivityMainBinding.inflate(layoutInflater)

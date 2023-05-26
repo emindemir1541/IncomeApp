@@ -37,7 +37,6 @@ import com.emindev.expensetodolist.main.common.calculation.Calculator
 import com.emindev.expensetodolist.main.common.constant.CardSettings
 import kotlinx.coroutines.flow.StateFlow
 
-@Preview
 @Composable
 fun MainPage(
     incomeViewModel: IncomeViewModel, expenseViewModel: ExpenseViewModel
@@ -51,13 +50,13 @@ fun MainPage(
     val totalIncome = CardSettings(0, true, "Income", 120)
     val totalExpense = CardSettings(1, true, "Expense", 100)
 
-    val listOfCalculations = mutableListOf<CardSettings>(totalExpense,totalIncome)
+    val listOfCalculations = mutableListOf<CardSettings>(totalExpense, totalIncome)
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(150.dp),
         content = {
             items(listOfCalculations) { item: CardSettings ->
-                CardCalculated(cardSettings = item){
+                CardCalculated(cardSettings = item) {
                     listOfCalculations.add(totalIncome)
                     context.test(listOfCalculations)
                 }
@@ -70,17 +69,18 @@ fun MainPage(
 
 @Composable
 fun CardCalculated(cardSettings: CardSettings, clickable: () -> Unit) {
-    val context =  LocalContext.current
+    val context = LocalContext.current
 
     if (cardSettings.isOpen)
         Card(modifier = Modifier.padding(16.dp), elevation = 16.dp, shape = RoundedCornerShape(16.dp)) {
             Column(modifier = Modifier
                 .size(150.dp)
                 .background(Color.Green)
-                .clickable {clickable() }, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                .clickable { clickable() }, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(text = cardSettings.name, fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                 Spacer(modifier = Modifier.padding(16.dp))
                 Text(text = cardSettings.calculatedValue.toString(), fontSize = 16.sp)
             }
         }
 }
+
