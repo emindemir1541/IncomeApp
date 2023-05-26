@@ -12,10 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.main.common.calculation.Calculator
 import com.emindev.expensetodolist.main.common.constant.Currency
-import com.emindev.expensetodolist.expense.data.room.Expense
-import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
-import com.emindev.expensetodolist.income.data.room.Income
-import com.emindev.expensetodolist.income.data.room.IncomeViewModel
+import com.emindev.expensetodolist.main.data.room.Expense
+import com.emindev.expensetodolist.main.data.room.Income
+import com.emindev.expensetodolist.main.data.room.IncomeViewModel
 import com.emindev.expensetodolist.databinding.FragmentMainBinding
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
@@ -31,8 +30,6 @@ class FragmentMain(private val mContext: Context) : Fragment() {
     private lateinit var composeView:ComposeView
 
     private lateinit var binding: FragmentMainBinding
-    private lateinit var expenseViewModel: ExpenseViewModel
-    private lateinit var incomeViewModel: IncomeViewModel
     private var incomeList: List<Income> = emptyList()
     private var expenseList: List<Expense> = emptyList()
 
@@ -49,11 +46,9 @@ class FragmentMain(private val mContext: Context) : Fragment() {
 
 
 
-        expenseViewModel = ViewModelProvider(this)[ExpenseViewModel::class.java]
-        incomeViewModel = ViewModelProvider(this)[IncomeViewModel::class.java]
 
         composeView.setContent {
-            MainPage(incomeViewModel,expenseViewModel)
+
         }
 
         //incomeGraph()
@@ -65,7 +60,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun calculator() {
-        incomeViewModel.readAllData.observe(viewLifecycleOwner) { incomeList ->
+      /*  incomeViewModel.readAllData.observe(viewLifecycleOwner) { incomeList ->
             this.incomeList = incomeList.filter { expense-> expense.date.checkMonthAndYear(DateUtil.currentDateTime) }
             val monthlyCalculator = Calculator(incomeList, expenseList, mContext)
             binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome.clearZero() + Currency.TL
@@ -82,21 +77,21 @@ class FragmentMain(private val mContext: Context) : Fragment() {
             updateProgressBar(monthlyCalculator.totalIncome, monthlyCalculator.remainedMoney)
 
 
-        }
+        }*/
     }
 
     /*private fun incomeGraph() {
         calculator()
         val incomeDataList = ArrayList<DataPoint>()
         for (i in 1..25) {
-            incomeDataList.add(DataPoint(i.toDouble(), i.toDouble()))
+            incomeDataList.upsert(DataPoint(i.toDouble(), i.toDouble()))
         }
 
         // TODO: eski tarihe para ekleyince göstermiyor 
         // TODO: grafikler düzgün çalışmıyor
 
         incomeList.forEach { income ->
-            incomeDataList.add(DataPoint(income.month.toDouble(), income.amount.toDouble()))
+            incomeDataList.upsert(DataPoint(income.month.toDouble(), income.amount.toDouble()))
         }
 
 

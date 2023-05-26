@@ -4,7 +4,7 @@ import android.content.Context
 import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
-import com.emindev.expensetodolist.income.data.room.Income
+import com.emindev.expensetodolist.main.data.room.Income
 import com.emindev.expensetodolist.main.data.sharedPreference.StatedDate
 
 fun Income.isSelected(context: Context): Boolean {

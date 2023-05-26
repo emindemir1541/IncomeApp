@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.expense.data.room
+package com.emindev.expensetodolist.main.data.room
 
 import android.os.Parcelable
 import androidx.room.Entity
@@ -17,7 +17,6 @@ data class Expense(
     var amount: Float,
     var startedDateLong: Long,
     var completed: Boolean,
-    var debt: Boolean,
     var lender: String?,
     var repetition: Int?,
     var deleted: Boolean,

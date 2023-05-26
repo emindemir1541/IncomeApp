@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.emindev.expensetodolist.R
-import com.emindev.expensetodolist.income.data.room.Income
-import com.emindev.expensetodolist.income.data.room.IncomeViewModel
+import com.emindev.expensetodolist.main.data.room.Income
+import com.emindev.expensetodolist.main.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.data.sharedPreference.PageSettings
 import com.emindev.expensetodolist.main.data.sharedPreference.StatedDate
 import com.emindev.expensetodolist.databinding.FragmentIncomeBinding
@@ -33,7 +33,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class FragmentIncome(private val mContext: Context, private val mAppCompatActivity: AppCompatActivity, private val fab_add: FloatingActionButton) :
     Fragment() {
 
-    private lateinit var incomeViewModel: IncomeViewModel
     private lateinit var binding: FragmentIncomeBinding
     private lateinit var bindingDialog: LayoutAddIncomeBinding
     private lateinit var adapter: IncomeAdapter
@@ -46,7 +45,6 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentIncomeBinding.bind(inflater.inflate(R.layout.fragment_income, container, false))
 
-        incomeViewModel = ViewModelProvider(this)[IncomeViewModel::class.java]
 
         return binding.root
     }
@@ -103,9 +101,7 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
     }
 
     private fun getData() {
-        incomeViewModel.readSelectedData.observe(viewLifecycleOwner) { incomeList ->
-            adapter.setData(sortListIncome(incomeList))
-        }
+
     }
 
     private fun setDateTimePickerCard(button: Button) {
@@ -223,7 +219,6 @@ class FragmentIncome(private val mContext: Context, private val mAppCompatActivi
                         false,
                         bindingDialog.layoutIncomeAddRepetationType1.isChecked,
                     )
-                    incomeViewModel.add(income)
                     fullScreenDialog?.cancel()
                     fullScreenDialog = null
                     getData()

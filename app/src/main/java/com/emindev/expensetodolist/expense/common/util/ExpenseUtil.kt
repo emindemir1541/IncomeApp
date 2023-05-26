@@ -5,7 +5,7 @@ import com.emindev.expensetodolist.expense.common.constant.ExpenseDaySituation
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.emindev.expensetodolist.expense.common.constant.ExpenseSituation
-import com.emindev.expensetodolist.expense.data.room.Expense
+import com.emindev.expensetodolist.main.data.room.Expense
 import com.emindev.expensetodolist.main.data.sharedPreference.StatedDate
 
 /*fun Expense.remainingDay(mContext: Context): String {

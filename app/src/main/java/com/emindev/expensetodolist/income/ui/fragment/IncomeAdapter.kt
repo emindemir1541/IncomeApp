@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.emindev.expensetodolist.R
-import com.emindev.expensetodolist.income.data.room.Income
-import com.emindev.expensetodolist.income.data.room.IncomeViewModel
+import com.emindev.expensetodolist.main.data.room.Income
+import com.emindev.expensetodolist.main.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.data.sharedPreference.SavedMoney
 import com.emindev.expensetodolist.main.data.sharedPreference.StatedDate
 import com.emindev.expensetodolist.databinding.LayoutAddIncomeBinding
@@ -38,7 +38,6 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
 
     private var incomeSelectedList = emptyList<TaggedCard<Income>>()
     private var incomeListAll = emptyList<Income>()
-    private lateinit var incomeViewModel: IncomeViewModel
     private var fullScreenDialog: Dialog? = null
     private lateinit var bindingDialog: LayoutAddIncomeBinding
     private lateinit var savedMoney: SavedMoney
@@ -104,10 +103,6 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
     }
 
     override fun getItemCount(): Int {
-        incomeViewModel = ViewModelProvider(mAppCompatActivity)[IncomeViewModel::class.java]
-        incomeViewModel.readAllData.observe(mFragment.viewLifecycleOwner) { incomeList ->
-            incomeListAll = incomeList
-        }
         return incomeSelectedList.size
     }
 
@@ -255,7 +250,6 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
                         month = date.monthValue,
                         year = date.year
                     )
-                    incomeViewModel.updateAll(newIncome, incomeListByCardId(newIncome.cardId, incomeListAll))
                     fullScreenDialog?.cancel()
                     fullScreenDialog = null
                 }
@@ -270,7 +264,6 @@ class IncomeAdapter(private val mContext: Context, private val mAppCompatActivit
             }
 
             bindingDialog.layoutIncomeAddDelete.setOnClickListener {
-                incomeViewModel.delete(income, incomeListByCardId(income.cardId, incomeListAll))
                 fullScreenDialog?.cancel()
                 fullScreenDialog = null
             }

@@ -19,8 +19,7 @@ import com.emindev.expensetodolist.databinding.FragmentExpenseBinding
 import com.emindev.expensetodolist.databinding.LayoutAddExpenseBinding
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.expense.common.util.Message
-import com.emindev.expensetodolist.expense.data.room.Expense
-import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
+import com.emindev.expensetodolist.main.data.room.Expense
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.Helper.isDarkThemeOn
 import com.emindev.expensetodolist.income.ui.component.DialogUtil
@@ -40,13 +39,11 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
     private val statedDate = StatedDate(mContext)
     private lateinit var adapter: ExpenseAdapter
     private var fullScreenDialog: Dialog? = null
-    private lateinit var expenseViewModel: ExpenseViewModel
     private val message = Message(mContext)
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentExpenseBinding.bind(inflater.inflate(R.layout.fragment_expense, container, false))
-        expenseViewModel = ViewModelProvider(this)[ExpenseViewModel::class.java]
         return binding.root
     }
 
@@ -100,9 +97,6 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
     }
 
     private fun getData() {
-        expenseViewModel.readSelectedData.observe(viewLifecycleOwner) { selectedExpenseList ->
-            adapter.setData(selectedExpenseList)
-        }
     }
 
     private fun setFabButton() {
@@ -244,21 +238,7 @@ class FragmentExpense(private val mContext: Context, private val mAppCompatActiv
             bindingDialog.layoutExpenseAddSave.setOnClickListener {
                 if (emptySafe()) {
                     val date = DateUtil.convertToDateTime(mTimeInMillis)
-                    val expense = Expense(
-                        bindingDialog.layoutExpenseAddExpenseName.text.toString(),
-                        bindingDialog.layoutExpenseAddAmount.text.toString().toFloat(),
-                        mTimeInMillis,
-                        false,
-                        bindingDialog.layoutExpenseAddTypeDebt.isChecked,
-                        if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) bindingDialog.layoutExpenseAddLender.text.toString() else null,
-                        if (bindingDialog.layoutExpenseAddRepetationType2.isChecked) null else bindingDialog.layoutExpenseAddRepetation.text.toString().toInt(),
-                        false,
-                        if (bindingDialog.layoutExpenseAddTypeNeed.isChecked) ExpenseType.NEED else if (bindingDialog.layoutExpenseAddTypeDebt.isChecked) ExpenseType.DEBT else ExpenseType.WANT,
-                        date.dayOfMonth,
-                        date.monthValue,
-                        date.year
-                    )
-                    expenseViewModel.add(expense)
+
                     fullScreenDialog?.cancel()
                     fullScreenDialog = null
                     getData()

@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.income.data.room
+package com.emindev.expensetodolist.main.data.room
 
 import android.os.Parcelable
 import androidx.room.Entity
@@ -13,7 +13,7 @@ import java.time.LocalDate
 @Entity(tableName = "table_income")
 @Parcelize
 data class Income(
-    val name: String?,
+    val name: String,
     val amount: Float,
     val startedDateLong: Long,
     var day:Int,

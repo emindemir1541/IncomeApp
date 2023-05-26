@@ -1,16 +1,13 @@
-package com.emindev.expensetodolist.income.data.room
+package com.emindev.expensetodolist.main.data.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IncomeDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun add(income: Income)
-
-    @Update
-    suspend fun update(income: Income)
+    @Upsert
+    suspend fun upsert(income: Income)
 
     @Query("Delete from table_income where id=:id ")
     suspend fun delete(id: Int)
@@ -19,13 +16,13 @@ interface IncomeDao {
     suspend fun deleteAll()
 
     @Query("select * from table_income order by id asc")
-    fun readAllData(): LiveData<List<Income>>
+    fun readAllData(): Flow<List<Income>>
 
     @Query("select * from table_income where month =:month and year=:year order by id asc")
-    fun readSelectedData(month: Int,year: Int):LiveData<List<Income>>
+    fun readSelectedData(month: Int,year: Int):Flow<List<Income>>
 
     @Query("select * from table_income where cardId =:cardId order by id asc")
-    fun readCardData(cardId:Long):LiveData<List<Income>>
+    fun readCardData(cardId:Long):Flow<List<Income>>
 
 
 }

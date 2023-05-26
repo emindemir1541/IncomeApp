@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.income.data.room
+package com.emindev.expensetodolist.main.data.room
 
 
 import android.content.Context
@@ -6,14 +6,13 @@ import androidx.lifecycle.LiveData
 import com.emindev.expensetodolist.expense.common.util.Message
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class IncomeCreator(context: Context) {
+class IncomeCreator(private val dao:IncomeDao) {
 
-    private val repository = IncomeRepository(context)
-    private val message = Message(context)
 
-    suspend fun add(income: Income) {
+    suspend fun upsert(income: Income) {
         val cardId = DateUtil.currentTime
         if (income.isRepeatable) {
 
@@ -27,17 +26,17 @@ class IncomeCreator(context: Context) {
                     deleted = false,
                     cardId = cardId
                 )
-                repository.add(newIncome)
+                dao.upsert(newIncome)
 
             }
         }
         else {
-            repository.add(income)
+            dao.upsert(income)
         }
     }
 
     suspend fun updateOne(income: Income) {
-        repository.update(income)
+        dao.upsert(income)
     }
 
     suspend fun updateAll(income: Income, incomeList: List<Income>) {
@@ -48,46 +47,44 @@ class IncomeCreator(context: Context) {
                         name = income.name,
                         amount = income.amount
                     )
-                    repository.update(newIncome)
+                    dao.upsert(newIncome)
                 }
                 else {
                     val newIncome = exIncome.copy(
                         name = income.name
                     )
-                    repository.update(newIncome)
+                    dao.upsert(newIncome)
                 }
             }
         }
         else {
-            repository.update(income)
+            dao.upsert(income)
 
         }
     }
 
     suspend fun delete(income: Income, incomeList: List<Income>) {
         if (income.deleted || !income.isRepeatable) {
-            repository.delete(income)
+            dao.delete(income.id)
             withContext(Dispatchers.Main) {
-                message.infoDeletedCard()
+               // message.infoDeletedCard()
             }
         }
         else {
             incomeList.forEach { exIncome ->
                 exIncome.deleted = true
-                repository.update(exIncome)
+                dao.upsert(exIncome)
                 if (exIncome.date >= DateUtil.currentDateTime.toLocalDate()) {
-                    repository.delete(exIncome)
+                    dao.delete(exIncome.id)
                 }
             }
             withContext(Dispatchers.Main) {
-                message.infoDeletedAfterNow()
+                //message.infoDeletedAfterNow()
             }
         }
     }
 
-    val readAllData: LiveData<List<Income>> = repository.readAllData
-
-    val readSelectedData: LiveData<List<Income>> get() = repository.readSelectedData
+    fun readSelectedData(month:Int,year:Int): Flow<List<Income>> = dao.readSelectedData(month,year)
 
 /*    fun readSelectedData(context: Context): List<Income> {
         return readAllData.value?.filter { income -> income.isSelected(context) } ?: emptyList()

@@ -14,8 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.emindev.expensetodolist.R
-import com.emindev.expensetodolist.expense.data.room.Expense
-import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
+import com.emindev.expensetodolist.main.data.room.Expense
 import com.emindev.expensetodolist.databinding.LayoutAddExpenseBinding
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.Helper.clearZero
@@ -44,8 +43,6 @@ class ExpenseAdapter(
     private var expenseListSelected = emptyList<TaggedCard<Expense>>()
     private var expenseListAll = emptyList<Expense>()
     private fun expenseListByCardId(cardId: Long, _expenseListAll: List<Expense>) = _expenseListAll.filter { expense -> expense.cardId == cardId }
-
-    private lateinit var expenseViewModel: ExpenseViewModel
 
 
     inner class ExpenseCardUndone(view: View) : RecyclerView.ViewHolder(view) {
@@ -153,10 +150,6 @@ class ExpenseAdapter(
     }
 
     override fun getItemCount(): Int {
-        expenseViewModel = ViewModelProvider(mAppCompatActivity)[ExpenseViewModel::class.java]
-        expenseViewModel.readAllData.observe(mFragment.viewLifecycleOwner) {
-            expenseListAll = it
-        }
         return expenseListSelected.size
     }
 
@@ -195,10 +188,6 @@ class ExpenseAdapter(
                         }
                         is ExpenseDaySituation.Paid -> {}
                     }
-                    cardExpenseUndone.expenseUndone_debt.isVisible = expense.debt
-                    if (expense.debt) {
-                        cardExpenseUndone.expenseUndone_debt.text = expense.lender
-                    }
                     cardExpenseUndone.cardView.setOnLongClickListener {
                         setFullScreenDialogExpense(false, expense)
                         false
@@ -206,7 +195,6 @@ class ExpenseAdapter(
                     cardExpenseUndone.expenseCheckBox.setOnClickListener {
                         if (cardExpenseUndone.expenseCheckBox.isChecked) {
                             expense.completed = true
-                            expenseViewModel.updateOne(expense)
                         }
                     }
                 }
@@ -219,12 +207,8 @@ class ExpenseAdapter(
                     cardExpenseDone.expenseName.text = expense.name
                     cardExpenseDone.expenseAmount.text = expense.amount.clearZero() + Currency.TL
                     cardExpenseDone.expenseDate.text = DateUtil.convertToString(expense.date)
-                    cardExpenseDone.expenseDone_debt.isVisible = expense.debt
                     cardExpenseDone.expenseRemainingDay.text = expense.daySituation(mContext).situation
                     cardExpenseDone.expenseRemainingDay.setTextColor(mContext.getColor(R.color.dark_green_warning))
-                    if (expense.debt) {
-                        cardExpenseDone.expenseDone_debt.text = expense.lender
-                    }
                     cardExpenseDone.cardView.setOnLongClickListener {
                         setFullScreenDialogExpense(true, expense)
                         false
@@ -310,7 +294,6 @@ class ExpenseAdapter(
                         amount = bindingDialog.layoutExpenseAddAmount.text.toString().toFloat()
                     )
 
-                    expenseViewModel.updateAll(newExpense, expenseListByCardId(newExpense.cardId, expenseListAll))
                     exitFullScreen()
                 }
                 else {
@@ -319,13 +302,11 @@ class ExpenseAdapter(
             }
 
             bindingDialog.layoutExpenseAddDelete.setOnClickListener {
-                expenseViewModel.delete(oldExpense, expenseListByCardId(expense.cardId, expenseListAll))
                 exitFullScreen()
             }
 
             bindingDialog.layoutExpenseAddDone.setOnClickListener {
                 oldExpense.completed = false
-                expenseViewModel.updateOne(oldExpense)
                 exitFullScreen()
             }
 

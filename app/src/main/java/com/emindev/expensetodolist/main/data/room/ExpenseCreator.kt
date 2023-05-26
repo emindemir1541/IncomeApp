@@ -1,18 +1,14 @@
-package com.emindev.expensetodolist.expense.data.room
+package com.emindev.expensetodolist.main.data.room
 
-import android.content.Context
-import androidx.lifecycle.LiveData
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.expense.common.constant.ExpenseSituation
-import com.emindev.expensetodolist.expense.common.util.Message
 import com.emindev.expensetodolist.expense.common.util.getCardType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.Year
 
-class ExpenseCreator(context: Context) {
+class ExpenseCreator(private val dao: ExpenseDao) {
 
-    private val repository = ExpenseRepository(context)
-    private val message = Message(context)
 
     suspend fun add(expense: Expense) {
 
@@ -23,22 +19,22 @@ class ExpenseCreator(context: Context) {
                 val date = expense.startedDate.plusMonths(it.toLong())
 
                 val newExpense = expense.copy(day = date.dayOfMonth, month = date.monthValue, year = date.year, cardId = cardId)
-                repository.add(newExpense)
+                dao.upsert(newExpense)
 
             }
         }
         else {
-            repository.add(expense)
+            dao.upsert(expense)
         }
     }
 
     suspend fun updateOne(expense: Expense) {
-        repository.update(expense)
+        dao.upsert(expense)
     }
 
     suspend fun updateAll(expense: Expense, expenseList: List<Expense>) {
         if (expense.getCardType() == ExpenseSituation.ONCE) {
-            repository.update(expense)
+            dao.upsert(expense)
         }
         else {
             expenseList.forEach { exExpense ->
@@ -46,13 +42,13 @@ class ExpenseCreator(context: Context) {
 
                     val newExpense = exExpense.copy(name = expense.name, amount = expense.amount, deleted = expense.deleted)
 
-                    repository.update(newExpense)
+                    dao.upsert(newExpense)
                 }
                 else {
 
                     val newExpense = exExpense.copy(name = expense.name, amount = expense.amount, deleted = expense.deleted)
 
-                    repository.update(newExpense)
+                    dao.upsert(newExpense)
                 }
             }
         }
@@ -60,31 +56,26 @@ class ExpenseCreator(context: Context) {
 
     suspend fun delete(expense: Expense, expenseList: List<Expense> = emptyList()) {
         if (expense.deleted || expense.getCardType() == ExpenseSituation.ONCE) {
-            repository.delete(expense)
-            withContext(Dispatchers.Main){
-                message.infoDeletedCard()
+            dao.delete(expense)
+            withContext(Dispatchers.Main) {
+                //message.infoDeletedCard()
             }
         }
         else {
             expenseList.forEach { exExpense: Expense ->
                 exExpense.deleted = true
-                repository.update(exExpense)
+                dao.upsert(expense)
                 if (exExpense.date >= DateUtil.currentDateTime.toLocalDate()) {
-                    repository.delete(exExpense)
+                    dao.delete(exExpense)
                 }
             }
-            withContext(Dispatchers.Main){
-                message.infoDeletedAfterNow()
+            withContext(Dispatchers.Main) {
+                // message.infoDeletedAfterNow()
             }
         }
     }
 
-    val readAllData: LiveData<List<Expense>> = repository.readAllData
-
-    val readSelectedData: LiveData<List<Expense>>
-        get() = repository.readSelectedData
-
-    /*fun readDataByCardId(cardId: Long): LiveData<List<Expense>> = repository.readDataByCardId(cardId)*/
+    fun readSelectedData(month:Int,year: Int) = dao.readSelectedData(month,year)
 
 }
 

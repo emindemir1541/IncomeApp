@@ -1,31 +1,25 @@
-package com.emindev.expensetodolist.expense.data.room
+package com.emindev.expensetodolist.main.data.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExpenseDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun add(expense: Expense)
-
-    @Update
-    suspend fun update(expense: Expense)
+    @Upsert
+    suspend fun upsert(expense: Expense)
 
     @Delete
     suspend fun delete(expense: Expense)
 
-    @Query("Delete from table_expense where cardId =:cardId")
-    suspend fun deleteByCardId(cardId: Long)
-
     @Query("select * from table_expense order by id asc")
-     fun readData(): LiveData<List<Expense>>
+     fun readData(): Flow<List<Expense>>
 
     @Query("select * from table_expense where cardId =:cardId order by id asc")
-     fun readDataByCardId(cardId:Long):LiveData<List<Expense>>
+     fun readDataByCardId(cardId:Long):Flow<List<Expense>>
 
     @Query("select * from table_expense where month =:month and year=:year order by id asc")
-    fun readSelectedData(month: Int,year: Int):LiveData<List<Expense>>
+    fun readSelectedData(month: Int,year: Int):Flow<List<Expense>>
 
 
 
