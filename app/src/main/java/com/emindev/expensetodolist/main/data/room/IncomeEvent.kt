@@ -14,7 +14,6 @@ sealed interface IncomeEvent {
     data class SetDeleted(val deleted:Boolean):IncomeEvent
     data class SetIsRepeatable(val isRepeatable:Boolean):IncomeEvent
     data class SetCardId(val cardId:Long):IncomeEvent
-    data class SetDate(val selectedDate:LocalDateTime):IncomeEvent
     object ShowDialog:IncomeEvent
     object HideDialog:IncomeEvent
     data class DeleteIncome(val income:Income):IncomeEvent

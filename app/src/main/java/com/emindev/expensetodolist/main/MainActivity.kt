@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return ExpenseViewModel(financeDatabase.expenseDao()) as T
+                    return ExpenseViewModel(financeDatabase.expenseDao(), mainViewModel) as T
                 }
             }
         }
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return IncomeViewModel(financeDatabase.incomeDao()) as T
+                    return IncomeViewModel(financeDatabase.incomeDao(), mainViewModel) as T
                 }
             }
         }
@@ -91,13 +91,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        mainViewModel.appIsLoading
 
         SystemInfo.PACKAGE_NAME = packageName
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(ComposeView(applicationContext).also { composeView = it })
 
-        mainViewModel._isLoading.value = false
 
         //updateCheck()
 
@@ -125,19 +125,19 @@ class MainActivity : AppCompatActivity() {
                 items(incomeState.incomes) {
                     Row(modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp).background(Color.Green), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                        .padding(16.dp)
+                        .background(Color.Green), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Text(text = it.name)
                         Text(text = it.amount.toString())
                     }
                 }
-                item{
+                item {
                     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
                         Button(onClick = {
 
                             onExpenseEvent(ExpenseEvent.ShowDialog)
                             onExpenseEvent(ExpenseEvent.SetName("emin"))
                             onExpenseEvent(ExpenseEvent.SetAmount(23432f))
-                            onExpenseEvent(ExpenseEvent.SetDate(DateUtil.currentDateTime))
                             onExpenseEvent(ExpenseEvent.SetRepetition(3))
                             onExpenseEvent(ExpenseEvent.SetDay(4))
                             onExpenseEvent(ExpenseEvent.SetMonth(5))
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
                         }) {
                             Text(text = "add Expense")
                         }
-                        
+
                         Button(onClick = {
                             onIncomeEvent(IncomeEvent.ShowDialog)
                             onIncomeEvent(IncomeEvent.SetName("emin"))
@@ -161,7 +161,6 @@ class MainActivity : AppCompatActivity() {
                             onIncomeEvent(IncomeEvent.SetDay(5))
                             onIncomeEvent(IncomeEvent.SetMonth(5))
                             onIncomeEvent(IncomeEvent.SetYear(2023))
-                            onIncomeEvent(IncomeEvent.SetDate(DateUtil.currentDateTime))
                             onIncomeEvent(IncomeEvent.SetStartedDate(DateUtil.currentTime))
                             onIncomeEvent(IncomeEvent.SaveIncome)
                             onIncomeEvent(IncomeEvent.HideDialog)
@@ -169,11 +168,26 @@ class MainActivity : AppCompatActivity() {
                             Text(text = "Add Income")
                         }
                     }
+
+                    Button(onClick = {
+                        mainViewModel.previousMonth
+                    }) {
+                        Text(text = "Back")
+                    }
+
+                    Button(onClick = {
+                        mainViewModel.nextMonth
+                    }) {
+                        Text(text = "next")
+                    }
+
                 }
 
             }
 
         }
+
+        mainViewModel.appLoaded
 
 
     }

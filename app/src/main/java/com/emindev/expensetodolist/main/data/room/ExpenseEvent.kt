@@ -18,7 +18,6 @@ sealed interface ExpenseEvent {
     data class SetMonth(val month: Int):ExpenseEvent
     data class SetYear(val year: Int):ExpenseEvent
     data class SetCardId(val cardId: Long):ExpenseEvent
-    data class SetDate(val selectedDate:LocalDateTime):ExpenseEvent
     object ShowDialog:ExpenseEvent
     object HideDialog:ExpenseEvent
     data class DeleteExpense(val expense: Expense):ExpenseEvent

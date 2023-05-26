@@ -1,12 +1,9 @@
 package com.emindev.expensetodolist.main.data.room
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import kotlinx.coroutines.Dispatchers
+import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,17 +14,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class IncomeViewModel(private val dao: IncomeDao) : ViewModel() {
+class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: MainViewModel) : ViewModel() {
 
-    private val _selectedDateState = MutableStateFlow(DateUtil.currentDateTime)
-
-    private val _incomes = _selectedDateState.flatMapLatest { selectedDate ->
+    private val _incomes = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
         dao.readSelectedData(selectedDate.monthValue, selectedDate.year)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _state = MutableStateFlow(IncomeState())
 
-    val state = combine(_state, _incomes, _selectedDateState) { state, incomes, selectedDate ->
+    val state = combine(_state, _incomes, mainViewModel.selectedDate) { state, incomes, selectedDate ->
         state.copy(
             incomes = incomes,
             selectedDate = selectedDate
@@ -99,9 +94,6 @@ class IncomeViewModel(private val dao: IncomeDao) : ViewModel() {
                 }
             }
 
-            is IncomeEvent.SetDate -> {
-                _selectedDateState.value = event.selectedDate
-            }
 
             is IncomeEvent.SetDay -> {
                 _state.update {
@@ -199,6 +191,8 @@ class IncomeViewModel(private val dao: IncomeDao) : ViewModel() {
                     dao.upsert(income)
                 }
             }
+
+
         }
     }
 

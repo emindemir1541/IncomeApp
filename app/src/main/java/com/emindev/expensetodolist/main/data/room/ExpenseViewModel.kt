@@ -1,9 +1,11 @@
 package com.emindev.expensetodolist.main.data.room
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
+import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,17 +16,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ExpenseViewModel(private val dao: ExpenseDao) : ViewModel() {
+class ExpenseViewModel(private val dao: ExpenseDao,private val mainViewModel: MainViewModel) : ViewModel() {
 
-    private val _selectedDateState = MutableStateFlow(DateUtil.currentDateTime)
 
-    private val _expenses = _selectedDateState.flatMapLatest { selectedDate ->
+    private val _expenses = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
         dao.readSelectedData(selectedDate.monthValue, selectedDate.year)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _state = MutableStateFlow(ExpenseState())
 
-    val state = combine(_state, _expenses, _selectedDateState) { state, expenses, selectedDate ->
+    val state = combine(_state, _expenses, mainViewModel.selectedDate) { state, expenses, selectedDate ->
         state.copy(
             expenses = expenses,
             selectedDate = selectedDate
@@ -39,9 +40,7 @@ class ExpenseViewModel(private val dao: ExpenseDao) : ViewModel() {
                 }
             }
 
-           is ExpenseEvent.SetDate -> {
-                _selectedDateState.value = event.selectedDate
-            }
+
 
             ExpenseEvent.HideDialog -> {
                 _state.update {
@@ -234,6 +233,7 @@ class ExpenseViewModel(private val dao: ExpenseDao) : ViewModel() {
                     dao.upsert(expense)
                 }
             }
+
         }
     }
 
