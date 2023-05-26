@@ -1,9 +1,7 @@
 package com.emindev.expensetodolist.main.data.room
+/*
 
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import com.emindev.expensetodolist.expense.common.util.Message
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +15,7 @@ class IncomeCreator(private val dao:IncomeDao) {
         if (income.isRepeatable) {
 
             repeat(24) {
-                val date = income.startedDate.plusMonths(it.toLong())
+                val date = income.initialDate.plusMonths(it.toLong())
 
                 val newIncome = income.copy(
                     day = date.dayOfMonth,
@@ -65,7 +63,7 @@ class IncomeCreator(private val dao:IncomeDao) {
 
     suspend fun delete(income: Income, incomeList: List<Income>) {
         if (income.deleted || !income.isRepeatable) {
-            dao.delete(income.id)
+            dao.delete(income)
             withContext(Dispatchers.Main) {
                // message.infoDeletedCard()
             }
@@ -75,7 +73,7 @@ class IncomeCreator(private val dao:IncomeDao) {
                 exIncome.deleted = true
                 dao.upsert(exIncome)
                 if (exIncome.date >= DateUtil.currentDateTime.toLocalDate()) {
-                    dao.delete(exIncome.id)
+                    dao.delete(exIncome)
                 }
             }
             withContext(Dispatchers.Main) {
@@ -86,9 +84,12 @@ class IncomeCreator(private val dao:IncomeDao) {
 
     fun readSelectedData(month:Int,year:Int): Flow<List<Income>> = dao.readSelectedData(month,year)
 
+*/
 /*    fun readSelectedData(context: Context): List<Income> {
         return readAllData.value?.filter { income -> income.isSelected(context) } ?: emptyList()
-    }*/
+    }*//*
+
 
 
 }
+*/

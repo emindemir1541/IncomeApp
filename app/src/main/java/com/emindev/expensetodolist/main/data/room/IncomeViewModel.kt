@@ -3,10 +3,12 @@ package com.emindev.expensetodolist.main.data.room
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
+import com.emindev.expensetodolist.helperlibrary.common.helper.test
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -14,18 +16,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: MainViewModel) : ViewModel() {
+class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: MainViewModel) :
+    ViewModel() {
 
     private val _incomes = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.readSelectedData(selectedDate.monthValue, selectedDate.year)
+         dao.readSelectedData(selectedDate.monthValue.toString(),selectedDate.year.toString())
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _state = MutableStateFlow(IncomeState())
 
-    val state = combine(_state, _incomes, mainViewModel.selectedDate) { state, incomes, selectedDate ->
+    val state = combine(_state, _incomes, mainViewModel.selectedDate) { state, incomes, _ ->
         state.copy(
             incomes = incomes,
-            selectedDate = selectedDate
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IncomeState())
 
@@ -33,8 +35,8 @@ class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: Main
         when (event) {
             is IncomeEvent.DeleteIncome -> {
                 viewModelScope.launch {
-                    val incomeList = state.value.incomes
-                    dao.delete(event.income.id)
+                    dao.delete(event.income)
+                    // TODO: delete
                 }
             }
 
@@ -49,13 +51,10 @@ class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: Main
             IncomeEvent.SaveIncome -> {
                 val name = state.value.name
                 val amount = state.value.amount
-                val startedDate = state.value.startedDate
-                val day = state.value.day
-                val month = state.value.month
-                val year = state.value.year
+                val initialDate = state.value.initialDate
+                val currentDate = state.value.currentDate
                 val deleted = state.value.deleted
                 val isRepeatable = state.value.isRepeatable
-                val cardId = state.value.cardId
 
                 if (name.isBlank() || amount.isBlank()) {
                     return
@@ -64,13 +63,11 @@ class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: Main
                 val income = Income(
                     name = name,
                     amount = amount.toFloat(),
-                    startedDateLong = startedDate,
-                    day = day,
-                    month = month,
-                    year = year,
+                    _initialDate = DateUtil.convertToString(initialDate),
+                    _currentDate = DateUtil.convertToString(currentDate),
                     deleted = deleted,
                     isRepeatable = isRepeatable,
-                    cardId = cardId
+                    cardId = DateUtil.currentTime
                 )
                 viewModelScope.launch {
                     dao.upsert(income)
@@ -95,14 +92,6 @@ class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: Main
             }
 
 
-            is IncomeEvent.SetDay -> {
-                _state.update {
-                    it.copy(
-                        day = event.day
-                    )
-                }
-            }
-
             is IncomeEvent.SetDeleted -> {
                 _state.update {
                     it.copy(
@@ -119,13 +108,6 @@ class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: Main
                 }
             }
 
-            is IncomeEvent.SetMonth -> {
-                _state.update {
-                    it.copy(
-                        month = event.month
-                    )
-                }
-            }
 
             is IncomeEvent.SetName -> {
                 _state.update {
@@ -135,21 +117,6 @@ class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: Main
                 }
             }
 
-            is IncomeEvent.SetStartedDate -> {
-                _state.update {
-                    it.copy(
-                        startedDate = event.startedDate
-                    )
-                }
-            }
-
-            is IncomeEvent.SetYear -> {
-                _state.update {
-                    it.copy(
-                        year = event.year
-                    )
-                }
-            }
 
             IncomeEvent.ShowDialog -> {
                 _state.update {
@@ -162,15 +129,11 @@ class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: Main
             IncomeEvent.UpdateIncome -> {
                 val name = state.value.name
                 val amount = state.value.amount
-                val startedDate = state.value.startedDate
-                val day = state.value.day
-                val month = state.value.month
-                val year = state.value.year
+                val initialDate = state.value.initialDate
+                val currentDate = state.value.currentDate
                 val deleted = state.value.deleted
                 val isRepeatable = state.value.isRepeatable
                 val cardId = state.value.cardId
-
-                val incomeList = state.value.incomes
 
                 if (name.isBlank() || amount.isBlank()) {
                     return
@@ -179,20 +142,32 @@ class IncomeViewModel(private val dao: IncomeDao,private val mainViewModel: Main
                 val income = Income(
                     name = name,
                     amount = amount.toFloat(),
-                    startedDateLong = startedDate,
-                    day = day,
-                    month = month,
-                    year = year,
+                    _initialDate = DateUtil.convertToString(initialDate),
+                    _currentDate = DateUtil.convertToString(currentDate),
                     deleted = deleted,
                     isRepeatable = isRepeatable,
-                    cardId = cardId
+                    cardId = cardId // TODO: use card id
                 )
                 viewModelScope.launch {
                     dao.upsert(income)
                 }
             }
 
+            is IncomeEvent.SetCurrentDate -> {
+                _state.update {
+                    it.copy(
+                        currentDate = event.currentDate
+                    )
+                }
+            }
 
+            is IncomeEvent.SetInitialDate -> {
+                _state.update {
+                    it.copy(
+                        initialDate = event.initialDate
+                    )
+                }
+            }
         }
     }
 

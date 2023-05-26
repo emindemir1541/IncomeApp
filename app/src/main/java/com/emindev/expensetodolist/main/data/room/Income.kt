@@ -6,6 +6,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
+import com.emindev.expensetodolist.income.common.currentDate
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
@@ -15,32 +16,12 @@ import java.time.LocalDate
 data class Income(
     val name: String,
     val amount: Float,
-    val startedDateLong: Long,
-    var day:Int,
-    var month:Int,
-    var year:Int,
+    val _initialDate: String,
+    var _currentDate:String,
     var deleted: Boolean,
     var isRepeatable: Boolean,
     var cardId:Long= DateUtil.currentTime,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-) : Parcelable {
-
-    @IgnoredOnParcel
-    @Ignore
-    var startedDate: LocalDate = DateUtil.convertToDateTime(startedDateLong).toLocalDate()
-
-    @IgnoredOnParcel
-    @Ignore
-    var date: LocalDate = DateUtil.convertToDateTime(year,month,day).toLocalDate()
-
-
-
-    //para yattı mı
-    @IgnoredOnParcel
-    @Ignore
-    val itsTime = date.dayOfMonth <= DateUtil.currentDateTime.dayOfMonth && date.checkMonthAndYear(DateUtil.currentDateTime)
-
-
-}
+) : Parcelable {}
 

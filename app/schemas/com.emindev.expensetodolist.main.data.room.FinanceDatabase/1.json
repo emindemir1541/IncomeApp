@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9844664491f5dcbda981f5aa2a5ffa81",
+    "identityHash": "052e6b4d83c97b5e9067004e0604fd07",
     "entities": [
       {
         "tableName": "table_expense",
@@ -98,7 +98,7 @@
       },
       {
         "tableName": "table_income",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `amount` REAL NOT NULL, `startedDateLong` INTEGER NOT NULL, `day` INTEGER NOT NULL, `month` INTEGER NOT NULL, `year` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `isRepeatable` INTEGER NOT NULL, `cardId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `amount` REAL NOT NULL, `_initialDate` TEXT NOT NULL, `_currentDate` TEXT NOT NULL, `deleted` INTEGER NOT NULL, `isRepeatable` INTEGER NOT NULL, `cardId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -113,27 +113,15 @@
             "notNull": true
           },
           {
-            "fieldPath": "startedDateLong",
-            "columnName": "startedDateLong",
-            "affinity": "INTEGER",
+            "fieldPath": "_initialDate",
+            "columnName": "_initialDate",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "day",
-            "columnName": "day",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "month",
-            "columnName": "month",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "year",
-            "columnName": "year",
-            "affinity": "INTEGER",
+            "fieldPath": "_currentDate",
+            "columnName": "_currentDate",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -174,7 +162,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9844664491f5dcbda981f5aa2a5ffa81')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '052e6b4d83c97b5e9067004e0604fd07')"
     ]
   }
 }

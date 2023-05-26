@@ -4,6 +4,7 @@ package com.emindev.expensetodolist.helperlibrary.common.helper
 import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.time.*
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
 
@@ -20,7 +21,7 @@ object DateUtil {
         get() = LocalDateTime.now()
 
     //Helpers
-     val formatter = SimpleDateFormat(PATTERN_TR)
+     val formatterTr = DateTimeFormatter.ofPattern(PATTERN_TR)
      fun splitDate(date: String): MutableList<String> = date.split("/").toMutableList()
 
     //Conversations
@@ -32,8 +33,9 @@ object DateUtil {
 
     fun convertToDateTime(dateTime: Long): LocalDateTime = Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime()
     fun convertToDateTime(date: LocalDate, time: LocalTime = LocalTime.of(0, 0, 0)): LocalDateTime = LocalDateTime.of(date, time)
+    fun convertToDate(date:String) = LocalDate.parse(date, formatterTr)
 
-    /*fun convertToDateTime(getSavedDate:String)=*/
+
     fun convertToDateTime(year: Int, month: Int, dayOfMonth: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, nanoOfSecond: Int = 0): LocalDateTime =
         LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(ZoneId.systemDefault()).toLocalDateTime()
 

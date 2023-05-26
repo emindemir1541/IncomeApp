@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,16 +28,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.emindev.expensetodolist.BuildConfig
 import com.emindev.expensetodolist.R
-import com.emindev.expensetodolist.main.data.sharedPreference.PageSettings
 import com.emindev.expensetodolist.databinding.ActivityMainBinding
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
-import com.emindev.expensetodolist.expense.ui.fragment.FragmentExpense
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.SystemInfo
 import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
 import com.emindev.expensetodolist.helperlibrary.common.model.Resource
 import com.emindev.expensetodolist.helperlibrary.ui.alertDialogClassic
-import com.emindev.expensetodolist.income.ui.fragment.FragmentIncome
 import com.emindev.expensetodolist.main.common.util.RemoteData
 import com.emindev.expensetodolist.main.data.room.ExpenseEvent
 import com.emindev.expensetodolist.main.data.room.ExpenseViewModel
@@ -44,7 +42,6 @@ import com.emindev.expensetodolist.main.data.room.FinanceDatabase
 import com.emindev.expensetodolist.main.data.room.IncomeEvent
 import com.emindev.expensetodolist.main.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
-import com.emindev.expensetodolist.main.ui.fragment.FragmentMain
 import com.emindev.expensetodolist.main.data.update.RemoteRepository
 import com.emindev.expensetodolist.main.data.update.RemoteSettings
 
@@ -126,9 +123,13 @@ class MainActivity : AppCompatActivity() {
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
-                        .background(Color.Green), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                        .background(Color.Green)
+                        .clickable {
+                            onIncomeEvent(IncomeEvent.DeleteIncome(it))
+                        }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Text(text = it.name)
                         Text(text = it.amount.toString())
+
                     }
                 }
                 item {
@@ -158,15 +159,15 @@ class MainActivity : AppCompatActivity() {
                             onIncomeEvent(IncomeEvent.ShowDialog)
                             onIncomeEvent(IncomeEvent.SetName("emin"))
                             onIncomeEvent(IncomeEvent.SetAmount(564f))
-                            onIncomeEvent(IncomeEvent.SetDay(5))
-                            onIncomeEvent(IncomeEvent.SetMonth(5))
-                            onIncomeEvent(IncomeEvent.SetYear(2023))
-                            onIncomeEvent(IncomeEvent.SetStartedDate(DateUtil.currentTime))
+                            onIncomeEvent(IncomeEvent.SetInitialDate(DateUtil.currentDateTime.toLocalDate()))
+                            onIncomeEvent(IncomeEvent.SetAmount(564f))
+                            onIncomeEvent(IncomeEvent.SetCurrentDate(DateUtil.currentDateTime.toLocalDate()))
                             onIncomeEvent(IncomeEvent.SaveIncome)
                             onIncomeEvent(IncomeEvent.HideDialog)
                         }) {
                             Text(text = "Add Income")
                         }
+
                     }
 
                     Button(onClick = {
@@ -192,46 +193,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-    private fun setFragmentIncome() {
-        supportFragmentManager.beginTransaction().add(R.id.frame_layout, FragmentIncome(this, this, binding.fabAdd)).commit()
-
-    }
-
-    private fun setFragmentMain() {
-        supportFragmentManager.beginTransaction().add(R.id.frame_layout, FragmentMain(this)).commit()
-    }
-
-    private fun setFragmentExpense() {
-        supportFragmentManager.beginTransaction().add(R.id.frame_layout, FragmentExpense(this, this, binding.fabAdd)).commit()
-    }
-
-    private fun setNavigationBar() {
-        binding.bottomNavigation.setOnItemSelectedListener { selectedItem ->
-            PageSettings(this).setPageLocation(selectedItem.itemId)
-            when (selectedItem.itemId) {
-                R.id.itemIncome -> {
-                    setFragmentIncome()
-                    binding.fabAdd.show()
-                    true
-                }
-
-                R.id.itemHome -> {
-                    setFragmentMain()
-                    binding.fabAdd.hide()
-                    true
-                }
-
-                R.id.itemExpense -> {
-                    setFragmentExpense()
-                    binding.fabAdd.show()
-                    true
-                }
-
-                else -> false
-            }
-        }
-    }
 
     private fun updateCheck() {
 

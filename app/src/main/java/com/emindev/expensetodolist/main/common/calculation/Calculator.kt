@@ -4,6 +4,7 @@ import android.content.Context
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.main.data.room.Expense
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
+import com.emindev.expensetodolist.income.common.isMoneyPaid
 import com.emindev.expensetodolist.main.data.room.Income
 import com.emindev.expensetodolist.main.data.sharedPreference.SavedMoney
 
@@ -13,7 +14,7 @@ class Calculator(private val selectedIncomeList: List<Income>, private val selec
         get() {
             var totalIncome = 0f
             selectedIncomeList.forEach { income ->
-                if (income.itsTime)
+                if (income.isMoneyPaid)
                     totalIncome += income.amount
             }
             return totalIncome

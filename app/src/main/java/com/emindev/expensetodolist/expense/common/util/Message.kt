@@ -3,7 +3,6 @@ package com.emindev.expensetodolist.expense.common.util
 import android.content.Context
 import android.widget.Toast
 import com.emindev.expensetodolist.R
-import com.emindev.expensetodolist.main.data.sharedPreference.StatedDate
 
 class Message(private val context: Context) {
 
@@ -30,7 +29,7 @@ class Message(private val context: Context) {
     }
 
     fun infoDeletedAfterNow() {
-        messageToast(StatedDate(context).month + " " + res(R.string.info_deleted_after_now))
+      //  messageToast(StatedDate(context).month + " " + res(R.string.info_deleted_after_now))
     }
 
     fun infoDeletedCard() {

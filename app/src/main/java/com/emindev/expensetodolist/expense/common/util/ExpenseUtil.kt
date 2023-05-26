@@ -6,14 +6,13 @@ import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.emindev.expensetodolist.expense.common.constant.ExpenseSituation
 import com.emindev.expensetodolist.main.data.room.Expense
-import com.emindev.expensetodolist.main.data.sharedPreference.StatedDate
 
 /*fun Expense.remainingDay(mContext: Context): String {
     val remainingDay = (DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate()))
     return if (completed) {
         mContext.getString(R.string.expense_paid)
     }
-    else if (itsTime) {
+    else if (isMoneyPaid) {
         mContext.getString(R.string.payment_time)
     }
     else {
@@ -40,10 +39,6 @@ fun Expense.daySituation(context: Context): ExpenseDaySituation {
         ExpenseDaySituation.DayPassed(this, context)
 }
 
-fun Expense.isSelected(context: Context): Boolean {
-    //cart, StatedDate de kaydedilen tarihle uyuşuyor mu
-    return StatedDate(context).dateTime.checkMonthAndYear(date)
-}
 
 fun Expense.getCardType(): ExpenseSituation {
     return when {
