@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.main.data.room
+package com.emindev.expensetodolist.main.data.room.income
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,15 +8,13 @@ import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -24,16 +22,10 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
     ViewModel() {
 
     private val _incomes = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.readSelectedData(selectedDate.monthValue.toString(), selectedDate.year.toString())
+        dao.getIncomesBySelectedDate(selectedDate.monthValue.toString(), selectedDate.year.toString())
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val allIncomeDao = dao.readAllData()
-    private val uniqueCardIncomeDao = dao.readUniqueCardId()
-
-    var allIncomes = emptyList<Income>()
-    var uniqueIncomeCards = emptyList<Income>()
-
-
     private val _state = MutableStateFlow(IncomeState())
 
     val state = combine(_state, _incomes, mainViewModel.selectedDate) { state, incomes, _ ->
@@ -41,18 +33,20 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             incomes = incomes,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IncomeState())
+
+
+    fun cardsByIncome(income:Income) = dao.getCardsByIncome(income.id)
+
     fun addIncomeCard(income: Income, currentDate: LocalDate) {
-        income.copy(
-            _currentDate = DateUtil.convertToString(currentDate),
-        )
+        // TODO: add card 
+        // TODO: add card if repetable loop
     }
 
     fun onEvent(event: IncomeEvent) {
         when (event) {
             is IncomeEvent.DeleteIncome -> {
                 viewModelScope.launch {
-                    dao.delete(event.income)
-                    // TODO: delete
+                  dao.upsert(event.income.copy(deleted = true).toIncomeModel)
                 }
             }
 
@@ -70,24 +64,27 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                 val amount = state.value.amount
                 val initialDate = state.value.initialDate
                 val currentDate = state.value.currentDate
-                val deleted = state.value.deleted
                 val isRepeatable = state.value.isRepeatable
 
                 if (name.isBlank() || amount.isBlank()) {
                     return
                 }
 
-                val income = Income(
+                val incomeModel = IncomeModel(
                     name = name,
-                    amount = amount.toFloat(),
-                    _initialDate = DateUtil.convertToString(initialDate),
-                    _currentDate = DateUtil.convertToString(currentDate),
-                    deleted = deleted,
+                    latestAmount = amount.toFloat(),
+                    initialDate = DateUtil.convertToStringTypeSql(initialDate),
+                    deleted = false,
                     isRepeatable = isRepeatable,
-                    cardId = DateUtil.currentTime
                 )
                 viewModelScope.launch {
-                    dao.upsert(income)
+                    val id = dao.upsert(incomeModel)
+                    val incomeCardModel = IncomeCardModel(
+                        id  = id,
+                        currentDate = DateUtil.convertToStringTypeSql(currentDate),
+                        amount = amount.toFloat(),
+                    )
+                    dao.upsert(incomeCardModel)
                 }
 
             }
@@ -109,13 +106,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             }
 
 
-            is IncomeEvent.SetDeleted -> {
-                _state.update {
-                    it.copy(
-                        deleted = event.deleted
-                    )
-                }
-            }
+
 
             is IncomeEvent.SetIsRepeatable -> {
                 _state.update {
@@ -144,7 +135,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             }
 
             IncomeEvent.UpdateIncome -> {
-                val name = state.value.name
+        /*        val name = state.value.name
                 val amount = state.value.amount
                 val initialDate = state.value.initialDate
                 val currentDate = state.value.currentDate
@@ -158,7 +149,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
 
                 val income = Income(
                     name = name,
-                    amount = amount.toFloat(),
+                    latestAmount = amount.toFloat(),
                     _initialDate = DateUtil.convertToString(initialDate),
                     _currentDate = DateUtil.convertToString(currentDate),
                     deleted = deleted,
@@ -167,7 +158,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                 )
                 viewModelScope.launch {
                     dao.upsert(income)
-                }
+                }*/
             }
 
             is IncomeEvent.SetCurrentDate -> {
@@ -195,10 +186,10 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
 
 
     init {
-        allIncomeDao.combine(uniqueCardIncomeDao) { allIncome, uniqueIncome ->
+       /* allIncomeDao.combine(uniqueCardIncomeDao) { allIncome, uniqueIncome ->
             allIncomes = allIncome
             uniqueIncomeCards = uniqueIncome
-        }.launchIn(viewModelScope)
+        }.launchIn(viewModelScope)*/
     }
 
 }

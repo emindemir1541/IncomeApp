@@ -35,18 +35,15 @@ import com.emindev.expensetodolist.helperlibrary.common.helper.SystemInfo
 import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
 import com.emindev.expensetodolist.helperlibrary.common.model.Resource
 import com.emindev.expensetodolist.helperlibrary.ui.alertDialogClassic
-import com.emindev.expensetodolist.income.common.currentDate
-import com.emindev.expensetodolist.main.common.util.CardCreator
 import com.emindev.expensetodolist.main.common.util.RemoteData
-import com.emindev.expensetodolist.main.data.room.ExpenseEvent
-import com.emindev.expensetodolist.main.data.room.ExpenseViewModel
+import com.emindev.expensetodolist.main.data.room.expense.ExpenseEvent
+import com.emindev.expensetodolist.main.data.room.expense.ExpenseViewModel
 import com.emindev.expensetodolist.main.data.room.FinanceDatabase
-import com.emindev.expensetodolist.main.data.room.IncomeEvent
-import com.emindev.expensetodolist.main.data.room.IncomeViewModel
+import com.emindev.expensetodolist.main.data.room.income.IncomeEvent
+import com.emindev.expensetodolist.main.data.room.income.IncomeViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.data.update.RemoteRepository
 import com.emindev.expensetodolist.main.data.update.RemoteSettings
-import kotlin.random.Random
 
 
 class MainActivity : AppCompatActivity() {
@@ -111,7 +108,6 @@ class MainActivity : AppCompatActivity() {
             val onExpenseEvent = expenseViewModel::onEvent
             val onIncomeEvent = incomeViewModel::onEvent
 
-          //  val incomeUniqueList = incomeViewModel.allIncomes.collectAsState(initial = emptyList())
 
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
@@ -140,13 +136,13 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-           /*     items(incomeUniqueList.value) {
+               /* items(incomeUniqueList.value) {
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                         .background(Color.Blue)
                         , verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                        Text(text = it.toString())
+                        Text(text = it.cardId.toString())
 
                     }
                 }*/
@@ -179,7 +175,6 @@ class MainActivity : AppCompatActivity() {
                             onIncomeEvent(IncomeEvent.SetName("emin"))
                             onIncomeEvent(IncomeEvent.SetAmount(564f))
                             onIncomeEvent(IncomeEvent.SetInitialDate(DateUtil.currentDateTime.toLocalDate()))
-                            onIncomeEvent(IncomeEvent.SetAmount(564f))
                             onIncomeEvent(IncomeEvent.SetIsRepeatable(true))
                             onIncomeEvent(IncomeEvent.SetCurrentDate(/*DateUtil.convertToDateTime(2023, Random.nextInt(1,12),5).toLocalDate()*/DateUtil.currentDateTime.toLocalDate()))
                             onIncomeEvent(IncomeEvent.SaveIncome)

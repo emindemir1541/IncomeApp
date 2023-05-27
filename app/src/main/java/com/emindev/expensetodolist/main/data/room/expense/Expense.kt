@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.main.data.room
+package com.emindev.expensetodolist.main.data.room.expense
 
 import android.os.Parcelable
 import androidx.room.Entity

@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.main.data.room
+package com.emindev.expensetodolist.main.data.room.income
 /*
 
 
@@ -43,7 +43,7 @@ class IncomeCreator(private val dao:IncomeDao) {
                 if (income.date >= DateUtil.currentDateTime.toLocalDate()) {
                     val newIncome = exIncome.copy(
                         name = income.name,
-                        amount = income.amount
+                        latestAmount = income.latestAmount
                     )
                     dao.upsert(newIncome)
                 }

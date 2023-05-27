@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "052e6b4d83c97b5e9067004e0604fd07",
+    "identityHash": "3c1a7456846acfa8fc444c8d96874a91",
     "entities": [
       {
         "tableName": "table_expense",
@@ -98,7 +98,7 @@
       },
       {
         "tableName": "table_income",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `amount` REAL NOT NULL, `_initialDate` TEXT NOT NULL, `_currentDate` TEXT NOT NULL, `deleted` INTEGER NOT NULL, `isRepeatable` INTEGER NOT NULL, `cardId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `latestAmount` REAL NOT NULL, `initialDate` TEXT NOT NULL, `deleted` INTEGER NOT NULL, `isRepeatable` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -107,20 +107,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "amount",
-            "columnName": "amount",
+            "fieldPath": "latestAmount",
+            "columnName": "latestAmount",
             "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "_initialDate",
-            "columnName": "_initialDate",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "_currentDate",
-            "columnName": "_currentDate",
+            "fieldPath": "initialDate",
+            "columnName": "initialDate",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -133,12 +127,6 @@
           {
             "fieldPath": "isRepeatable",
             "columnName": "isRepeatable",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "cardId",
-            "columnName": "cardId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -157,12 +145,50 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "table_income_card",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `currentDate` TEXT NOT NULL, `amount` REAL NOT NULL, `cardId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentDate",
+            "columnName": "currentDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "amount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardId",
+            "columnName": "cardId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "cardId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '052e6b4d83c97b5e9067004e0604fd07')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3c1a7456846acfa8fc444c8d96874a91')"
     ]
   }
 }

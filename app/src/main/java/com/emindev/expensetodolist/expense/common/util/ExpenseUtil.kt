@@ -3,9 +3,8 @@ package com.emindev.expensetodolist.expense.common.util
 import android.content.Context
 import com.emindev.expensetodolist.expense.common.constant.ExpenseDaySituation
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.emindev.expensetodolist.expense.common.constant.ExpenseSituation
-import com.emindev.expensetodolist.main.data.room.Expense
+import com.emindev.expensetodolist.main.data.room.expense.Expense
 
 /*fun Expense.remainingDay(mContext: Context): String {
     val remainingDay = (DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate()))

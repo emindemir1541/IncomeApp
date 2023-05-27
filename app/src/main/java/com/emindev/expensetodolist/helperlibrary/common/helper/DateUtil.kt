@@ -13,6 +13,8 @@ import java.util.*
 object DateUtil {
 
     private const val PATTERN_TR = "dd/MM/yyyy"
+    //that way uses because when you sort to date, it will start from year, than month,than day
+    private const val PATTERN_TR_SQL = "yyyy/MM/dd"
     private const val PATTERN_EU = "yyyy-MM-dd"
 
     val currentTime: Long
@@ -21,14 +23,16 @@ object DateUtil {
         get() = LocalDateTime.now()
 
     //Helpers
-     val formatterTr = DateTimeFormatter.ofPattern(PATTERN_TR)
+     val formatterTr = DateTimeFormatter.ofPattern(PATTERN_TR_SQL)
      fun splitDate(date: String): MutableList<String> = date.split("/").toMutableList()
 
     //Conversations
     fun convertToString(day: Int, month: Int, year: Int): String = "$day/$month/$year "
-    fun convertToString(timeInMillis: Long): String = android.text.format.DateFormat.format(PATTERN_TR, timeInMillis).toString()
+    fun convertToString(timeInMillis: Long): String = android.text.format.DateFormat.format(PATTERN_TR_SQL, timeInMillis).toString()
     fun convertToString(dateTime: LocalDateTime): String = "${dateTime.dayOfMonth}/${dateTime.monthValue}/${dateTime.year}"
+    fun convertToStringTypeSql(dateTime: LocalDateTime): String = "${dateTime.year}/${dateTime.monthValue}/${dateTime.dayOfMonth}"
     fun convertToString(dateTime: LocalDate): String = "${dateTime.dayOfMonth}/${dateTime.monthValue}/${dateTime.year}"
+    fun convertToStringTypeSql(dateTime: LocalDate): String = "${dateTime.year}/${dateTime.monthValue}/${dateTime.dayOfMonth}"
     private fun convertToStringEu(timeInMillis: Long): String = android.text.format.DateFormat.format(PATTERN_EU, timeInMillis).toString()
 
     fun convertToDateTime(dateTime: Long): LocalDateTime = Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime()

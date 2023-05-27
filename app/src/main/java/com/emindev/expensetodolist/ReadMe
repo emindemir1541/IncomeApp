@@ -1,9 +1,8 @@
-todo    room database
 
+todo    sınırlı sayıda tekrar edenler için bir kaydetme algoritması yap
 todo    ilk kez ekleme yaptığımda ekleme yapmyor
 
 todo    message after deleted
-todo    income.id -> income in database
 
 
 

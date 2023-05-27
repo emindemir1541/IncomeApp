@@ -3,7 +3,7 @@ package com.emindev.expensetodolist.expense.common.constant
 import android.content.Context
 import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.expense.common.util.remainingDay
-import com.emindev.expensetodolist.main.data.room.Expense
+import com.emindev.expensetodolist.main.data.room.expense.Expense
 import kotlin.math.abs
 
 sealed class ExpenseDaySituation(val situation: String,val day:Long? = null) {

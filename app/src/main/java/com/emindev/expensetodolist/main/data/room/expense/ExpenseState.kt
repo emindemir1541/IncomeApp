@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.main.data.room
+package com.emindev.expensetodolist.main.data.room.expense
 
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil

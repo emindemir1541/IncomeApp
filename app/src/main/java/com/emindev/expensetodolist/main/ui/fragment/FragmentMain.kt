@@ -8,18 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.emindev.expensetodolist.R
-import com.emindev.expensetodolist.main.common.calculation.Calculator
 import com.emindev.expensetodolist.main.common.constant.Currency
-import com.emindev.expensetodolist.main.data.room.Expense
-import com.emindev.expensetodolist.main.data.room.Income
-import com.emindev.expensetodolist.main.data.room.IncomeViewModel
+import com.emindev.expensetodolist.main.data.room.expense.Expense
+import com.emindev.expensetodolist.main.data.room.income.Income
 import com.emindev.expensetodolist.databinding.FragmentMainBinding
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.emindev.expensetodolist.helperlibrary.common.helper.Helper.clearZero
-import com.emindev.expensetodolist.main.ui.page.MainPage
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
@@ -91,7 +85,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
         // TODO: grafikler düzgün çalışmıyor
 
         incomeList.forEach { income ->
-            incomeDataList.upsert(DataPoint(income.month.toDouble(), income.amount.toDouble()))
+            incomeDataList.upsert(DataPoint(income.month.toDouble(), income.latestAmount.toDouble()))
         }
 
 

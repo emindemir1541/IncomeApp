@@ -2,11 +2,11 @@ package com.emindev.expensetodolist.main.common.calculation
 
 import android.content.Context
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.main.data.room.Expense
+import com.emindev.expensetodolist.main.data.room.expense.Expense
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
-import com.emindev.expensetodolist.income.common.isMoneyPaid
-import com.emindev.expensetodolist.main.data.room.Income
+import com.emindev.expensetodolist.main.data.room.income.Income
 import com.emindev.expensetodolist.main.data.sharedPreference.SavedMoney
+/*
 
 class Calculator(private val selectedIncomeList: List<Income>, private val selectedExpenseList: List<Expense>, private val mContext: Context) {
 
@@ -15,7 +15,7 @@ class Calculator(private val selectedIncomeList: List<Income>, private val selec
             var totalIncome = 0f
             selectedIncomeList.forEach { income ->
                 if (income.isMoneyPaid)
-                    totalIncome += income.amount
+                    totalIncome += income.latestAmount
             }
             return totalIncome
         }
@@ -52,4 +52,4 @@ class Calculator(private val selectedIncomeList: List<Income>, private val selec
             return mRemainedMoney
         }
 
-}
+}*/
