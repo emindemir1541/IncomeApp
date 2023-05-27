@@ -17,14 +17,17 @@ interface IncomeDao {
     @Query("Delete from table_income")
     suspend fun deleteAll()
 
-    @Query("select * from table_income order by id asc")
+    @Query("select * from table_income where deleted = 0 order by id asc")
     fun readAllData(): Flow<List<Income>>
 
-    @Query("select * from table_income where _currentDate like '%' || :month || '/' || :year order by id asc")
+    @Query("select * from table_income where _currentDate like '%' || :month || '/' || :year and deleted = 0 order by id asc")
     fun readSelectedData(month: String,year:String):Flow<List<Income>>
 
-    @Query("select * from table_income where cardId =:cardId order by id asc")
-    fun readCardData(cardId:Long):Flow<List<Income>>
+    @Query("select * from table_income where cardId =:cardId and deleted = 0 order by id asc")
+    fun readDataByCardId(cardId:Long):Flow<List<Income>>
+
+    @Query("SELECT * FROM table_income where deleted = 0 GROUP BY cardId ORDER BY _currentDate ASC")
+    fun readUniqueCardId():Flow<List<Income>>
 
 
 }

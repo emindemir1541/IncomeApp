@@ -8,20 +8,31 @@ import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: MainViewModel) :
     ViewModel() {
 
     private val _incomes = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-         dao.readSelectedData(selectedDate.monthValue.toString(),selectedDate.year.toString())
+        dao.readSelectedData(selectedDate.monthValue.toString(), selectedDate.year.toString())
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    private val allIncomeDao = dao.readAllData()
+    private val uniqueCardIncomeDao = dao.readUniqueCardId()
+
+    var allIncomes = emptyList<Income>()
+    var uniqueIncomeCards = emptyList<Income>()
+
 
     private val _state = MutableStateFlow(IncomeState())
 
@@ -30,6 +41,11 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             incomes = incomes,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IncomeState())
+    fun addIncomeCard(income: Income, currentDate: LocalDate) {
+        income.copy(
+            _currentDate = DateUtil.convertToString(currentDate),
+        )
+    }
 
     fun onEvent(event: IncomeEvent) {
         when (event) {
@@ -49,6 +65,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             }
 
             IncomeEvent.SaveIncome -> {
+
                 val name = state.value.name
                 val amount = state.value.amount
                 val initialDate = state.value.initialDate
@@ -168,7 +185,20 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                     )
                 }
             }
+
+            IncomeEvent.CreateCard -> {
+
+                // TODO: when app started, create cards if doesnt exist
+            }
         }
+    }
+
+
+    init {
+        allIncomeDao.combine(uniqueCardIncomeDao) { allIncome, uniqueIncome ->
+            allIncomes = allIncome
+            uniqueIncomeCards = uniqueIncome
+        }.launchIn(viewModelScope)
     }
 
 }
