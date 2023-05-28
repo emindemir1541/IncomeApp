@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearEqualOrSmallerThan
+import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
 import com.emindev.expensetodolist.helperlibrary.common.helper.test
 import com.emindev.expensetodolist.main.data.room.income.IncomeCardModel
 import com.emindev.expensetodolist.main.data.room.income.IncomeModel
@@ -17,44 +18,39 @@ fun CardCreator(incomeViewModel: IncomeViewModel) {
 
     //infinity income card creator
     // TODO: check if this month already created, you can save this settings to datastore app settings
-    // TODO: if eğer başlanbıç tarihi şuanki tarihten ilerideyse onu dahil etme
-    // TODO: ileride gösterilmesi gereken kartlar için yansıma kullan
+    // TODO: ileride gösterilmesi gereken kartlar için yansıma kullan, bu yansıma expense de tamamlandıysa kaydet
 
 
-        val incomeModelListFlow = incomeViewModel.incomeModels.collectAsState(initial = emptyList())
-        val incomeCardModelListFlow = incomeViewModel.incomeCardModels.collectAsState(initial = emptyList())
+    val incomeModelListFlow = incomeViewModel.incomeModels.collectAsState(initial = emptyList())
+    val incomeCardModelListFlow = incomeViewModel.incomeCardModels.collectAsState(initial = emptyList())
 
 
-        if (incomeModelListFlow.value.isNotEmpty() && incomeCardModelListFlow.value.isNotEmpty()) {
-            // TODO: make loading view for no one add or change to database
+    if (incomeModelListFlow.value.isNotEmpty() && incomeCardModelListFlow.value.isNotEmpty()) {
+        // TODO: make loading view for no one add or change to database
 
 
-            val incomeModelList = incomeModelListFlow.value
-            val incomeCardModelList = incomeCardModelListFlow.value
-            incomeModelList.filter { income: IncomeModel -> income.isRepeatable }.forEach { incomeModel ->
-                try {
+        val incomeModelList = incomeModelListFlow.value
+        val incomeCardModelList = incomeCardModelListFlow.value
 
-                    var dateCounter = incomeModel.initialLocalDate
-                    test = "incomeModel: $incomeModel"
-                    test = "dateCounterSituation: " + (dateCounter < DateUtil.localDateTimeNow.toLocalDate()).toString()
-                    while (dateCounter.isMonthAndYearEqualOrSmallerThan(DateUtil.localDateNow)) {
-                        test = "dateCounter: $dateCounter"
-                        val incomeCard = incomeCardModelList.find { incomeCardModel -> incomeCardModel.id == incomeModel.id && incomeCardModel.currentLocalDate == dateCounter }
-                        if (incomeCard == null) {
-                            val incomeCardModel = IncomeCardModel(incomeModel.id, SqlDateUtil.convertDate(dateCounter), incomeModel.latestAmount)
-                            incomeViewModel.addIncomeCard(incomeCardModel)
-                            test = "card added:    $incomeCardModel"
-                        }
-                        dateCounter = dateCounter.plusMonths(1)
-
+        incomeModelList.filter { income: IncomeModel -> income.isRepeatable }.forEach { incomeModel ->
+            try {
+                var dateCounter = incomeModel.initialLocalDate
+                while (dateCounter.isMonthAndYearEqualOrSmallerThan(DateUtil.localDateNow)) {
+                    val incomeCard = incomeCardModelList.find { incomeCardModel -> incomeCardModel.id == incomeModel.id && incomeCardModel.currentLocalDate == dateCounter }
+                    if (incomeCard == null) {
+                        val incomeCardModel = IncomeCardModel(incomeModel.id, SqlDateUtil.convertDate(dateCounter), incomeModel.latestAmount)
+                        incomeViewModel.addIncomeCard(incomeCardModel)
                     }
-                } catch (e: Exception) {
-                test = e.localizedMessage
+                    dateCounter = dateCounter.plusMonths(1)
+
                 }
+            } catch (e: Exception) {
+                addLog("CardCreator", e.localizedMessage, "Error occurred while creating card", "CardCreator.kt")
             }
-
-
         }
+
+
+    }
 
 
 }

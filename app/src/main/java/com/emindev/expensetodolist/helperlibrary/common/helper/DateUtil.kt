@@ -93,9 +93,7 @@ sealed interface DateUtil {
 
         //Month And Year
         fun LocalDateTime.isMonthAndYearEqualTo(localDateTime: LocalDateTime): Boolean = localDateTime.monthValue == this.monthValue && localDateTime.year == this.year
-        fun LocalDateTime.isMonthAndYearEqualTo(localDateTime: LocalDate): Boolean = localDateTime.monthValue == this.monthValue && localDateTime.year == this.year
-       // fun LocalDate.isMonthAndYearEqualTo(localDateTime: LocalDate): Boolean = localDateTime.monthValue == this.monthValue && localDateTime.year == this.year
-        fun LocalDate.isMonthAndYearEqualTo(localDateTime: LocalDateTime): Boolean = localDateTime.monthValue == this.monthValue && localDateTime.year == this.year
+        fun LocalDate.isMonthAndYearEqualTo(localDate:LocalDate): Boolean = localDate.monthValue == this.monthValue && localDate.year == this.year
         fun LocalDate.isMonthAndYearBiggerThan(smallerLocalDate: LocalDate): Boolean = smallerLocalDate.monthValue < this.monthValue && this.year < this.year
         fun LocalDate.isMonthAndYearEqualOrBiggerThan(smallerLocalDate: LocalDate): Boolean = smallerLocalDate.monthValue <= this.monthValue && this.year <= this.year
         fun LocalDate.isMonthAndYearSmallerThan(biggerLocalDate: LocalDate): Boolean = biggerLocalDate.monthValue > this.monthValue && this.year > this.year

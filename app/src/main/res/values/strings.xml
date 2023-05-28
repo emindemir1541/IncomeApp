@@ -85,6 +85,8 @@
     <!--info-->
     <string name="info_deleted_after_now"> sonrası silindi</string>
     <string name="info_deleted_card">Geçerli kart silindi</string>
+    <string name="back">Geri</string>
+    <string name="forward">İleri</string>
 
 
     <string-array name="days">

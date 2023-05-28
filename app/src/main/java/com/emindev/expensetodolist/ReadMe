@@ -1,48 +1,38 @@
-
-todo    sınırlı sayıda tekrar edenler için bir kaydetme algoritması yap
+Errors
 todo    ilk kez ekleme yaptığımda ekleme yapmyor
 
+Important Adds
+todo    income update hallet
+todo    sınırlı sayıda tekrar edenler için bir kaydetme algoritması yap
+todo    income ileri tarihler için yansıma yap, bir expense veya income tamamlanırsa onu kaydet
+todo    datastore shared preference kullanarak yeni aya girip girmediğini kontrol et, ve yeni aya girdiysen cardcreator fonksiyonunu çalıştır
+todo    kart oluşturulurken yükleme ekranı getir
+
+Should Add
 todo    message after deleted
+todo    animation of Lazy column
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// TODO: shared preference iki öge kaydetmiyor
-// TODO: saved money çalışmıyor
-
-// TODO: karanlık temadaki renk sıkıntıları düzelt
-// TODO: karanlık temaya geçerken kapanmayı düzelt
-// TODO: zamanı geçen giderlerin checkbox unu kırmızı yap,text renklerini değiştir
-// TODO: telefoındaki navigasyon çubuğunun rengini değiştir
-// TODO: gelir ekle layoutundaki arkaplan renklerini değiştir
-
+Can Be Add
 // TODO: 11.10.2022 kalan geliri bir sonraki aya aktar
-// TODO: 6.10.2022 gelir gider tutarına sınır koy
-// TODO: 11.10.2022 uygulama açılırken güzel bir başlangıç yapsın
 // TODO: 11.10.2022 döviz bilgilerini internettten çek
 // TODO: telefona bildirim gönder
+todo    update class, school gadgets'ten çekebilirsin
+todo    yorumlar
+todo    testler
 
 
-// TODO: KÜTÜPHANE
-// TODO: splash screen
-// TODO: update sınıfı
-// TODO: error sınıfı
-// TODO: yoorumlar
 
-// TODO: Testss
+
+
+
+
+
+
+
+
+
+
+
 
 
 

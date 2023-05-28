@@ -81,6 +81,8 @@
     <string name="info_deleted_after_now">\'s after deleted</string>
     <string name="info_deleted_card">Current Card deleted</string>
 
+    <string name="back">Back</string>
+    <string name="forward">Forward</string>
 
     <string-array name="days">
         <item>1</item>

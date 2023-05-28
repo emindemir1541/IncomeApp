@@ -2,6 +2,8 @@ package com.emindev.expensetodolist.main
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -13,8 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -47,12 +47,11 @@ import com.emindev.expensetodolist.main.data.room.income.IncomeViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.data.update.RemoteRepository
 import com.emindev.expensetodolist.main.data.update.RemoteSettings
+import com.emindev.expensetodolist.main.ui.component.DateRow
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var composeView: ComposeView
 
     private val financeDatabase by lazy {
         Room.databaseBuilder(
@@ -95,14 +94,12 @@ class MainActivity : AppCompatActivity() {
 
         SystemInfo.PACKAGE_NAME = packageName
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(ComposeView(applicationContext).also { composeView = it })
 
 
         //updateCheck()
 
 
-        composeView.setContent {
+        setContent {
 
             val expenseState by expenseViewModel.state.collectAsState()
             val incomeState by incomeViewModel.state.collectAsState()
@@ -112,9 +109,9 @@ class MainActivity : AppCompatActivity() {
 
             val selectedDate = mainViewModel.selectedDate.collectAsState()
 
-            test = incomeState.incomes
+            DateRow(mainViewModel = mainViewModel)
 
-          CardCreator(incomeViewModel = incomeViewModel)
+  /*        CardCreator(incomeViewModel = incomeViewModel)
 
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
@@ -151,16 +148,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                /* items(incomeUniqueList.value) {
-                     Row(modifier = Modifier
-                         .fillMaxWidth()
-                         .padding(16.dp)
-                         .background(Color.Blue)
-                         , verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                         Text(text = it.cardId.toString())
 
-                     }
-                 }*/
 
                 item {
                     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
@@ -191,7 +179,7 @@ class MainActivity : AppCompatActivity() {
                             onIncomeEvent(IncomeEvent.SetAmount(564f))
                             onIncomeEvent(IncomeEvent.SetInitialDate(DateUtil.localDateTimeNow.toLocalDate()))
                             onIncomeEvent(IncomeEvent.SetIsRepeatable(true))
-                            onIncomeEvent(IncomeEvent.SetCurrentDate(/*DateUtil.convertToDateTime(2023, Random.nextInt(1,12),5).toLocalDate()*/DateUtil.localDateTimeNow.toLocalDate()))
+                            onIncomeEvent(IncomeEvent.SetCurrentDate(*//*DateUtil.convertToDateTime(2023, Random.nextInt(1,12),5).toLocalDate()*//*DateUtil.localDateTimeNow.toLocalDate()))
                             onIncomeEvent(IncomeEvent.SaveIncome)
                             onIncomeEvent(IncomeEvent.HideDialog)
                         }) {
@@ -214,7 +202,7 @@ class MainActivity : AppCompatActivity() {
 
                 }
 
-            }
+            }*/
 
         }
 

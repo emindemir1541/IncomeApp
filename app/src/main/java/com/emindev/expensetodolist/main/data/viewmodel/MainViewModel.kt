@@ -12,7 +12,7 @@ class MainViewModel() : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _selectedDate = MutableStateFlow(DateUtil.localDateTimeNow.toLocalDate())
+    private val _selectedDate = MutableStateFlow(DateUtil.localDateNow)
     val selectedDate = _selectedDate.asStateFlow()
     fun setSelectedDate(selectedDate: LocalDate) {
         _selectedDate.value = selectedDate

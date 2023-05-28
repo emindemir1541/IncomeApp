@@ -34,7 +34,7 @@ data class Income(
         get()= SqlDateUtil.convertDate(currentDate)
 
     val isMoneyPaid:Boolean
-        get() = currentLocalDate.dayOfMonth <= DateUtil.localDateTimeNow.dayOfMonth && currentLocalDate.isMonthAndYearEqualTo(DateUtil.localDateTimeNow)
+        get() = currentLocalDate.dayOfMonth <= DateUtil.localDateTimeNow.dayOfMonth && currentLocalDate.isMonthAndYearEqualTo(DateUtil.localDateNow)
 
 
 
