@@ -55,7 +55,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun calculator() {
       /*  incomeViewModel.readAllData.observe(viewLifecycleOwner) { incomeList ->
-            this.incomeList = incomeList.filter { expense-> expense.date.checkMonthAndYear(DateUtil.currentDateTime) }
+            this.incomeList = incomeList.filter { expense-> expense.date.isMonthAndYearEqualTo(DateUtil.localDateTimeNow) }
             val monthlyCalculator = Calculator(incomeList, expenseList, mContext)
             binding.fragmentMainTotalIncome.text = monthlyCalculator.totalIncome.clearZero() + Currency.TL
             binding.fragmentMainRemainingMoney.text = monthlyCalculator.remainedMoney.clearZero() + Currency.TL
@@ -63,7 +63,7 @@ class FragmentMain(private val mContext: Context) : Fragment() {
         }
 
         expenseViewModel.readAllData.observe(viewLifecycleOwner) { expenseList ->
-            this.expenseList = expenseList.filter { expense-> expense.date.checkMonthAndYear(DateUtil.currentDateTime) }
+            this.expenseList = expenseList.filter { expense-> expense.date.isMonthAndYearEqualTo(DateUtil.localDateTimeNow) }
             val monthlyCalculator = Calculator(incomeList, expenseList, mContext)
             binding.fragmentMainPaidExpense.text = monthlyCalculator.paidExpense.clearZero() + Currency.TL
             binding.fragmentMainPotentialExpense.text = monthlyCalculator.potentialExpense.clearZero() + Currency.TL

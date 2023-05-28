@@ -24,7 +24,7 @@ data class Expense(
     var day: Int,
     var month: Int,
     var year: Int,
-    var cardId: Long = DateUtil.currentTime,
+    var cardId: Long = DateUtil.dateTimeNow,
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
 ) : Parcelable {
@@ -35,7 +35,7 @@ data class Expense(
 
     @Ignore
     @IgnoredOnParcel
-    val itsTime = (day <= DateUtil.currentDateTime.dayOfMonth && DateUtil.currentDateTime.dayOfMonth == day && DateUtil.currentDateTime.monthValue == month) || completed
+    val itsTime = (day <= DateUtil.localDateTimeNow.dayOfMonth && DateUtil.localDateTimeNow.dayOfMonth == day && DateUtil.localDateTimeNow.monthValue == month) || completed
 
     @IgnoredOnParcel
     @Ignore

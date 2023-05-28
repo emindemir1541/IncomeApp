@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.room.Entity
 import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearEqualTo
+import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import java.time.LocalDate
 
 @Entity
@@ -18,7 +19,7 @@ data class Income(
     val deleted:Boolean,
     val isRepeatable: Boolean,
 ){
-    fun remainingDay(mContext: Context): String = if (isMoneyPaid) mContext.getString(R.string.paid) else (DateUtil.dayBetweenTwoDate(currentLocalDate, DateUtil.currentDateTime.toLocalDate())).toString() +" "+ mContext.getString(R.string.day_remained)
+    fun remainingDay(mContext: Context): String = if (isMoneyPaid) mContext.getString(R.string.paid) else (DateUtil.dayBetweenTwoDate(currentLocalDate, DateUtil.localDateTimeNow.toLocalDate())).toString() +" "+ mContext.getString(R.string.day_remained)
 
     val toIncomeModel:IncomeModel
         get() = IncomeModel(name, amount,initialDate,deleted,isRepeatable,id)
@@ -27,11 +28,17 @@ data class Income(
         get() = IncomeCardModel(id,currentDate,amount,cardId)
 
     val initialLocalDate:LocalDate
-        get()= DateUtil.convertToDate(initialDate)
+        get()= SqlDateUtil.convertDate(initialDate)
 
     val currentLocalDate:LocalDate
-        get()= DateUtil.convertToDate(currentDate)
+        get()= SqlDateUtil.convertDate(currentDate)
 
     val isMoneyPaid:Boolean
-        get() = currentLocalDate.dayOfMonth <= DateUtil.currentDateTime.dayOfMonth && currentLocalDate.checkMonthAndYear(DateUtil.currentDateTime)
+        get() = currentLocalDate.dayOfMonth <= DateUtil.localDateTimeNow.dayOfMonth && currentLocalDate.isMonthAndYearEqualTo(DateUtil.localDateTimeNow)
+
+
+
+
+
+
 }

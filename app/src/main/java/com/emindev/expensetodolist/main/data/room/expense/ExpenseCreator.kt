@@ -11,7 +11,7 @@ class ExpenseCreator(private val dao: ExpenseDao) {
 
     suspend fun add(expense: Expense) {
 
-        val cardId = DateUtil.currentTime
+        val cardId = DateUtil.dateTimeNow
         if (expense.repetition != null) {
 
             repeat(expense.repetition!!) {
@@ -37,7 +37,7 @@ class ExpenseCreator(private val dao: ExpenseDao) {
         }
         else {
             expenseList.forEach { exExpense ->
-                if (expense.date >= DateUtil.currentDateTime.toLocalDate()) {
+                if (expense.date >= DateUtil.localDateTimeNow.toLocalDate()) {
 
                     val newExpense = exExpense.copy(name = expense.name, amount = expense.amount, deleted = expense.deleted)
 
@@ -64,7 +64,7 @@ class ExpenseCreator(private val dao: ExpenseDao) {
             expenseList.forEach { exExpense: Expense ->
                 exExpense.deleted = true
                 dao.upsert(expense)
-                if (exExpense.date >= DateUtil.currentDateTime.toLocalDate()) {
+                if (exExpense.date >= DateUtil.localDateTimeNow.toLocalDate()) {
                     dao.delete(exExpense)
                 }
             }

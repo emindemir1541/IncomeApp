@@ -5,15 +5,16 @@ import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class MainViewModel() : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _selectedDate = MutableStateFlow(DateUtil.currentDateTime)
+    private val _selectedDate = MutableStateFlow(DateUtil.localDateTimeNow.toLocalDate())
     val selectedDate = _selectedDate.asStateFlow()
-    fun setSelectedDate(selectedDate: LocalDateTime) {
+    fun setSelectedDate(selectedDate: LocalDate) {
         _selectedDate.value = selectedDate
     }
 

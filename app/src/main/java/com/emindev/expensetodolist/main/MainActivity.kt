@@ -31,10 +31,13 @@ import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.databinding.ActivityMainBinding
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.convertToString
 import com.emindev.expensetodolist.helperlibrary.common.helper.SystemInfo
 import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
+import com.emindev.expensetodolist.helperlibrary.common.helper.test
 import com.emindev.expensetodolist.helperlibrary.common.model.Resource
 import com.emindev.expensetodolist.helperlibrary.ui.alertDialogClassic
+import com.emindev.expensetodolist.main.common.util.CardCreator
 import com.emindev.expensetodolist.main.common.util.RemoteData
 import com.emindev.expensetodolist.main.data.room.expense.ExpenseEvent
 import com.emindev.expensetodolist.main.data.room.expense.ExpenseViewModel
@@ -98,7 +101,6 @@ class MainActivity : AppCompatActivity() {
 
         //updateCheck()
 
-        //CardCreator.e incomeCreator(incomeViewModel)
 
         composeView.setContent {
 
@@ -108,10 +110,23 @@ class MainActivity : AppCompatActivity() {
             val onExpenseEvent = expenseViewModel::onEvent
             val onIncomeEvent = incomeViewModel::onEvent
 
+            val selectedDate = mainViewModel.selectedDate.collectAsState()
+
+            test = incomeState.incomes
+
+          CardCreator(incomeViewModel = incomeViewModel)
 
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
                 .background(Color.DarkGray)) {
+
+                item{
+                    Row(modifier=Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "Selected Date:  " +selectedDate.value.convertToString(DateUtil.Delimiters.slash), color = Color.White)
+                        Text(text = "Current Date:  " + DateUtil.localDateNow.convertToString(DateUtil.Delimiters.slash), color = Color.White)
+                    }
+                }
+
                 items(expenseState.expenses) {
                     Row(modifier = Modifier
                         .fillMaxWidth()
@@ -136,16 +151,16 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-               /* items(incomeUniqueList.value) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .background(Color.Blue)
-                        , verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                        Text(text = it.cardId.toString())
+                /* items(incomeUniqueList.value) {
+                     Row(modifier = Modifier
+                         .fillMaxWidth()
+                         .padding(16.dp)
+                         .background(Color.Blue)
+                         , verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                         Text(text = it.cardId.toString())
 
-                    }
-                }*/
+                     }
+                 }*/
 
                 item {
                     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
@@ -158,7 +173,7 @@ class MainActivity : AppCompatActivity() {
                             onExpenseEvent(ExpenseEvent.SetDay(4))
                             onExpenseEvent(ExpenseEvent.SetMonth(5))
                             onExpenseEvent(ExpenseEvent.SetYear(2023))
-                            onExpenseEvent(ExpenseEvent.SetStartedDate(DateUtil.currentTime))
+                            onExpenseEvent(ExpenseEvent.SetStartedDate(DateUtil.dateTimeNow))
                             onExpenseEvent(ExpenseEvent.SetCompleted(false))
                             onExpenseEvent(ExpenseEvent.SetExpenseType(ExpenseType.NEED))
                             onExpenseEvent(ExpenseEvent.SaveExpense)
@@ -174,9 +189,9 @@ class MainActivity : AppCompatActivity() {
                             onIncomeEvent(IncomeEvent.ShowDialog)
                             onIncomeEvent(IncomeEvent.SetName("emin"))
                             onIncomeEvent(IncomeEvent.SetAmount(564f))
-                            onIncomeEvent(IncomeEvent.SetInitialDate(DateUtil.currentDateTime.toLocalDate()))
+                            onIncomeEvent(IncomeEvent.SetInitialDate(DateUtil.localDateTimeNow.toLocalDate()))
                             onIncomeEvent(IncomeEvent.SetIsRepeatable(true))
-                            onIncomeEvent(IncomeEvent.SetCurrentDate(/*DateUtil.convertToDateTime(2023, Random.nextInt(1,12),5).toLocalDate()*/DateUtil.currentDateTime.toLocalDate()))
+                            onIncomeEvent(IncomeEvent.SetCurrentDate(/*DateUtil.convertToDateTime(2023, Random.nextInt(1,12),5).toLocalDate()*/DateUtil.localDateTimeNow.toLocalDate()))
                             onIncomeEvent(IncomeEvent.SaveIncome)
                             onIncomeEvent(IncomeEvent.HideDialog)
                         }) {

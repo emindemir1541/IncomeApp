@@ -3,7 +3,6 @@ package com.emindev.expensetodolist.main.common.calculation
 import android.content.Context
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.main.data.room.expense.Expense
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
 import com.emindev.expensetodolist.main.data.room.income.Income
 import com.emindev.expensetodolist.main.data.sharedPreference.SavedMoney
 /*
@@ -33,7 +32,7 @@ class Calculator(private val selectedIncomeList: List<Income>, private val selec
     val potentialExpense: Float
         get() {
             var totalExpense = 0f
-            selectedExpenseList.filter { expense: Expense -> expense.date.checkMonthAndYear(DateUtil.currentDateTime) }.forEach { expense ->
+            selectedExpenseList.filter { expense: Expense -> expense.date.isMonthAndYearEqualTo(DateUtil.localDateTimeNow) }.forEach { expense ->
                     totalExpense += expense.amount
             }
             return totalExpense
@@ -48,7 +47,7 @@ class Calculator(private val selectedIncomeList: List<Income>, private val selec
         get() {
             val mRemainedMoney = totalIncome - paidExpense
             if (mRemainedMoney != 0f)
-                SavedMoney(mContext).setTemporary(mRemainedMoney, DateUtil.currentDateTime)
+                SavedMoney(mContext).setTemporary(mRemainedMoney, DateUtil.localDateTimeNow)
             return mRemainedMoney
         }
 

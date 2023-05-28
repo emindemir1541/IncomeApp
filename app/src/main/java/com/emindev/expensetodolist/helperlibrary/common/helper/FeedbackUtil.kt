@@ -29,7 +29,7 @@ object FeedbackUtil {
 
     @SuppressLint("SuspiciousIndentation")
     fun setError(title: String, exception: Exception, errorLocation: String, userMessage: String? = null, description: String? = null, contextForUserMessage: Context? = null): Exception {
-        val error = Error(title, exception.localizedMessage ?: "", exception.cause.toString(), errorLocation, DateUtil.currentTime, description)
+        val error = Error(title, exception.localizedMessage ?: "", exception.cause.toString(), errorLocation, DateUtil.dateTimeNow, description)
         FeedBackRepository().setError(error) {
             when (it) {
                 is Resource.Success -> {}
@@ -51,7 +51,7 @@ object FeedbackUtil {
     }
 
     fun setComment(nameSurname: String, title: String, commentData: String) {
-        val comment = Comment(nameSurname, title, commentData, DateUtil.currentTime)
+        val comment = Comment(nameSurname, title, commentData, DateUtil.dateTimeNow)
         FeedBackRepository().setComment(comment) {
             when (it) {
                 is Resource.Success -> {

@@ -2,11 +2,12 @@ package com.emindev.expensetodolist.main.data.room.expense
 
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class ExpenseState (
     val expenses:List<Expense> = emptyList(),
-    val selectedDate: LocalDateTime = DateUtil.currentDateTime,
+    val selectedDate: LocalDate = DateUtil.localDateTimeNow.toLocalDate(),
     val name:String = "",
     val amount:String = "",
     val startedDate:Long =0,

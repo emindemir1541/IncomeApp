@@ -2,8 +2,8 @@ package com.emindev.expensetodolist.main.data.sharedPreference
 
 import android.content.Context
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.checkMonthAndYear
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.toLong
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearEqualTo
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.toLong
 import com.emindev.expensetodolist.helperlibrary.data.sharedpreference.SharedPreferenceRepository
 import com.emindev.expensetodolist.main.common.constant.SharedPrefFileNames
 import com.emindev.expensetodolist.main.common.constant.SharedPrefSavedMoney
@@ -33,9 +33,9 @@ class SavedMoney(context: Context) {
 
     val savedDate get() = DateUtil.convertToDateTime(repository.getLong(SharedPrefFileNames.SAVED_MONEY, SharedPrefSavedMoney.SAVED_MONEY_DATE,0))
 
-    val resetTemporary get() = setTemporary(0f, DateUtil.currentDateTime)
+    val resetTemporary get() = setTemporary(0f, DateUtil.localDateTimeNow)
 
-    val checkDate get() = !savedDate.checkMonthAndYear(DateUtil.currentDateTime)
+    val checkDate get() = !savedDate.isMonthAndYearEqualTo(DateUtil.localDateTimeNow)
 
     fun resetPermanent() = setPermanent(0f)
 

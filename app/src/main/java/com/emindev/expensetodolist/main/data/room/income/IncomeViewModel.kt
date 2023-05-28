@@ -3,7 +3,9 @@ package com.emindev.expensetodolist.main.data.room.income
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.toDateString
 import com.emindev.expensetodolist.helperlibrary.common.helper.test
+import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,12 +24,10 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
     ViewModel() {
 
     private val _incomes = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getIncomesBySelectedDate(selectedDate.monthValue.toString(), selectedDate.year.toString())
+        dao.getIncomesBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(),SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    private val allIncomeDao = dao.readAllData()
     private val _state = MutableStateFlow(IncomeState())
-
     val state = combine(_state, _incomes, mainViewModel.selectedDate) { state, incomes, _ ->
         state.copy(
             incomes = incomes,
@@ -35,11 +35,15 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IncomeState())
 
 
+    val allIncomes = dao.readAllData()
+    val incomeModels = dao.getIncomeModels()
+    val incomeCardModels = dao.getIncomeCardModels()
     fun cardsByIncome(income:Income) = dao.getCardsByIncome(income.id)
 
-    fun addIncomeCard(income: Income, currentDate: LocalDate) {
-        // TODO: add card 
-        // TODO: add card if repetable loop
+    fun addIncomeCard(incomeCardModel: IncomeCardModel) {
+       viewModelScope.launch {
+           dao.upsert(incomeCardModel)
+       }
     }
 
     fun onEvent(event: IncomeEvent) {
@@ -73,7 +77,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                 val incomeModel = IncomeModel(
                     name = name,
                     latestAmount = amount.toFloat(),
-                    initialDate = DateUtil.convertToStringTypeSql(initialDate),
+                    initialDate = SqlDateUtil.convertDate(initialDate),
                     deleted = false,
                     isRepeatable = isRepeatable,
                 )
@@ -81,7 +85,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                     val id = dao.upsert(incomeModel)
                     val incomeCardModel = IncomeCardModel(
                         id  = id,
-                        currentDate = DateUtil.convertToStringTypeSql(currentDate),
+                        currentDate = SqlDateUtil.convertDate(currentDate),
                         amount = amount.toFloat(),
                     )
                     dao.upsert(incomeCardModel)

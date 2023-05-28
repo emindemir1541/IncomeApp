@@ -9,8 +9,8 @@ data class IncomeState(
     val cardId: Long = 0,
     val name: String = "",
     val amount: String = "",
-    val initialDate: LocalDate = DateUtil.currentDateTime.toLocalDate(),
-    val currentDate:LocalDate = DateUtil.currentDateTime.toLocalDate(),
+    val initialDate: LocalDate = DateUtil.localDateTimeNow.toLocalDate(),
+    val currentDate:LocalDate = DateUtil.localDateTimeNow.toLocalDate(),
     val isRepeatable: Boolean = false,
     val isAddingIncome:Boolean = false
 )

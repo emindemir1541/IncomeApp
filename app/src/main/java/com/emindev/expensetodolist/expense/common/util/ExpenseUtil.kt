@@ -7,7 +7,7 @@ import com.emindev.expensetodolist.expense.common.constant.ExpenseSituation
 import com.emindev.expensetodolist.main.data.room.expense.Expense
 
 /*fun Expense.remainingDay(mContext: Context): String {
-    val remainingDay = (DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate()))
+    val remainingDay = (DateUtil.dayBetweenTwoDate(date, DateUtil.localDateTimeNow.toLocalDate()))
     return if (completed) {
         mContext.getString(R.string.expense_paid)
     }
@@ -23,7 +23,7 @@ import com.emindev.expensetodolist.main.data.room.expense.Expense
 }*/
 
 val Expense.remainingDay: Long
-    get() = DateUtil.dayBetweenTwoDate(date, DateUtil.currentDateTime.toLocalDate())
+    get() = DateUtil.dayBetweenTwoDate(date, DateUtil.localDateTimeNow.toLocalDate())
 
 fun Expense.daySituation(context: Context): ExpenseDaySituation {
     return if (completed) {

@@ -26,8 +26,12 @@ interface IncomeDao {
 
     @Query("select table_income.id,table_income_card.cardId,table_income.name,table_income_card.amount,table_income.initialDate,table_income_card.currentDate,table_income.deleted,table_income.isRepeatable " +
             " from table_income left join table_income_card on table_income.id = table_income_card.id " +
-            "where deleted = 0 and currentDate like :year ||  '/' || :month ||'%' order by cardId")
-    fun getIncomesBySelectedDate(month: String,year: String): Flow<List<Income>>
+            "where deleted = 0 and currentDate like :year ||  :delimiter || :month ||'%' order by cardId")
+    fun getIncomesBySelectedDate(month: String,year: String,delimiter:String): Flow<List<Income>>
+    @Query("select * from table_income where deleted = 0 order by initialDate")
+    fun getIncomeModels():Flow<List<IncomeModel>>
+    @Query("select * from table_income_card order by currentDate")
+    fun getIncomeCardModels():Flow<List<IncomeCardModel>>
     @Query("select * from table_income_card where id =:incomeId order by currentDate")
     fun getCardsByIncome(incomeId:Long):Flow<List<IncomeCardModel>>
 

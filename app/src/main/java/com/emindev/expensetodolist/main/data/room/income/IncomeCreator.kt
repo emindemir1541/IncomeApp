@@ -11,7 +11,7 @@ class IncomeCreator(private val dao:IncomeDao) {
 
 
     suspend fun upsert(income: Income) {
-        val cardId = DateUtil.currentTime
+        val cardId = DateUtil.dateTimeNow
         if (income.isRepeatable) {
 
             repeat(24) {
@@ -40,7 +40,7 @@ class IncomeCreator(private val dao:IncomeDao) {
     suspend fun updateAll(income: Income, incomeList: List<Income>) {
         if (income.isRepeatable) {
             incomeList.forEach { exIncome ->
-                if (income.date >= DateUtil.currentDateTime.toLocalDate()) {
+                if (income.date >= DateUtil.localDateTimeNow.toLocalDate()) {
                     val newIncome = exIncome.copy(
                         name = income.name,
                         latestAmount = income.latestAmount
@@ -72,7 +72,7 @@ class IncomeCreator(private val dao:IncomeDao) {
             incomeList.forEach { exIncome ->
                 exIncome.deleted = true
                 dao.upsert(exIncome)
-                if (exIncome.date >= DateUtil.currentDateTime.toLocalDate()) {
+                if (exIncome.date >= DateUtil.localDateTimeNow.toLocalDate()) {
                     dao.delete(exIncome)
                 }
             }
