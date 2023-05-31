@@ -69,16 +69,12 @@ fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incom
 
 
         items(incomeState.incomesMultipleCard) { income ->
-            AlertDialogDelete(onDeleteClick = { onEvent(IncomeEvent.DeleteCard(income)) }, onDeleteAllClick = { onEvent(IncomeEvent.DeleteIncome(income)) }, alertDialogState)
+            AlertDialogDelete(onDeleteCardClick = { onEvent(IncomeEvent.DeleteCard(income)) }, onDeleteAllClick = { onEvent(IncomeEvent.DeleteIncome(income)) }, alertDialogState)
 
             Box(modifier = Modifier
                 .animateItemPlacement(animationSpec = tween(durationMillis = 600))
             ) {
                 RowIncomeMultipleCard(income) {
-                    test = income.currentLocalDate
-                    test = DateUtil.localDateNow
-                    test= income.isCardPassed
-                    test = DateUtil.localDateNow.monthValue > income.currentLocalDate.monthValue && DateUtil.localDateNow.year >income.currentLocalDate.year
                     if (income.isCardPassed) {
                         alertDialogState.show()
                     }
