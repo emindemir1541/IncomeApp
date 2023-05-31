@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3c1a7456846acfa8fc444c8d96874a91",
+    "identityHash": "7642e668d899f2d3389cb1b9ec7433bd",
     "entities": [
       {
         "tableName": "table_expense",
@@ -98,7 +98,7 @@
       },
       {
         "tableName": "table_income",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `latestAmount` REAL NOT NULL, `initialDate` TEXT NOT NULL, `deleted` INTEGER NOT NULL, `isRepeatable` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `latestAmount` REAL NOT NULL, `initialDate` TEXT NOT NULL, `deleted` INTEGER NOT NULL, `repeatType` TEXT NOT NULL, `repetition` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -125,8 +125,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "isRepeatable",
-            "columnName": "isRepeatable",
+            "fieldPath": "repeatType",
+            "columnName": "repeatType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repetition",
+            "columnName": "repetition",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -148,7 +154,7 @@
       },
       {
         "tableName": "table_income_card",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `currentDate` TEXT NOT NULL, `amount` REAL NOT NULL, `cardId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `currentDate` TEXT NOT NULL, `cardAmount` REAL NOT NULL, `cardDeleted` INTEGER NOT NULL, `cardId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -163,9 +169,15 @@
             "notNull": true
           },
           {
-            "fieldPath": "amount",
-            "columnName": "amount",
+            "fieldPath": "cardAmount",
+            "columnName": "cardAmount",
             "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardDeleted",
+            "columnName": "cardDeleted",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -188,7 +200,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3c1a7456846acfa8fc444c8d96874a91')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7642e668d899f2d3389cb1b9ec7433bd')"
     ]
   }
 }

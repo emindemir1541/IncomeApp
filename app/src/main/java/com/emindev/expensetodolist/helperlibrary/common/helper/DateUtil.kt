@@ -2,6 +2,9 @@ package com.emindev.expensetodolist.helperlibrary.common.helper
 
 
 import android.annotation.SuppressLint
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearBiggerThan
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearSmallerThan
+import java.lang.IllegalArgumentException
 import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -39,7 +42,7 @@ sealed interface DateUtil {
         //Helpers
         private fun formatterTr(dateType: String) = DateTimeFormatter.ofPattern(dateType)
 
-         fun Int.toDateString(): String {
+        fun Int.toDateString(): String {
             val value = this.toString()
             return if (value.length < 2)
                 "0$value"
@@ -53,9 +56,11 @@ sealed interface DateUtil {
         fun convertToString(day: Int, month: Int, year: Int, delimiter: String): String = "${day.toDateString()}$delimiter${month.toDateString()}$delimiter$year"
         fun convertToStringReverted(day: Int, month: Int, year: Int, delimiter: String): String = "$year$delimiter${month.toDateString()}$delimiter${day.toDateString()}"
         fun convertToString(timeInMillis: Long, dataType: String): String = android.text.format.DateFormat.format(dataType, timeInMillis).toString()
-       // fun convertToString(dateTime: LocalDate,delimiter: String): String = "${dateTime.dayOfMonth.toDateString()}$delimiter${dateTime.monthValue.toDateString()}$delimiter${dateTime.year}"
+
+        // fun convertToString(dateTime: LocalDate,delimiter: String): String = "${dateTime.dayOfMonth.toDateString()}$delimiter${dateTime.monthValue.toDateString()}$delimiter${dateTime.year}"
         fun LocalDate.convertToString(delimiter: String): String = "${this.dayOfMonth.toDateString()}$delimiter${this.monthValue.toDateString()}$delimiter${this.year}"
-      //  fun convertToStringReverted(dateTime: LocalDate,delimiter: String): String = "${dateTime.year}$delimiter${dateTime.monthValue.toDateString()}$delimiter${dateTime.dayOfMonth.toDateString()}"
+
+        //  fun convertToStringReverted(dateTime: LocalDate,delimiter: String): String = "${dateTime.year}$delimiter${dateTime.monthValue.toDateString()}$delimiter${dateTime.dayOfMonth.toDateString()}"
         fun LocalDate.convertToStringReverted(delimiter: String): String = "${this.year}$delimiter${this.monthValue.toDateString()}$delimiter${this.dayOfMonth.toDateString()}"
 
         fun convertToDateTime(dateTime: Long): LocalDateTime = Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime()
@@ -66,6 +71,8 @@ sealed interface DateUtil {
         fun convertToDateTime(year: Int, month: Int, dayOfMonth: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, nanoOfSecond: Int = 0): LocalDateTime =
             LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(ZoneId.systemDefault()).toLocalDateTime()
 
+        fun convertToDate(year: Int, month: Int, dayOfMonth: Int): LocalDate =
+            LocalDate.of(year, month, dayOfMonth)
 
         fun LocalDateTime.toLong(): Long = this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         fun LocalDate.toLong(): Long = convertToDateTime(this).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -93,11 +100,11 @@ sealed interface DateUtil {
 
         //Month And Year
         fun LocalDateTime.isMonthAndYearEqualTo(localDateTime: LocalDateTime): Boolean = localDateTime.monthValue == this.monthValue && localDateTime.year == this.year
-        fun LocalDate.isMonthAndYearEqualTo(localDate:LocalDate): Boolean = localDate.monthValue == this.monthValue && localDate.year == this.year
-        fun LocalDate.isMonthAndYearBiggerThan(smallerLocalDate: LocalDate): Boolean = smallerLocalDate.monthValue < this.monthValue && this.year < this.year
-        fun LocalDate.isMonthAndYearEqualOrBiggerThan(smallerLocalDate: LocalDate): Boolean = smallerLocalDate.monthValue <= this.monthValue && this.year <= this.year
-        fun LocalDate.isMonthAndYearSmallerThan(biggerLocalDate: LocalDate): Boolean = biggerLocalDate.monthValue > this.monthValue && this.year > this.year
-        fun LocalDate.isMonthAndYearEqualOrSmallerThan(biggerLocalDate: LocalDate): Boolean = biggerLocalDate.monthValue >= this.monthValue && this.year >= this.year
+        fun LocalDate.isMonthAndYearEqualTo(localDate: LocalDate): Boolean = localDate.monthValue == this.monthValue && localDate.year == this.year
+        fun LocalDate.isMonthAndYearBiggerThan(smallerLocalDate: LocalDate): Boolean = (smallerLocalDate.year < this.year) || (smallerLocalDate.year == this.year && smallerLocalDate.monthValue < this.monthValue)
+        fun LocalDate.isMonthAndYearEqualOrBiggerThan(smallerLocalDate: LocalDate): Boolean = isMonthAndYearBiggerThan(smallerLocalDate) || isMonthAndYearEqualTo(smallerLocalDate)
+        fun LocalDate.isMonthAndYearSmallerThan(biggerLocalDate: LocalDate): Boolean = (biggerLocalDate.year > this.year) || (biggerLocalDate.year == this.year && biggerLocalDate.monthValue > this.monthValue)
+        fun LocalDate.isMonthAndYearEqualOrSmallerThan(biggerLocalDate: LocalDate): Boolean = isMonthAndYearSmallerThan(biggerLocalDate) || isMonthAndYearEqualTo(biggerLocalDate)
         fun LocalDate.toDateTime(): LocalDateTime = convertToDateTime(this)
 
 
@@ -106,6 +113,17 @@ sealed interface DateUtil {
         fun dayBetweenTwoDate(dateTimeA: LocalDate, dateTimeB: LocalDate) = java.util.concurrent.TimeUnit.DAYS.convert(dateTimeA.toLong() - dateTimeB.toLong(), java.util.concurrent.TimeUnit.MILLISECONDS)
         fun dayBetweenTwoDate(dateTimeA: Long, dateTimeB: Long) = java.util.concurrent.TimeUnit.DAYS.convert(dateTimeA - dateTimeB, java.util.concurrent.TimeUnit.MILLISECONDS)
 
+        fun forEachMonthBetweenTwoDate(includedFirstDate: LocalDate, includedLastDate: LocalDate, onEveryMonth: (LocalDate) -> Unit) {
+            var currentDate = includedFirstDate
+
+            if (includedLastDate < includedFirstDate)
+                throw IllegalArgumentException("Last date must be bigger than first date")
+            do {
+                onEveryMonth.invoke(currentDate)
+                currentDate = currentDate.plusMonths(1)
+            } while (currentDate.isMonthAndYearEqualOrSmallerThan(includedLastDate))
+
+        }
 
 //fun getLocalDate(): String = DateTimeFormatter.ofPattern(UTC_TR).format(LocalDate.now())
         /*  fun dateToMonthAndYear(dateLong: String): String {

@@ -5,6 +5,7 @@ package com.emindev.expensetodolist.main.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearEqualTo
@@ -32,11 +34,11 @@ import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 
 @Composable
-fun DateRow(mainViewModel: MainViewModel) {
+fun DateRow(modifier: Modifier,mainViewModel: MainViewModel) {
     val selectedDate = mainViewModel.selectedDate.collectAsState()
     val calendarState = rememberUseCaseState()
 
-    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
+    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
         IconButton(onClick = { mainViewModel.previousMonth }) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(id = R.string.back))
         }

@@ -6,7 +6,7 @@ import androidx.compose.runtime.collectAsState
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearEqualOrSmallerThan
 import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
-import com.emindev.expensetodolist.helperlibrary.common.helper.test
+import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.data.room.income.IncomeCardModel
 import com.emindev.expensetodolist.main.data.room.income.IncomeModel
 import com.emindev.expensetodolist.main.data.room.income.IncomeViewModel
@@ -21,7 +21,7 @@ fun CardCreator(incomeViewModel: IncomeViewModel) {
     // TODO: ileride gösterilmesi gereken kartlar için yansıma kullan, bu yansıma expense de tamamlandıysa kaydet
 
 
-    val incomeModelListFlow = incomeViewModel.incomeModels.collectAsState(initial = emptyList())
+    val incomeModelListFlow = incomeViewModel.incomeModelsNotDeleted.collectAsState(initial = emptyList())
     val incomeCardModelListFlow = incomeViewModel.incomeCardModels.collectAsState(initial = emptyList())
 
 
@@ -32,16 +32,14 @@ fun CardCreator(incomeViewModel: IncomeViewModel) {
         val incomeModelList = incomeModelListFlow.value
         val incomeCardModelList = incomeCardModelListFlow.value
 
-        incomeModelList.filter { income: IncomeModel -> income.isRepeatable }.forEach { incomeModel ->
+        incomeModelList.filter { income: IncomeModel -> income.repeatType == RepeatType.INFINITY }.forEach { incomeModel ->
             try {
-                var dateCounter = incomeModel.initialLocalDate
-                while (dateCounter.isMonthAndYearEqualOrSmallerThan(DateUtil.localDateNow)) {
-                    val incomeCard = incomeCardModelList.find { incomeCardModel -> incomeCardModel.id == incomeModel.id && incomeCardModel.currentLocalDate == dateCounter }
+                DateUtil.forEachMonthBetweenTwoDate(incomeModel.initialLocalDate,DateUtil.localDateNow) {currentDate->
+                    val incomeCard = incomeCardModelList.find { incomeCardModel -> incomeCardModel.id == incomeModel.id && incomeCardModel.currentLocalDate == currentDate }
                     if (incomeCard == null) {
-                        val incomeCardModel = IncomeCardModel(incomeModel.id, SqlDateUtil.convertDate(dateCounter), incomeModel.latestAmount)
+                        val incomeCardModel = IncomeCardModel(id = incomeModel.id,currentDate= SqlDateUtil.convertDate(currentDate), cardAmount = incomeModel.latestAmount, cardDeleted = false)
                         incomeViewModel.addIncomeCard(incomeCardModel)
                     }
-                    dateCounter = dateCounter.plusMonths(1)
 
                 }
             } catch (e: Exception) {

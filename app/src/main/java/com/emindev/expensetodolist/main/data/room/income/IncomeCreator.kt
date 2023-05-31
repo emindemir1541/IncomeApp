@@ -21,7 +21,7 @@ class IncomeCreator(private val dao:IncomeDao) {
                     day = date.dayOfMonth,
                     month = date.monthValue,
                     year = date.year,
-                    deleted = false,
+                    cardDeleted = false,
                     cardId = cardId
                 )
                 dao.upsert(newIncome)
@@ -42,14 +42,14 @@ class IncomeCreator(private val dao:IncomeDao) {
             incomeList.forEach { exIncome ->
                 if (income.date >= DateUtil.localDateTimeNow.toLocalDate()) {
                     val newIncome = exIncome.copy(
-                        name = income.name,
+                        route = income.route,
                         latestAmount = income.latestAmount
                     )
                     dao.upsert(newIncome)
                 }
                 else {
                     val newIncome = exIncome.copy(
-                        name = income.name
+                        route = income.route
                     )
                     dao.upsert(newIncome)
                 }
@@ -62,7 +62,7 @@ class IncomeCreator(private val dao:IncomeDao) {
     }
 
     suspend fun delete(income: Income, incomeList: List<Income>) {
-        if (income.deleted || !income.isRepeatable) {
+        if (income.cardDeleted || !income.isRepeatable) {
             dao.delete(income)
             withContext(Dispatchers.Main) {
                // message.infoDeletedCard()
@@ -70,7 +70,7 @@ class IncomeCreator(private val dao:IncomeDao) {
         }
         else {
             incomeList.forEach { exIncome ->
-                exIncome.deleted = true
+                exIncome.cardDeleted = true
                 dao.upsert(exIncome)
                 if (exIncome.date >= DateUtil.localDateTimeNow.toLocalDate()) {
                     dao.delete(exIncome)

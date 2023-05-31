@@ -97,6 +97,8 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+    // navigationFragment
+     implementation "androidx.navigation:navigation-compose:2.6.0-alpha08"
 
 
     implementation 'com.jjoe64:graphview:4.2.2'

@@ -64,15 +64,15 @@
     <string name="save">Kaydet</string>
 
     <!--remote-->
-    <!--<string name="locked">Locked !!</string>-->
+    <!--<string route="locked">Locked !!</string>-->
     <string name="locked">Kilitlendi !!</string>
-    <!--<string name="locked_content">App has locked by Admin, Please try again later</string>-->
+    <!--<string route="locked_content">App has locked by Admin, Please try again later</string>-->
     <string name="locked_content">Uygulama yönetici tarafından kilitlendi, lütfen daha sonra tekrar deneyin</string>
-    <!--<string name="update">Update</string>-->
+    <!--<string route="update">Update</string>-->
     <string name="update">Güncelleme</string>
-    <!--<string name="update_content">We have update for you, you can update from Google Play</string>-->
+    <!--<string route="update_content">We have update for you, you can update from Google Play</string>-->
     <string name="update_content">Sizin için bir güncellememiz var, Play store üzeinden uygulamayı güncelleyebilirsiniz</string>
-    <!--<string name="update_force_content">We have update for you, please update from Google Play Store to continue</string>-->
+    <!--<string route="update_force_content">We have update for you, please update from Google Play Store to continue</string>-->
     <string name="update_force_content">Sizin için bir güncellememiz var, uygulamayı kullanmaya devam etmek için lütfen uygulamayı güncelleyin</string>
 
     <!--warnings-->
@@ -87,6 +87,14 @@
     <string name="info_deleted_card">Geçerli kart silindi</string>
     <string name="back">Geri</string>
     <string name="forward">İleri</string>
+    <string name="name">isim</string>
+    <string name="amount">Tutar</string>
+    <string name="limited">Limitli</string>
+    <string name="Repetition">Tekrar</string>
+    <string name="income_update">Gelir Güncelle</string>
+    <string name="info_delete_card">Bu gelir geçmişteki bir zamana ait, sadece bu zamandaki kartı mı silmek istiyorsunuz</string>
+    <string name="delete_this_card">Kartı sil</string>
+    <string name="delete_income">Geliri sil</string>
 
 
     <string-array name="days">

@@ -106,7 +106,7 @@ fun canToggleGPS(context: Context): Boolean {
     if (pacInfo != null) {
         for (actInfo in pacInfo.receivers) {
             //failIfNotEqual if recevier is exported. if so, we can toggle GPS.
-            if (actInfo.name == "com.android.settings.widget.SettingsAppWidgetProvider" && actInfo.exported) {
+            if (actInfo.route == "com.android.settings.widget.SettingsAppWidgetProvider" && actInfo.exported) {
                 return true
             }
         }

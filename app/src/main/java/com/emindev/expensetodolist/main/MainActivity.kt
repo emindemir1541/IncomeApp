@@ -37,6 +37,9 @@ import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
 import com.emindev.expensetodolist.helperlibrary.common.helper.test
 import com.emindev.expensetodolist.helperlibrary.common.model.Resource
 import com.emindev.expensetodolist.helperlibrary.ui.alertDialogClassic
+import com.emindev.expensetodolist.income.ui.pages.IncomeAddPage
+import com.emindev.expensetodolist.income.ui.pages.IncomePage
+import com.emindev.expensetodolist.main.common.constant.ChangeDataType
 import com.emindev.expensetodolist.main.common.util.CardCreator
 import com.emindev.expensetodolist.main.common.util.RemoteData
 import com.emindev.expensetodolist.main.data.room.expense.ExpenseEvent
@@ -48,6 +51,7 @@ import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.data.update.RemoteRepository
 import com.emindev.expensetodolist.main.data.update.RemoteSettings
 import com.emindev.expensetodolist.main.ui.component.DateRow
+import com.emindev.expensetodolist.main.ui.page.Navigation
 
 
 class MainActivity : ComponentActivity() {
@@ -95,7 +99,6 @@ class MainActivity : ComponentActivity() {
         SystemInfo.PACKAGE_NAME = packageName
 
 
-
         //updateCheck()
 
 
@@ -109,77 +112,78 @@ class MainActivity : ComponentActivity() {
 
             val selectedDate = mainViewModel.selectedDate.collectAsState()
 
-            DateRow(mainViewModel = mainViewModel)
+            //IncomeAddPage(DateUtil.localDateNow,incomeState = incomeState,onIncomeEvent,ChangeDataType.ADD)
 
-  /*        CardCreator(incomeViewModel = incomeViewModel)
+            Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, onIncomeEvent = onIncomeEvent)
+            /*        CardCreator(incomeViewModel = incomeViewModel)
 
-            LazyColumn(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.DarkGray)) {
+                      LazyColumn(modifier = Modifier
+                          .fillMaxSize()
+                          .background(Color.DarkGray)) {
 
-                item{
-                    Row(modifier=Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "Selected Date:  " +selectedDate.value.convertToString(DateUtil.Delimiters.slash), color = Color.White)
-                        Text(text = "Current Date:  " + DateUtil.localDateNow.convertToString(DateUtil.Delimiters.slash), color = Color.White)
-                    }
-                }
+                          item{
+                              Row(modifier=Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
+                                  Text(text = "Selected Date:  " +selectedDate.value.convertToString(DateUtil.Delimiters.slash), color = Color.White)
+                                  Text(text = "Current Date:  " + DateUtil.localDateNow.convertToString(DateUtil.Delimiters.slash), color = Color.White)
+                              }
+                          }
 
-                items(expenseState.expenses) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                        Text(text = it.name)
-                        Text(text = it.amount.toString())
-                    }
-                }
+                          items(expenseState.expenses) {
+                              Row(modifier = Modifier
+                                  .fillMaxWidth()
+                                  .padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                                  Text(text = it.route)
+                                  Text(text = it.amount.toString())
+                              }
+                          }
 
-                items(incomeState.incomes) {
+                          items(incomeState.incomes) {
 
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .background(Color.Green)
-                        .clickable {
-                            onIncomeEvent(IncomeEvent.DeleteIncome(it))
-                        }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                        Text(text = it.name)
-                        Text(text = it.amount.toString())
+                              Row(modifier = Modifier
+                                  .fillMaxWidth()
+                                  .padding(16.dp)
+                                  .background(Color.Green)
+                                  .clickable {
+                                      onIncomeEvent(IncomeEvent.DeleteIncome(it))
+                                  }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                                  Text(text = it.route)
+                                  Text(text = it.amount.toString())
 
-                    }
-                }
+                              }
+                          }
 
 
 
-                item {
-                    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-                        Button(onClick = {
+                          item {
+                              Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
+                                  Button(onClick = {
 
-                            onExpenseEvent(ExpenseEvent.ShowDialog)
-                            onExpenseEvent(ExpenseEvent.SetName("emin"))
-                            onExpenseEvent(ExpenseEvent.SetAmount(23432f))
-                            onExpenseEvent(ExpenseEvent.SetRepetition(3))
-                            onExpenseEvent(ExpenseEvent.SetDay(4))
-                            onExpenseEvent(ExpenseEvent.SetMonth(5))
-                            onExpenseEvent(ExpenseEvent.SetYear(2023))
-                            onExpenseEvent(ExpenseEvent.SetStartedDate(DateUtil.dateTimeNow))
-                            onExpenseEvent(ExpenseEvent.SetCompleted(false))
-                            onExpenseEvent(ExpenseEvent.SetExpenseType(ExpenseType.NEED))
-                            onExpenseEvent(ExpenseEvent.SaveExpense)
-                            onExpenseEvent(ExpenseEvent.HideDialog)
+                                      onExpenseEvent(ExpenseEvent.ShowDialog)
+                                      onExpenseEvent(ExpenseEvent.SetName("emin"))
+                                      onExpenseEvent(ExpenseEvent.SetAmount(23432f))
+                                      onExpenseEvent(ExpenseEvent.SetRepetition(3))
+                                      onExpenseEvent(ExpenseEvent.SetDay(4))
+                                      onExpenseEvent(ExpenseEvent.SetMonth(5))
+                                      onExpenseEvent(ExpenseEvent.SetYear(2023))
+                                      onExpenseEvent(ExpenseEvent.SetStartedDate(DateUtil.dateTimeNow))
+                                      onExpenseEvent(ExpenseEvent.SetCompleted(false))
+                                      onExpenseEvent(ExpenseEvent.SetExpenseType(ExpenseType.NEED))
+                                      onExpenseEvent(ExpenseEvent.SaveExpense)
+                                      onExpenseEvent(ExpenseEvent.HideDialog)
 
-                            Toast.makeText(this@MainActivity, "workinh-g", Toast.LENGTH_LONG).show()
+                                      Toast.makeText(this@MainActivity, "workinh-g", Toast.LENGTH_LONG).show()
 
-                        }) {
-                            Text(text = "add Expense")
-                        }
+                                  }) {
+                                      Text(text = "add Expense")
+                                  }
 
-                        Button(onClick = {
-                            onIncomeEvent(IncomeEvent.ShowDialog)
-                            onIncomeEvent(IncomeEvent.SetName("emin"))
-                            onIncomeEvent(IncomeEvent.SetAmount(564f))
-                            onIncomeEvent(IncomeEvent.SetInitialDate(DateUtil.localDateTimeNow.toLocalDate()))
-                            onIncomeEvent(IncomeEvent.SetIsRepeatable(true))
-                            onIncomeEvent(IncomeEvent.SetCurrentDate(*//*DateUtil.convertToDateTime(2023, Random.nextInt(1,12),5).toLocalDate()*//*DateUtil.localDateTimeNow.toLocalDate()))
+                                  Button(onClick = {
+                                      onIncomeEvent(IncomeEvent.ShowDialog)
+                                      onIncomeEvent(IncomeEvent.SetName("emin"))
+                                      onIncomeEvent(IncomeEvent.SetAmount(564f))
+                                      onIncomeEvent(IncomeEvent.SetInitialDate(DateUtil.localDateTimeNow.toLocalDate()))
+                                      onIncomeEvent(IncomeEvent.SetIsRepeatable(true))
+                                      onIncomeEvent(IncomeEvent.SetCurrentDate(*//*DateUtil.convertToDateTime(2023, Random.nextInt(1,12),5).toLocalDate()*//*DateUtil.localDateTimeNow.toLocalDate()))
                             onIncomeEvent(IncomeEvent.SaveIncome)
                             onIncomeEvent(IncomeEvent.HideDialog)
                         }) {
