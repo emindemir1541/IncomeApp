@@ -17,7 +17,6 @@ class MainViewModel() : ViewModel() {
         _selectedDate.value = selectedDate
     }
 
-
     val appIsLoading: Unit
         get() {
             _isLoading.value = true

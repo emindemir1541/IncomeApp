@@ -2,8 +2,6 @@ package com.emindev.expensetodolist.helperlibrary.common.helper
 
 
 import android.annotation.SuppressLint
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearBiggerThan
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearSmallerThan
 import java.lang.IllegalArgumentException
 import java.time.*
 import java.time.format.DateTimeFormatter
@@ -110,7 +108,7 @@ sealed interface DateUtil {
 
         //difference between two getSavedDate
         fun dayBetweenTwoDate(dateTimeA: LocalDateTime, dateTimeB: LocalDateTime) = java.util.concurrent.TimeUnit.DAYS.convert(dateTimeA.toLong() - dateTimeB.toLong(), java.util.concurrent.TimeUnit.MILLISECONDS)
-        fun dayBetweenTwoDate(dateTimeA: LocalDate, dateTimeB: LocalDate) = java.util.concurrent.TimeUnit.DAYS.convert(dateTimeA.toLong() - dateTimeB.toLong(), java.util.concurrent.TimeUnit.MILLISECONDS)
+        fun dayBetweenTwoDate(biggerDateTime: LocalDate, smallerDateTime: LocalDate) = java.util.concurrent.TimeUnit.DAYS.convert(biggerDateTime.toLong() - smallerDateTime.toLong(), java.util.concurrent.TimeUnit.MILLISECONDS)
         fun dayBetweenTwoDate(dateTimeA: Long, dateTimeB: Long) = java.util.concurrent.TimeUnit.DAYS.convert(dateTimeA - dateTimeB, java.util.concurrent.TimeUnit.MILLISECONDS)
 
         fun forEachMonthBetweenTwoDate(includedFirstDate: LocalDate, includedLastDate: LocalDate, onEveryMonth: (LocalDate) -> Unit) {

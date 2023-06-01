@@ -39,6 +39,8 @@ data class Income(
     val isMoneyPaid: Boolean
         get() = currentLocalDate <= localDateNow
 
+
+
     val isCardPassed: Boolean
         get() = currentLocalDate.isMonthAndYearSmallerThan(localDateNow)
 

@@ -7,6 +7,7 @@ import java.time.LocalDate
 
 data class IncomeState(
     val incomesMultipleCard: List<Income> = emptyList(),
+    val incomesInfinity: List<IncomeModel> = emptyList(),
     val incomesOneCard: List<Income> = emptyList(),
     val id:Long=0,
     val cardId: Long = 0,

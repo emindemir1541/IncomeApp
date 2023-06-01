@@ -3,6 +3,7 @@ package com.emindev.expensetodolist.main.data.room.income
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import kotlinx.parcelize.Parcelize
@@ -22,5 +23,7 @@ data class IncomeModel(
 ) : Parcelable {
     val initialLocalDate: LocalDate
         get()= SqlDateUtil.convertDate(initialDate)
+
+
 }
 

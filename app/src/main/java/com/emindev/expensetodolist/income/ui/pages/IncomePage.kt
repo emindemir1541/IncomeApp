@@ -21,6 +21,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +36,7 @@ import androidx.navigation.NavController
 import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.convertToString
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearBiggerThan
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearSmallerThan
 import com.emindev.expensetodolist.helperlibrary.common.helper.test
 import com.emindev.expensetodolist.main.common.constant.Currency
@@ -42,21 +44,23 @@ import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.main.common.util.CardCreator
 import com.emindev.expensetodolist.main.data.room.income.Income
 import com.emindev.expensetodolist.main.data.room.income.IncomeEvent
+import com.emindev.expensetodolist.main.data.room.income.IncomeModel
 import com.emindev.expensetodolist.main.data.room.income.IncomeViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AlertDialogDelete
 import com.emindev.expensetodolist.main.ui.component.ButtonAdd
 import com.emindev.expensetodolist.main.ui.component.DateRow
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import java.time.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, onEvent: (IncomeEvent) -> Unit) {
 
     val context = LocalContext.current
-
     val incomeState by incomeViewModel.state.collectAsState()
     val alertDialogState = rememberUseCaseState(false)
+    val selectedDate by mainViewModel.selectedDate.collectAsState()
 
 
     LazyColumn(modifier = Modifier
@@ -67,25 +71,34 @@ fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incom
             DateRow(modifier = Modifier.padding(vertical = 16.dp), mainViewModel = mainViewModel)
         }
 
-
-        items(incomeState.incomesMultipleCard) { income ->
-            AlertDialogDelete(onDeleteCardClick = { onEvent(IncomeEvent.DeleteCard(income)) }, onDeleteAllClick = { onEvent(IncomeEvent.DeleteIncome(income)) }, alertDialogState)
-
+        items(incomeState.incomesInfinity) { income ->
             Box(modifier = Modifier
                 .animateItemPlacement(animationSpec = tween(durationMillis = 600))
             ) {
-                RowIncomeMultipleCard(income) {
-                    if (income.isCardPassed) {
-                        alertDialogState.show()
-                    }
-                    else {
-                        incomeViewModel.setState(income)
-                        navController.navigate(Page.IncomeUpdate.route)
-                    }
-                }
+               if (selectedDate.isMonthAndYearBiggerThan(DateUtil.localDateNow))
+                    RowIncomeMultipleCard(income, selectedDate)
             }
-
         }
+
+
+           items(incomeState.incomesMultipleCard) { income ->
+               AlertDialogDelete(onDeleteCardClick = { onEvent(IncomeEvent.DeleteCard(income)) }, onDeleteAllClick = { onEvent(IncomeEvent.DeleteIncome(income)) }, alertDialogState)
+
+               Box(modifier = Modifier
+                   .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+               ) {
+                   RowIncomeMultipleCard(income) {
+                       if (income.isCardPassed) {
+                           alertDialogState.show()
+                       }
+                       else {
+                           incomeViewModel.setState(income)
+                           navController.navigate(Page.IncomeUpdate.route)
+                       }
+                   }
+               }
+
+           }
 
         items(incomeState.incomesOneCard) { income ->
             Box(modifier = Modifier
@@ -144,6 +157,36 @@ fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
+fun RowIncomeMultipleCard(income: IncomeModel, selectedDate: LocalDate) {
+    val context = LocalContext.current
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(0.dp),
+        border = BorderStroke(1.dp, Color.Black),
+    ) {
+
+        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                Text(text = income.name, fontSize = 30.sp)
+            }
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
+                val date = DateUtil.convertToDate(selectedDate.year, selectedDate.monthValue, income.initialLocalDate.dayOfMonth)
+                TextRemainedDay(income = income, selectedDate)
+                Text(text = income.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
+                Text(text = date.convertToString(DateUtil.Delimiters.slash))
+            }
+            Spacer(modifier = Modifier.padding(6.dp))
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
 private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
     val context = LocalContext.current
     Card(
@@ -176,5 +219,12 @@ private fun TextRemainedDay(income: Income) {
     Text(
         text = if (income.isMoneyPaid) stringResource(R.string.paid) else (DateUtil.dayBetweenTwoDate(income.currentLocalDate, DateUtil.localDateNow)).toString() + " " + stringResource(R.string.day_remained),
         color = if (income.isMoneyPaid) Color.Green else Color.Unspecified, fontWeight = FontWeight.Bold)
+}
+
+@Composable
+private fun TextRemainedDay(income: IncomeModel, selectedDate: LocalDate) {
+    Text(
+        text = (DateUtil.dayBetweenTwoDate(selectedDate, DateUtil.localDateNow)).toString() + " " + stringResource(R.string.day_remained),
+        color = Color.Unspecified, fontWeight = FontWeight.Bold)
 }
 

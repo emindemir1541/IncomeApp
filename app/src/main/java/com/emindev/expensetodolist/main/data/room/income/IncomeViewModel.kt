@@ -3,6 +3,7 @@ package com.emindev.expensetodolist.main.data.room.income
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearEqualTo
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.toDateString
 import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
 import com.emindev.expensetodolist.main.common.constant.RepeatType
@@ -21,27 +22,33 @@ import kotlinx.coroutines.launch
 class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: MainViewModel) :
     ViewModel() {
 
+    val incomeModelsNotDeleted = dao.getIncomeModelsNotDeleted()
+    val incomeModels = dao.getIncomeModels()
+    val incomeCardModelsNotDeleted = dao.getIncomeCardModelsNotDeleted()
+    val incomeCardModels = dao.getIncomeCardModels()
+    val incomeInfinityModels = dao.getIncomeInfinityModels()
+
+
     private val _incomesMultipleCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
         dao.getIncomesWithMultipleCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
 
     private val _incomesOneCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
         dao.getIncomesWithOneCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _state = MutableStateFlow(IncomeState())
-    val state = combine(_state, _incomesMultipleCard, _incomesOneCard, mainViewModel.selectedDate) { state, incomesMultipleCard, incomesOneCard, _ ->
+    val state = combine(_state, _incomesMultipleCard,incomeInfinityModels, _incomesOneCard, mainViewModel.selectedDate) { state, incomesMultipleCard,_incomeInfinityModels, incomesOneCard, _ ->
         state.copy(
             incomesMultipleCard = incomesMultipleCard,
+            incomesInfinity = _incomeInfinityModels,
             incomesOneCard = incomesOneCard,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IncomeState())
 
 
-    val incomeModelsNotDeleted = dao.getIncomeModelsNotDeleted()
-    val incomeModels = dao.getIncomeModels()
-    val incomeCardModelsNotDeleted = dao.getIncomeCardModelsNotDeleted()
-    val incomeCardModels = dao.getIncomeCardModels()
+
     fun cardsByIncome(income: Income) = dao.getCardsByIncome(income.id)
 
     fun addIncomeCard(incomeCardModel: IncomeCardModel) {

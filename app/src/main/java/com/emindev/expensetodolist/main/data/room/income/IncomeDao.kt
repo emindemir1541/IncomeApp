@@ -32,10 +32,14 @@ interface IncomeDao {
             "where deleted = 0 and cardDeleted = 0 and repeatType = 'ONCE' and currentDate like :year ||  :delimiter || :month ||'%' order by currentDate")
     fun getIncomesWithOneCardBySelectedDate(month: String,year: String,delimiter:String): Flow<List<Income>>
 
+    @Query("select * from table_income " +
+            "where  deleted = 0 and repeatType = 'INFINITY'  order by initialDate")
+    fun getIncomeInfinityModels(): Flow<List<IncomeModel>>
     @Query("select table_income.id,table_income_card.cardId,table_income.name,table_income_card.cardAmount,table_income.latestAmount,table_income.initialDate,table_income_card.currentDate,table_income.deleted,table_income_card.cardDeleted,table_income.repeatType, table_income.repetition" +
             " from table_income left join table_income_card on table_income.id = table_income_card.id " +
             "where deleted = 0 and cardDeleted = 0 and repeatType IN ('INFINITY', 'LIMITED') and currentDate like :year ||  :delimiter || :month ||'%' order by currentDate")
     fun getIncomesWithMultipleCardBySelectedDate(month: String,year: String,delimiter:String): Flow<List<Income>>
+
     @Query("select * from table_income where deleted = 0 order by initialDate")
     fun getIncomeModelsNotDeleted():Flow<List<IncomeModel>>
     @Query("select * from table_income_card where cardDeleted = 0 order by currentDate")
