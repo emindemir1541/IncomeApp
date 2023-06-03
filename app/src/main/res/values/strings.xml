@@ -95,6 +95,7 @@
     <string name="info_delete_card">Bu gelir geçmişteki bir zamana ait, sadece bu zamandaki kartı mı silmek istiyorsunuz</string>
     <string name="delete_this_card">Kartı sil</string>
     <string name="delete_income">Geliri sil</string>
+    <string name="main_page">Ana Sayfa</string>
 
 
     <string-array name="days">

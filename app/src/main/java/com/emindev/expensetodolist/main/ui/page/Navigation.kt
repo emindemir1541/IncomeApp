@@ -18,11 +18,12 @@ fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, o
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = Page.Income.route) {
+    NavHost(navController = navController, startDestination = Page.PageContent.route) {
 
-        composable(route = Page.Income.route) {
-            IncomePage(navController,mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, onEvent = onIncomeEvent)
+        composable(route = Page.PageContent.route) { 
+            PageContent(navController = navController,incomeViewModel,mainViewModel,onIncomeEvent)
         }
+
 
         composable(route = Page.IncomeAdd.route) {
             IncomeAddPage(navController,mainViewModel = mainViewModel, incomeViewModel =incomeViewModel,onEvent = onIncomeEvent )

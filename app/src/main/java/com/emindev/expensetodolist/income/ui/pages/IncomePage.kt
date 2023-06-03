@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -67,84 +68,63 @@ import java.time.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, onEvent: (IncomeEvent) -> Unit) {
+fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, listState: LazyListState, onEvent: (IncomeEvent) -> Unit) {
 
     val context = LocalContext.current
     val incomeState by incomeViewModel.state.collectAsState()
     val alertDialogState = rememberUseCaseState(false)
     val selectedDate by mainViewModel.selectedDate.collectAsState()
 
-    val lazyColumnListState = rememberLazyListState()
+    LazyColumn(modifier = Modifier
+        .fillMaxSize()
+        .padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
+        state = listState) {
 
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        floatingActionButton = {
-            HideAbleButtonContent(isVisibleBecauseOfScrolling = lazyColumnListState.isScrollingUp()) {
-
-                LargeFloatingActionButton(onClick = {
-                    navController.navigate(Page.IncomeAdd.route)
-                }) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add))
-                }
+        items(incomeState.incomesInfinity) { income ->
+            Box(modifier = Modifier
+                .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+            ) {
+                if (selectedDate.isMonthAndYearBiggerThan(DateUtil.localDateNow))
+                    RowIncomeMultipleCard(income, selectedDate)
             }
-
-        },
-    ) { padding ->
-        LazyColumn(modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
-            state = lazyColumnListState) {
-
-            item {
-                DateRow(modifier = Modifier.padding(vertical = 16.dp), mainViewModel = mainViewModel)
-            }
-
-            items(incomeState.incomesInfinity) { income ->
-                Box(modifier = Modifier
-                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
-                ) {
-                    if (selectedDate.isMonthAndYearBiggerThan(DateUtil.localDateNow))
-                        RowIncomeMultipleCard(income, selectedDate)
-                }
-            }
+        }
 
 
-            items(incomeState.incomesMultipleCard) { income ->
-                AlertDialogDelete(onDeleteCardClick = { onEvent(IncomeEvent.DeleteCard(income)) }, onDeleteAllClick = { onEvent(IncomeEvent.DeleteIncome(income)) }, alertDialogState)
+        items(incomeState.incomesMultipleCard) { income ->
+            AlertDialogDelete(onDeleteCardClick = { onEvent(IncomeEvent.DeleteCard(income)) }, onDeleteAllClick = { onEvent(IncomeEvent.DeleteIncome(income)) }, alertDialogState)
 
-                Box(modifier = Modifier
-                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
-                ) {
-                    RowIncomeMultipleCard(income) {
-                        if (income.isCardPassed) {
-                            alertDialogState.show()
-                        }
-                        else {
-                            incomeViewModel.setState(income)
-                            navController.navigate(Page.IncomeUpdate.route)
-                        }
+            Box(modifier = Modifier
+                .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+            ) {
+                RowIncomeMultipleCard(income) {
+                    if (income.isCardPassed) {
+                        alertDialogState.show()
                     }
-                }
-            } // TODO: yükleme animasyonunu düzelt
-
-            items(incomeState.incomesOneCard) { income ->
-                Box(modifier = Modifier
-                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
-                ) {
-                    RowIncomeOneCard(income) {
+                    else {
                         incomeViewModel.setState(income)
                         navController.navigate(Page.IncomeUpdate.route)
                     }
                 }
             }
+        } // TODO: yükleme animasyonunu düzelt
 
+        items(incomeState.incomesOneCard) { income ->
+            Box(modifier = Modifier
+                .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+            ) {
+                RowIncomeOneCard(income) {
+                    incomeViewModel.setState(income)
+                    navController.navigate(Page.IncomeUpdate.route)
+                }
+            }
         }
-    }
 
+    }
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
     val context = LocalContext.current
