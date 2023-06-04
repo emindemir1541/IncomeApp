@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -85,98 +83,6 @@ class MainActivity : ComponentActivity() {
             //IncomeAddPage(DateUtil.localDateNow,incomeState = incomeState,onIncomeEvent,ChangeDataType.ADD)
 
             Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, onIncomeEvent = onIncomeEvent)
-            /*        CardCreator(incomeViewModel = incomeViewModel)
-
-                      LazyColumn(modifier = Modifier
-                          .fillMaxSize()
-                          .background(Color.DarkGray)) {
-
-                          item{
-                              Row(modifier=Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.SpaceAround, verticalAlignment = Alignment.CenterVertically) {
-                                  Text(text = "Selected Date:  " +selectedDate.value.convertToString(DateUtil.Delimiters.slash), color = Color.White)
-                                  Text(text = "Current Date:  " + DateUtil.localDateNow.convertToString(DateUtil.Delimiters.slash), color = Color.White)
-                              }
-                          }
-
-                          items(expenseState.expenses) {
-                              Row(modifier = Modifier
-                                  .fillMaxWidth()
-                                  .padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                                  Text(text = it.route)
-                                  Text(text = it.amount.toString())
-                              }
-                          }
-
-                          items(incomeState.incomes) {
-
-                              Row(modifier = Modifier
-                                  .fillMaxWidth()
-                                  .padding(16.dp)
-                                  .background(Color.Green)
-                                  .clickable {
-                                      onIncomeEvent(IncomeEvent.DeleteIncome(it))
-                                  }, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                                  Text(text = it.route)
-                                  Text(text = it.amount.toString())
-
-                              }
-                          }
-
-
-
-                          item {
-                              Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-                                  Button(onClick = {
-
-                                      onExpenseEvent(ExpenseEvent.ShowDialog)
-                                      onExpenseEvent(ExpenseEvent.SetName("emin"))
-                                      onExpenseEvent(ExpenseEvent.SetAmount(23432f))
-                                      onExpenseEvent(ExpenseEvent.SetRepetition(3))
-                                      onExpenseEvent(ExpenseEvent.SetDay(4))
-                                      onExpenseEvent(ExpenseEvent.SetMonth(5))
-                                      onExpenseEvent(ExpenseEvent.SetYear(2023))
-                                      onExpenseEvent(ExpenseEvent.SetStartedDate(DateUtil.dateTimeNow))
-                                      onExpenseEvent(ExpenseEvent.SetCompleted(false))
-                                      onExpenseEvent(ExpenseEvent.SetExpenseType(ExpenseType.NEED))
-                                      onExpenseEvent(ExpenseEvent.SaveExpense)
-                                      onExpenseEvent(ExpenseEvent.HideDialog)
-
-                                      Toast.makeText(this@MainActivity, "workinh-g", Toast.LENGTH_LONG).show()
-
-                                  }) {
-                                      Text(text = "add Expense")
-                                  }
-
-                                  Button(onClick = {
-                                      onIncomeEvent(IncomeEvent.ShowDialog)
-                                      onIncomeEvent(IncomeEvent.SetName("emin"))
-                                      onIncomeEvent(IncomeEvent.SetAmount(564f))
-                                      onIncomeEvent(IncomeEvent.SetInitialDate(DateUtil.localDateTimeNow.toLocalDate()))
-                                      onIncomeEvent(IncomeEvent.SetIsRepeatable(true))
-                                      onIncomeEvent(IncomeEvent.SetCurrentDate(*//*DateUtil.convertToDateTime(2023, Random.nextInt(1,12),5).toLocalDate()*//*DateUtil.localDateTimeNow.toLocalDate()))
-                            onIncomeEvent(IncomeEvent.SaveIncome)
-                            onIncomeEvent(IncomeEvent.HideDialog)
-                        }) {
-                            Text(text = "Add Income")
-                        }
-
-                    }
-
-                    Button(onClick = {
-                        mainViewModel.previousMonth
-                    }) {
-                        Text(text = "Back")
-                    }
-
-                    Button(onClick = {
-                        mainViewModel.nextMonth
-                    }) {
-                        Text(text = "next")
-                    }
-
-                }
-
-            }*/
 
         }
 

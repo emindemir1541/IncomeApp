@@ -55,7 +55,10 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
             HideAbleButtonContent(isVisibleBecauseOfScrolling = selectedPage.value != BottomNavItems.MainPage && lazyColumnListState.isScrollingUp()) {
 
                 LargeFloatingActionButton(onClick = {
-                    navController.navigate(Page.IncomeAdd.route)
+                    if (selectedPage.value == BottomNavItems.IncomePage)
+                        navController.navigate(Page.IncomeAdd.route)
+                    if (selectedPage.value == BottomNavItems.ExpensePage)
+                        navController.navigate(Page.ExpenseAdd.route)
                 }) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add))
                 }

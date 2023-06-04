@@ -29,6 +29,9 @@ fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, o
         composable(route = Page.IncomeUpdate.route) {
             IncomeUpdatePage(navController,mainViewModel = mainViewModel, incomeViewModel =incomeViewModel,onEvent = onIncomeEvent )
         }
+        composable(route = Page.ExpenseAdd.route) {
+            // TODO: ExpenseAddpage
+        }
     }
 
 }

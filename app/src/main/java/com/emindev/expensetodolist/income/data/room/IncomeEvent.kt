@@ -8,8 +8,7 @@ sealed interface IncomeEvent {
     object UpdateIncome: IncomeEvent
     data class SetName(val name:String): IncomeEvent
     data class SetAmount(val amount:String): IncomeEvent
-    data class SetInitialDate(val initialDate:LocalDate): IncomeEvent
-    data class SetCurrentDate(val currentDate:LocalDate): IncomeEvent
+    data class SetDate(val currentDate:LocalDate): IncomeEvent
     data class SetRepeatType(val repeatType: RepeatType): IncomeEvent
     data class SetRepetition(val repetition: String): IncomeEvent
     data class SetCardId(val cardId:Long): IncomeEvent

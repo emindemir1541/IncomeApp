@@ -66,8 +66,7 @@ fun IncomeAddPage(navController: NavController, mainViewModel: MainViewModel, in
         config = CalendarConfig(yearSelection = false, monthSelection = false),
         selection = CalendarSelection.Date(selectedDate = incomeState.currentDate) { newDate ->
             val date = LocalDate.of((incomeState.initialDate).year, (incomeState.initialDate).monthValue, newDate.dayOfMonth)
-            onEvent(IncomeEvent.SetInitialDate(date))
-            onEvent(IncomeEvent.SetCurrentDate(date))
+            onEvent(IncomeEvent.SetDate(date))
         }
 
     )
@@ -144,7 +143,7 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
         config = CalendarConfig(yearSelection = false, monthSelection = false),
         selection = CalendarSelection.Date(selectedDate = incomeState.currentDate) { newDate ->
             val date = LocalDate.of((incomeState.initialDate).year, (incomeState.initialDate).monthValue, newDate.dayOfMonth)
-            onEvent(IncomeEvent.SetCurrentDate(date))
+            onEvent(IncomeEvent.SetDate(date))
         }
 
     )

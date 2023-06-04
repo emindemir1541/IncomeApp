@@ -6,6 +6,8 @@ import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.toDateString
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
+import com.emindev.expensetodolist.main.common.util.toFloatOrZero
+import com.emindev.expensetodolist.main.common.util.toIntOrZero
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,14 +39,13 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _state = MutableStateFlow(IncomeState())
-    val state = combine(_state, _incomesMultipleCard,incomeInfinityModels, _incomesOneCard, mainViewModel.selectedDate) { state, incomesMultipleCard,_incomeInfinityModels, incomesOneCard, _ ->
+    val state = combine(_state, _incomesMultipleCard, incomeInfinityModels, _incomesOneCard, mainViewModel.selectedDate) { state, incomesMultipleCard, _incomeInfinityModels, incomesOneCard, _ ->
         state.copy(
             incomesMultipleCard = incomesMultipleCard,
             incomesInfinity = _incomeInfinityModels,
             incomesOneCard = incomesOneCard,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IncomeState())
-
 
 
     fun cardsByIncome(income: Income) = dao.getCardsByIncome(income.id)
@@ -76,24 +77,24 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             IncomeEvent.SaveIncome -> {
 
                 val name = state.value.name
-                val cardAmount = state.value.cardAmount
+                //val cardAmount = state.value.cardAmount
                 val latestAmount = state.value.latestAmount
-                val initialDate = state.value.initialDate
+               // val initialDate = state.value.initialDate
                 val currentDate = state.value.currentDate
                 val repeatType = state.value.repeatType
-                val repetition = state.value.repetition.toIntOrNull() ?: 0
+                val repetition = state.value.repetition
 
-                if (name.isBlank() || latestAmount.isBlank()) {
+                if (name.isBlank() || latestAmount.isBlank() || (repeatType == RepeatType.LIMITED && repetition.isBlank()) ) {
                     // TODO:  edit this place
                     return
                 }
                 val incomeModel = IncomeModel(
                     name = name,
-                    latestAmount = latestAmount.toFloat(),
-                    initialDate = SqlDateUtil.convertDate(initialDate),
+                    latestAmount = latestAmount.toFloatOrZero(),
+                    initialDate = SqlDateUtil.convertDate(currentDate),
                     deleted = false,
                     repeatType = repeatType,
-                    repetition = repetition
+                    repetition = repetition.toIntOrZero()
                 )
                 when (repeatType) {
                     RepeatType.ONCE, RepeatType.INFINITY -> {
@@ -103,7 +104,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                             val incomeCardModel = IncomeCardModel(
                                 id = getId,
                                 currentDate = SqlDateUtil.convertDate(currentDate),
-                                cardAmount = latestAmount.toFloat(),
+                                cardAmount = latestAmount.toFloatOrZero(),
                                 cardDeleted = false,
                             )
                             dao.upsert(incomeCardModel)
@@ -111,10 +112,9 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                     }
 
                     RepeatType.LIMITED -> {
-                        viewModelScope.launch {
-                            var date = currentDate
-                            val getId = dao.upsert(incomeModel)
-                            repeat(repetition) {
+                        DateUtil.forEachMonthWithInitialDateAndRepetition(currentDate, repetition.toIntOrZero()) { date ->
+                            viewModelScope.launch {
+                                val getId = dao.upsert(incomeModel)
                                 val incomeCardModel = IncomeCardModel(
                                     id = getId,
                                     currentDate = SqlDateUtil.convertDate(date),
@@ -122,7 +122,6 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                                     cardDeleted = false,
                                 )
                                 dao.upsert(incomeCardModel)
-                                date = date.plusMonths(1)
                             }
                         }
                     }
@@ -137,15 +136,14 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                 val id = state.value.id
                 val cardId = state.value.cardId
                 val name = state.value.name
-                val cardAmount = state.value.cardAmount
+                //val cardAmount = state.value.cardAmount
                 val latestAmount = state.value.latestAmount
                 val initialDate = state.value.initialDate
                 val currentDate = state.value.currentDate
                 val repeatType = state.value.repeatType
                 val repetition = state.value.repetition
 
-                if (name.isBlank() || latestAmount.isBlank()) {
-                    // TODO: edit this place
+                if (name.isBlank() || latestAmount.isBlank() || (repeatType == RepeatType.LIMITED && repetition.isBlank())) {
                     return
                 }
 
@@ -174,7 +172,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
 
                         RepeatType.LIMITED -> {
                             val localDate = DateUtil.localDateNow
-                            val filterDate = SqlDateUtil.convertDate(DateUtil.convertToDate(localDate.year,localDate.monthValue,1))
+                            val filterDate = SqlDateUtil.convertDate(DateUtil.convertToDate(localDate.year, localDate.monthValue, 1))
                             dao.updateAmountOfCardsAfterSpecificDate(id, filterDate, latestAmount.toFloat())
 
                         }
@@ -236,18 +234,11 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                 }
             }
 
-            is IncomeEvent.SetCurrentDate -> {
+
+            is IncomeEvent.SetDate -> {
                 _state.update {
                     it.copy(
                         currentDate = event.currentDate
-                    )
-                }
-            }
-
-            is IncomeEvent.SetInitialDate -> {
-                _state.update {
-                    it.copy(
-                        initialDate = event.initialDate
                     )
                 }
             }

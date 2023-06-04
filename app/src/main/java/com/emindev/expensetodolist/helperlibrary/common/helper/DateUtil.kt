@@ -123,6 +123,16 @@ sealed interface DateUtil {
 
         }
 
+        fun forEachMonthWithInitialDateAndRepetition(includedFirstDate: LocalDate, repetition: Int, onEveryMonth: (LocalDate) -> Unit) {
+            var currentDate = includedFirstDate
+
+            repeat(repetition) {
+                onEveryMonth.invoke(currentDate)
+                currentDate = currentDate.plusMonths(1)
+            }
+
+        }
+
 //fun getLocalDate(): String = DateTimeFormatter.ofPattern(UTC_TR).format(LocalDate.now())
         /*  fun dateToMonthAndYear(dateLong: String): String {
             val splintedDate = dateLong.split("/")
