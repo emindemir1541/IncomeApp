@@ -1,8 +1,6 @@
-package com.emindev.expensetodolist.main.data.room.income
+package com.emindev.expensetodolist.income.data.room
 
 import androidx.room.Entity
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearEqualTo
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearSmallerThan
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.localDateNow
 import com.emindev.expensetodolist.main.common.constant.RepeatType

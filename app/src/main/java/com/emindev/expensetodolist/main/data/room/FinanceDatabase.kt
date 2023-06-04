@@ -2,14 +2,15 @@ package com.emindev.expensetodolist.main.data.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.emindev.expensetodolist.main.data.room.expense.Expense
-import com.emindev.expensetodolist.main.data.room.expense.ExpenseDao
-import com.emindev.expensetodolist.main.data.room.income.Income
-import com.emindev.expensetodolist.main.data.room.income.IncomeCardModel
-import com.emindev.expensetodolist.main.data.room.income.IncomeDao
-import com.emindev.expensetodolist.main.data.room.income.IncomeModel
+import com.emindev.expensetodolist.expense.data.room.Expense
+import com.emindev.expensetodolist.expense.data.room.ExpenseCardModel
+import com.emindev.expensetodolist.expense.data.room.ExpenseDao
+import com.emindev.expensetodolist.expense.data.room.ExpenseModel
+import com.emindev.expensetodolist.income.data.room.IncomeCardModel
+import com.emindev.expensetodolist.income.data.room.IncomeDao
+import com.emindev.expensetodolist.income.data.room.IncomeModel
 
-@Database(entities = [Expense::class, IncomeModel::class,IncomeCardModel::class], version = 1)
+@Database(entities = [ExpenseModel::class,ExpenseCardModel::class, IncomeModel::class, IncomeCardModel::class], version = 1)
 abstract class FinanceDatabase : RoomDatabase() {
 
     abstract fun expenseDao(): ExpenseDao

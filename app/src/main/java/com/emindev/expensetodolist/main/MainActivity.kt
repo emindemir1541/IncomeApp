@@ -1,56 +1,28 @@
 package com.emindev.expensetodolist.main
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.emindev.expensetodolist.BuildConfig
 import com.emindev.expensetodolist.R
-import com.emindev.expensetodolist.databinding.ActivityMainBinding
-import com.emindev.expensetodolist.expense.common.constant.ExpenseType
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.convertToString
 import com.emindev.expensetodolist.helperlibrary.common.helper.SystemInfo
 import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
-import com.emindev.expensetodolist.helperlibrary.common.helper.test
 import com.emindev.expensetodolist.helperlibrary.common.model.Resource
 import com.emindev.expensetodolist.helperlibrary.ui.alertDialogClassic
-import com.emindev.expensetodolist.income.ui.pages.IncomeAddPage
-import com.emindev.expensetodolist.income.ui.pages.IncomePage
-import com.emindev.expensetodolist.main.common.constant.ChangeDataType
-import com.emindev.expensetodolist.main.common.util.CardCreator
 import com.emindev.expensetodolist.main.common.util.RemoteData
-import com.emindev.expensetodolist.main.data.room.expense.ExpenseEvent
-import com.emindev.expensetodolist.main.data.room.expense.ExpenseViewModel
+import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.main.data.room.FinanceDatabase
-import com.emindev.expensetodolist.main.data.room.income.IncomeEvent
-import com.emindev.expensetodolist.main.data.room.income.IncomeViewModel
+import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.data.update.RemoteRepository
 import com.emindev.expensetodolist.main.data.update.RemoteSettings
-import com.emindev.expensetodolist.main.ui.component.DateRow
 import com.emindev.expensetodolist.main.ui.page.Navigation
 
 
@@ -104,13 +76,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            val expenseState by expenseViewModel.state.collectAsState()
-            val incomeState by incomeViewModel.state.collectAsState()
+       /*     val expenseState by expenseViewModel.state.collectAsState()
 
-            val onExpenseEvent = expenseViewModel::onEvent
+            val onExpenseEvent = expenseViewModel::onEvent*/
             val onIncomeEvent = incomeViewModel::onEvent
 
-            val selectedDate = mainViewModel.selectedDate.collectAsState()
 
             //IncomeAddPage(DateUtil.localDateNow,incomeState = incomeState,onIncomeEvent,ChangeDataType.ADD)
 

@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.main.data.room.income
+package com.emindev.expensetodolist.income.data.room
 /*
 
 

@@ -1,8 +1,10 @@
-package com.emindev.expensetodolist.main.data.room.expense
+package com.emindev.expensetodolist.expense.data.room
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.toDateString
+import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,21 +18,26 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 class ExpenseViewModel(private val dao: ExpenseDao,private val mainViewModel: MainViewModel) : ViewModel() {
 
-
-    private val _expenses = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.readSelectedData(selectedDate.monthValue, selectedDate.year)
+/*
+    private val _expensesOneCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
+        dao.getIncomesWithOneCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(),SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    private val _expensesMultipleCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
+        dao.getIncomesWithMultipleCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toDateString(),SqlDateUtil.dateDelimiter)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
 
     private val _state = MutableStateFlow(ExpenseState())
 
-    val state = combine(_state, _expenses, mainViewModel.selectedDate) { state, expenses, selectedDate ->
+    val state = combine(_state, _expensesOneCard,_expensesMultipleCard, mainViewModel.selectedDate) { state, expensesOneCard,expensesMultipleCard, selectedDate ->
         state.copy(
-            expenses = expenses,
-            selectedDate = selectedDate
+            expensesOneCard = expensesOneCard,
+            expensesMultipleCard = expensesMultipleCard
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExpenseState())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExpenseState())*/
 
-    fun onEvent(event: ExpenseEvent) {
+/*    fun onEvent(event: ExpenseEvent) {
         when (event) {
             is ExpenseEvent.DeleteExpense -> {
                 viewModelScope.launch {
@@ -233,6 +240,6 @@ class ExpenseViewModel(private val dao: ExpenseDao,private val mainViewModel: Ma
             }
 
         }
-    }
+    }*/
 
 }

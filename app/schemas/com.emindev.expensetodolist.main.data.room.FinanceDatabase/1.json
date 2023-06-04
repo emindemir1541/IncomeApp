@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7642e668d899f2d3389cb1b9ec7433bd",
+    "identityHash": "5b0ffddf6367b38723fecb64859d3968",
     "entities": [
       {
         "tableName": "table_expense",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `amount` REAL NOT NULL, `startedDateLong` INTEGER NOT NULL, `completed` INTEGER NOT NULL, `lender` TEXT, `repetition` INTEGER, `deleted` INTEGER NOT NULL, `type` TEXT NOT NULL, `day` INTEGER NOT NULL, `month` INTEGER NOT NULL, `year` INTEGER NOT NULL, `cardId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `latestAmount` REAL NOT NULL, `initialDate` TEXT NOT NULL, `deleted` INTEGER NOT NULL, `repeatType` TEXT NOT NULL, `repetition` INTEGER, `expenseType` TEXT NOT NULL, `lender` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -15,34 +15,16 @@
             "notNull": true
           },
           {
-            "fieldPath": "amount",
-            "columnName": "amount",
+            "fieldPath": "latestAmount",
+            "columnName": "latestAmount",
             "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "startedDateLong",
-            "columnName": "startedDateLong",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "completed",
-            "columnName": "completed",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lender",
-            "columnName": "lender",
+            "fieldPath": "initialDate",
+            "columnName": "initialDate",
             "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "repetition",
-            "columnName": "repetition",
-            "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "deleted",
@@ -51,34 +33,28 @@
             "notNull": true
           },
           {
-            "fieldPath": "type",
-            "columnName": "type",
+            "fieldPath": "repeatType",
+            "columnName": "repeatType",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "day",
-            "columnName": "day",
+            "fieldPath": "repetition",
+            "columnName": "repetition",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "expenseType",
+            "columnName": "expenseType",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "month",
-            "columnName": "month",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "year",
-            "columnName": "year",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "cardId",
-            "columnName": "cardId",
-            "affinity": "INTEGER",
-            "notNull": true
+            "fieldPath": "lender",
+            "columnName": "lender",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "id",
@@ -91,6 +67,56 @@
           "autoGenerate": true,
           "columnNames": [
             "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "table_expense_card",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`currentAmount` REAL NOT NULL, `currentDate` TEXT NOT NULL, `cardDeleted` INTEGER NOT NULL, `completed` INTEGER, `id` INTEGER NOT NULL, `cardId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "currentAmount",
+            "columnName": "currentAmount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentDate",
+            "columnName": "currentDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardDeleted",
+            "columnName": "cardDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completed",
+            "columnName": "completed",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardId",
+            "columnName": "cardId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "cardId"
           ]
         },
         "indices": [],
@@ -200,7 +226,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7642e668d899f2d3389cb1b9ec7433bd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5b0ffddf6367b38723fecb64859d3968')"
     ]
   }
 }

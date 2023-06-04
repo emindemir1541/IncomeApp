@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.main.data.room.income
+package com.emindev.expensetodolist.income.data.room
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
