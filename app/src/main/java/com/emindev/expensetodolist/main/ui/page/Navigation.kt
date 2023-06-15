@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
+import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.income.ui.pages.IncomeAddPage
 import com.emindev.expensetodolist.income.ui.pages.IncomeUpdatePage
 import com.emindev.expensetodolist.main.common.constant.Page
@@ -12,14 +14,14 @@ import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 
 @Composable
-fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, onIncomeEvent: (IncomeEvent) -> Unit) {
+fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel,expenseViewModel: ExpenseViewModel, onIncomeEvent: (IncomeEvent) -> Unit,onExpenseEvent: (ExpenseEvent)->Unit) {
 
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Page.PageContent.route) {
 
         composable(route = Page.PageContent.route) { 
-            PageContent(navController = navController,incomeViewModel,mainViewModel,onIncomeEvent)
+            PageContent(navController = navController,incomeViewModel,expenseViewModel,mainViewModel,onIncomeEvent,onExpenseEvent)
         }
 
 

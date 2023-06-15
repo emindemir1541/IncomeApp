@@ -11,7 +11,7 @@ data class ExpenseCardModel(
     val currentAmount:Float,
     val currentDate:String,
     val cardDeleted:Boolean,
-    val completed:Boolean?,
+    val completed:Boolean,
     val id:Long,
     @PrimaryKey(autoGenerate = true)
     val cardId:Long = 0

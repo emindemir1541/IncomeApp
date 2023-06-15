@@ -25,20 +25,22 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
 
 
     private val _expensesOneCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getIncomesWithOneCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
+        dao.getExpenseWithOneCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _expensesMultipleCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getIncomesWithMultipleCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toDateString(), SqlDateUtil.dateDelimiter)
+        dao.getExpenseWithMultipleCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toDateString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
+    private val expenseInfinityModels = dao.getExpenseInfinityModels()
 
     private val _state = MutableStateFlow(ExpenseState())
 
-    val state = combine(_state, _expensesOneCard, _expensesMultipleCard, mainViewModel.selectedDate) { state, expensesOneCard, expensesMultipleCard, selectedDate ->
+    val state = combine(_state, _expensesOneCard, _expensesMultipleCard,expenseInfinityModels, mainViewModel.selectedDate) { state, expensesOneCard, expensesMultipleCard,expenseInfinityModels, selectedDate ->
         state.copy(
             expensesOneCard = expensesOneCard,
-            expensesMultipleCard = expensesMultipleCard
+            expensesMultipleCard = expensesMultipleCard,
+            expenseInfinityModels = expenseInfinityModels
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExpenseState())
 
@@ -264,6 +266,12 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
                     it.copy(repeatType = event.repeatType)
                 }
             }
+        }
+    }
+
+    fun setState(expense: Expense) {
+        _state.update {
+            it.copy(id= expense.id, cardId = expense.cardId, name = expense.name, latestAmount = expense.latestAmount.toString(), currentAmount = expense.currentAmount.toString(), initialDate = expense.initialLocalDate, currentDate = expense.currentLocalDate, completed = expense.completed?:false, repeatType = expense.repeatType, cardDeleted = expense.cardDeleted, deleted = expense.deleted, expenseType = expense.expenseType)
         }
     }
 

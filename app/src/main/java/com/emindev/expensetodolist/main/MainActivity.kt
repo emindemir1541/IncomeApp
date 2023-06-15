@@ -10,14 +10,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.emindev.expensetodolist.BuildConfig
 import com.emindev.expensetodolist.R
+import com.emindev.expensetodolist.expense.common.constant.ExpenseType
+import com.emindev.expensetodolist.expense.data.room.Expense
+import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
 import com.emindev.expensetodolist.helperlibrary.common.helper.SystemInfo
 import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
 import com.emindev.expensetodolist.helperlibrary.common.model.Resource
 import com.emindev.expensetodolist.helperlibrary.ui.alertDialogClassic
 import com.emindev.expensetodolist.main.common.util.RemoteData
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.main.data.room.FinanceDatabase
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
+import com.emindev.expensetodolist.main.common.constant.RepeatType
+import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.data.update.RemoteRepository
 import com.emindev.expensetodolist.main.data.update.RemoteSettings
@@ -74,15 +80,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-       /*     val expenseState by expenseViewModel.state.collectAsState()
 
-            val onExpenseEvent = expenseViewModel::onEvent*/
+            val onExpenseEvent = expenseViewModel::onEvent
             val onIncomeEvent = incomeViewModel::onEvent
+
 
 
             //IncomeAddPage(DateUtil.localDateNow,incomeState = incomeState,onIncomeEvent,ChangeDataType.ADD)
 
-            Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, onIncomeEvent = onIncomeEvent)
+            Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, expenseViewModel = expenseViewModel, onIncomeEvent = onIncomeEvent, onExpenseEvent = onExpenseEvent)
 
         }
 

@@ -8,6 +8,7 @@ import java.time.LocalDate
 data class ExpenseState(
     val expensesOneCard:List<Expense> = emptyList(),
     val expensesMultipleCard:List<Expense> = emptyList(),
+    val expenseInfinityModels:List<ExpenseModel> = emptyList(),
     val id: Long = 0,
     val cardId: Long= 0,
     val name: String = "",

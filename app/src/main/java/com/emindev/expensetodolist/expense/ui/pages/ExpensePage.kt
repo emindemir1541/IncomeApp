@@ -1,6 +1,7 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+package com.emindev.expensetodolist.expense.ui.pages
 
-package com.emindev.expensetodolist.income.ui.pages
+import androidx.compose.runtime.Composable
+
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -19,9 +20,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,15 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.emindev.expensetodolist.R
+import com.emindev.expensetodolist.expense.data.room.Expense
+import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
+import com.emindev.expensetodolist.expense.data.room.ExpenseModel
+import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.convertToString
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearBiggerThan
 import com.emindev.expensetodolist.main.common.constant.Currency
 import com.emindev.expensetodolist.main.common.constant.Page
-import com.emindev.expensetodolist.income.data.room.Income
-import com.emindev.expensetodolist.income.data.room.IncomeEvent
-import com.emindev.expensetodolist.income.data.room.IncomeModel
-import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AlertDialogDelete
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -50,12 +51,13 @@ import java.time.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, listState: LazyListState, onEvent: (IncomeEvent) -> Unit,) {
+fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expenseViewModel: ExpenseViewModel, listState: LazyListState, onEvent: (ExpenseEvent) -> Unit) {
 
     val context = LocalContext.current
-    val incomeState by incomeViewModel.state.collectAsState()
+    val expenseState by expenseViewModel.state.collectAsState()
     val alertDialogState = rememberUseCaseState(false)
     val selectedDate by mainViewModel.selectedDate.collectAsState()
+
 
     LazyColumn(modifier = Modifier
         .fillMaxSize()
@@ -63,40 +65,40 @@ fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incom
         state = listState) {
 
 
-        items(incomeState.incomesInfinity) { income ->
+        items(expenseState.expenseInfinityModels) { expense ->
             Box(modifier = Modifier
                 .animateItemPlacement(animationSpec = tween(durationMillis = 600))
             ) {
                 if (selectedDate.isMonthAndYearBiggerThan(DateUtil.localDateNow))
-                    RowIncomeMultipleCard(income, selectedDate)
+                    RowExpenseMultipleCard(expense, selectedDate)
             }
         }
 
 
-        items(incomeState.incomesMultipleCard) { income ->
-            AlertDialogDelete(onDeleteCardClick = { onEvent(IncomeEvent.DeleteCard(income)) }, onDeleteAllClick = { onEvent(IncomeEvent.DeleteIncome(income)) }, alertDialogState)
+        items(expenseState.expensesMultipleCard) { expense ->
+            AlertDialogDelete(onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) }, onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) }, alertDialogState)
 
             Box(modifier = Modifier
                 .animateItemPlacement(animationSpec = tween(durationMillis = 600))
             ) {
-                RowIncomeMultipleCard(income) {
-                    if (income.isCardPassed) {
+                RowExpenseMultipleCard(expense,{onEvent(ExpenseEvent.SetCompleted(it)); onEvent(ExpenseEvent.UpdateExpense)}) {
+                    if (expense.isCardPassed) {
                         alertDialogState.show()
                     }
                     else {
-                        incomeViewModel.setState(income)
+                        expenseViewModel.setState(expense)
                         navController.navigate(Page.IncomeUpdate.route)
                     }
                 }
             }
         } // TODO: yükleme animasyonunu düzelt
 
-        items(incomeState.incomesOneCard) { income ->
+        items(expenseState.expensesOneCard) { expense ->
             Box(modifier = Modifier
                 .animateItemPlacement(animationSpec = tween(durationMillis = 600))
             ) {
-                RowIncomeOneCard(income) {
-                    incomeViewModel.setState(income)
+                RowExpenseOneCard(expense) {
+                    expenseViewModel.setState(expense)
                     navController.navigate(Page.IncomeUpdate.route)
                 }
             }
@@ -108,7 +110,7 @@ fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incom
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
+fun RowExpenseMultipleCard(expense: Expense,onCheckedChanged:(Boolean)->Unit,onLongClick: () -> Unit) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -125,23 +127,23 @@ fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                Text(text = income.name, fontSize = 30.sp)
+                Text(text = expense.name, fontSize = 30.sp)
+                Checkbox(checked = expense.completed, onCheckedChange = {onCheckedChanged(it)})
             }
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-                TextRemainedDay(income = income)
-                Text(text = income.cardAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
-                Text(text = income.currentLocalDate.convertToString(DateUtil.Delimiters.slash))
+                TextRemainedDay(expense = expense)
+                Text(text = expense.currentAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
+                Text(text = expense.currentLocalDate.convertToString(DateUtil.Delimiters.slash))
             }
             Spacer(modifier = Modifier.padding(6.dp))
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RowIncomeMultipleCard(income: IncomeModel, selectedDate: LocalDate) {
+fun RowExpenseMultipleCard(expense: ExpenseModel, selectedDate: LocalDate) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -154,14 +156,14 @@ fun RowIncomeMultipleCard(income: IncomeModel, selectedDate: LocalDate) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                Text(text = income.name, fontSize = 30.sp)
+                Text(text = expense.name, fontSize = 30.sp)
             }
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-                val date = DateUtil.convertToDate(selectedDate.year, selectedDate.monthValue, income.initialLocalDate.dayOfMonth)
+                val date = DateUtil.convertToDate(selectedDate.year, selectedDate.monthValue, expense.initialLocalDate.dayOfMonth)
                 TextRemainedDay(selectedDate)
-                Text(text = income.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
+                Text(text = expense.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
                 Text(text = date.convertToString(DateUtil.Delimiters.slash))
             }
             Spacer(modifier = Modifier.padding(6.dp))
@@ -171,7 +173,7 @@ fun RowIncomeMultipleCard(income: IncomeModel, selectedDate: LocalDate) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
+private fun RowExpenseOneCard(expense: Expense, onLongClick: () -> Unit) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -188,9 +190,9 @@ private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 18.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-                Text(text = income.name, fontSize = 25.sp) // TODO: title sınırı, belli bir değerden sonra yazı boyutu küçülsün 
-                Text(text = income.currentLocalDate.convertToString(DateUtil.Delimiters.slash)) // TODO: bunu tam ortala
-                Text(text = if (income.isCardPassed) income.cardAmount.toString() else income.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
+                Text(text = expense.name, fontSize = 25.sp) // TODO: title sınırı, belli bir değerden sonra yazı boyutu küçülsün
+                Text(text = expense.currentLocalDate.convertToString(DateUtil.Delimiters.slash)) // TODO: bunu tam ortala
+                Text(text = if (expense.isCardPassed) expense.currentAmount.toString() else expense.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
 
             }
 
@@ -199,10 +201,10 @@ private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
 }
 
 @Composable
-private fun TextRemainedDay(income: Income) {
+private fun TextRemainedDay(expense: Expense) {
     Text(
-        text = if (income.isMoneyPaid) stringResource(R.string.paid) else (DateUtil.dayBetweenTwoDate(income.currentLocalDate, DateUtil.localDateNow)).toString() + " " + stringResource(R.string.day_remained),
-        color = if (income.isMoneyPaid) Color.Green else Color.Unspecified, fontWeight = FontWeight.Bold)
+        text = if (expense.isPaymentTime) stringResource(R.string.payment_time) else (DateUtil.dayBetweenTwoDate(expense.currentLocalDate, DateUtil.localDateNow)).toString() + " " + stringResource(R.string.day_remained),
+        color = if (expense.isPaymentTime) Color.Yellow else Color.Unspecified, fontWeight = FontWeight.Bold)
 }
 
 @Composable
@@ -211,4 +213,6 @@ private fun TextRemainedDay(selectedDate: LocalDate) {
         text = (DateUtil.dayBetweenTwoDate(selectedDate, DateUtil.localDateNow)).toString() + " " + stringResource(R.string.day_remained),
         color = Color.Unspecified, fontWeight = FontWeight.Bold)
 }
+
+
 

@@ -19,6 +19,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,11 +29,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.emindev.expensetodolist.R
+import com.emindev.expensetodolist.expense.common.constant.ExpenseType
+import com.emindev.expensetodolist.expense.data.room.Expense
+import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
+import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
+import com.emindev.expensetodolist.expense.ui.pages.ExpensePage
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.income.ui.pages.IncomePage
 import com.emindev.expensetodolist.main.common.constant.BottomNavItems
 import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.income.data.room.IncomeEvent
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
+import com.emindev.expensetodolist.main.common.constant.RepeatType
+import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.DateRow
 import com.emindev.expensetodolist.main.ui.component.HideAbleButtonContent
@@ -40,12 +49,12 @@ import com.emindev.expensetodolist.main.ui.component.isScrollingUp
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, mainViewModel: MainViewModel, onIncomeEvent: (IncomeEvent) -> Unit) {
+fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, expenseViewModel: ExpenseViewModel, mainViewModel: MainViewModel, onIncomeEvent: (IncomeEvent) -> Unit, onExpenseEvent: (ExpenseEvent) -> Unit) {
 
     val isContentOpen = remember { mutableStateOf(true) }
 
 
-    val selectedPage = remember { mutableStateOf<BottomNavItems>(BottomNavItems.MainPage) }
+    val selectedPage = mainViewModel.bottomNavItem.collectAsState()
 
     val lazyColumnListState = rememberLazyListState()
 
@@ -58,7 +67,9 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
                     if (selectedPage.value == BottomNavItems.IncomePage)
                         navController.navigate(Page.IncomeAdd.route)
                     if (selectedPage.value == BottomNavItems.ExpensePage)
-                        navController.navigate(Page.ExpenseAdd.route)
+                    // navController.navigate(Page.ExpenseAdd.route)
+                        expenseViewModel.setState(Expense(1, 1, "ldsjfk", 45f, 4f, SqlDateUtil.convertDate(DateUtil.localDateNow), SqlDateUtil.convertDate(DateUtil.localDateNow), false, false, false, RepeatType.INFINITY, 5, ExpenseType.NEED, ""))
+                        onExpenseEvent(ExpenseEvent.SaveExpense)
                 }) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add))
                 }
@@ -68,16 +79,18 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
             NavigationBar(containerColor = MaterialTheme.colorScheme.primaryContainer) {
 
                 NavItem(page = BottomNavItems.IncomePage, selected = selectedPage.value == BottomNavItems.IncomePage) {
-                    selectedPage.value = BottomNavItems.IncomePage
+                    mainViewModel.setNavItem(BottomNavItems.IncomePage)
                 }
 
                 NavItem(page = BottomNavItems.MainPage, selected = selectedPage.value == BottomNavItems.MainPage) {
-                    selectedPage.value = BottomNavItems.MainPage
+                    mainViewModel.setNavItem(BottomNavItems.MainPage)
+
 
                 }
 
                 NavItem(page = BottomNavItems.ExpensePage, selected = selectedPage.value == BottomNavItems.ExpensePage) {
-                    selectedPage.value = BottomNavItems.ExpensePage
+                    mainViewModel.setNavItem(BottomNavItems.ExpensePage)
+
 
                 }
             }
@@ -93,7 +106,7 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
             Box(modifier = Modifier
                 .fillMaxSize()) {
                 when (selectedPage.value) {
-                    BottomNavItems.ExpensePage -> {}
+                    BottomNavItems.ExpensePage -> ExpensePage(navController = navController, mainViewModel = mainViewModel, expenseViewModel = expenseViewModel, listState = lazyColumnListState, onEvent = onExpenseEvent)
                     BottomNavItems.IncomePage -> IncomePage(navController = navController, mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, lazyColumnListState, onEvent = onIncomeEvent)
                     BottomNavItems.MainPage -> MainPage()
                 }

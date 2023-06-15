@@ -2,6 +2,8 @@ package com.emindev.expensetodolist.expense.data.room
 
 import androidx.room.Entity
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
+import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearSmallerThan
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import java.time.LocalDate
@@ -15,7 +17,7 @@ data class Expense(
     val currentAmount: Float,
     val initialDate: String,
     val currentDate: String,
-    val completed: Boolean?,
+    val completed: Boolean,
     val deleted: Boolean,
     val cardDeleted: Boolean,
     val repeatType: RepeatType,
@@ -34,6 +36,12 @@ data class Expense(
 
     val toExpenseCardModel: ExpenseCardModel
         get() = ExpenseCardModel(id = id, currentDate = currentDate, currentAmount = currentAmount, completed = completed, cardDeleted = cardDeleted, cardId = cardId)
+
+    val isPaymentTime: Boolean
+        get() = currentLocalDate <= DateUtil.localDateNow
+
+    val isCardPassed: Boolean
+        get() = currentLocalDate.isMonthAndYearSmallerThan(DateUtil.localDateNow)
 
 
 }

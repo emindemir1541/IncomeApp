@@ -42,10 +42,8 @@ sealed interface DateUtil {
 
         fun Int.toDateString(): String {
             val value = this.toString()
-            return if (value.length < 2)
-                "0$value"
-            else
-                value
+            return if (value.length < 2) "0$value"
+            else value
         }
 
         fun splitDate(date: String, delimiter: String): MutableList<String> = date.split(delimiter).toMutableList()
@@ -66,16 +64,13 @@ sealed interface DateUtil {
         fun convertToDate(date: String, dateFormat: String): LocalDate = LocalDate.parse(date, DateTimeFormatter.ofPattern(dateFormat))
 
 
-        fun convertToDateTime(year: Int, month: Int, dayOfMonth: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, nanoOfSecond: Int = 0): LocalDateTime =
-            LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(ZoneId.systemDefault()).toLocalDateTime()
+        fun convertToDateTime(year: Int, month: Int, dayOfMonth: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, nanoOfSecond: Int = 0): LocalDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(ZoneId.systemDefault()).toLocalDateTime()
 
-        fun convertToDate(year: Int, month: Int, dayOfMonth: Int): LocalDate =
-            LocalDate.of(year, month, dayOfMonth)
+        fun convertToDate(year: Int, month: Int, dayOfMonth: Int): LocalDate = LocalDate.of(year, month, dayOfMonth)
 
         fun LocalDateTime.toLong(): Long = this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         fun LocalDate.toLong(): Long = convertToDateTime(this).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        fun toLong(year: Int, month: Int, dayOfMonth: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, nanoOfSecond: Int = 0): Long =
-            convertToDateTime(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        fun toLong(year: Int, month: Int, dayOfMonth: Int, hour: Int = 0, minute: Int = 0, second: Int = 0, nanoOfSecond: Int = 0): Long = convertToDateTime(year, month, dayOfMonth, hour, minute, second, nanoOfSecond).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
         //plus month
         //localDateTime.plusMonth
@@ -114,8 +109,7 @@ sealed interface DateUtil {
         fun forEachMonthBetweenTwoDate(includedFirstDate: LocalDate, includedLastDate: LocalDate, onEveryMonth: (LocalDate) -> Unit) {
             var currentDate = includedFirstDate
 
-            if (includedLastDate < includedFirstDate)
-                throw IllegalArgumentException("Last date must be bigger than first date")
+            if (includedLastDate < includedFirstDate) throw IllegalArgumentException("Last date must be bigger than first date")
             do {
                 onEveryMonth.invoke(currentDate)
                 currentDate = currentDate.plusMonths(1)

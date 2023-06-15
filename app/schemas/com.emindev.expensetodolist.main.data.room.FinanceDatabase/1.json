@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5b0ffddf6367b38723fecb64859d3968",
+    "identityHash": "ec42a40529f16230a095b32aaa50a9d1",
     "entities": [
       {
         "tableName": "table_expense",
@@ -74,7 +74,7 @@
       },
       {
         "tableName": "table_expense_card",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`currentAmount` REAL NOT NULL, `currentDate` TEXT NOT NULL, `cardDeleted` INTEGER NOT NULL, `completed` INTEGER, `id` INTEGER NOT NULL, `cardId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`currentAmount` REAL NOT NULL, `currentDate` TEXT NOT NULL, `cardDeleted` INTEGER NOT NULL, `completed` INTEGER NOT NULL, `id` INTEGER NOT NULL, `cardId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "currentAmount",
@@ -98,7 +98,7 @@
             "fieldPath": "completed",
             "columnName": "completed",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "id",
@@ -226,7 +226,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5b0ffddf6367b38723fecb64859d3968')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ec42a40529f16230a095b32aaa50a9d1')"
     ]
   }
 }

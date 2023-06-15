@@ -2,6 +2,7 @@ package com.emindev.expensetodolist.main.data.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
+import com.emindev.expensetodolist.main.common.constant.BottomNavItems
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -15,6 +16,13 @@ class MainViewModel() : ViewModel() {
     val selectedDate = _selectedDate.asStateFlow()
     fun setSelectedDate(selectedDate: LocalDate) {
         _selectedDate.value = selectedDate
+    }
+
+    private val _bottomNavItem = MutableStateFlow<BottomNavItems>(BottomNavItems.MainPage)
+    val bottomNavItem = _bottomNavItem.asStateFlow()
+
+    fun setNavItem(bottomNavItem: BottomNavItems) {
+        _bottomNavItem.value = bottomNavItem
     }
 
     val appIsLoading: Unit
