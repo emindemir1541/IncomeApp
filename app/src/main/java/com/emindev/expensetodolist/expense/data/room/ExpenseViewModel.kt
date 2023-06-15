@@ -120,176 +120,174 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
 
                         RepeatType.LIMITED -> {
 
-                                DateUtil.forEachMonthWithInitialDateAndRepetition(currentDate, repetition.toIntOrZero()) { date ->
-                                    val expenseCardModel = ExpenseCardModel(
-                                        currentAmount = latestAmount.toFloatOrZero(),
-                                        currentDate = SqlDateUtil.convertDate(date),
-                                        cardDeleted = cardDeleted,
-                                        completed = completed,
-                                        id = getId
-                                    )
-                                    dao.upsert(expenseCardModel)
-                                }
-                            }
-
-                        }
-                    }
-
-
-                }
-
-                is ExpenseEvent.SetAmount -> {
-                    _state.update {
-                        it.copy(
-                            currentAmount = event.amount,
-                            latestAmount = event.amount
-                        )
-                    }
-                }
-
-
-                is ExpenseEvent.SetCompleted -> {
-                    _state.update {
-                        it.copy(
-                            completed = event.completed
-                        )
-                    }
-                }
-
-
-                is ExpenseEvent.SetLenderName -> {
-                    _state.update {
-                        it.copy(
-                            lender = event.lender
-                        )
-                    }
-                }
-
-
-                is ExpenseEvent.SetName -> {
-                    _state.update {
-                        it.copy(
-                            name = event.name
-                        )
-                    }
-                }
-
-                is ExpenseEvent.SetRepetition -> {
-                    _state.update {
-                        it.copy(
-                            repetition = if (event.repetition != null) event.repetition.toString() else ""
-                        )
-                    }
-                }
-
-
-                ExpenseEvent.ShowDialog -> {
-                    _state.update {
-                        it.copy(
-                            isAddingExpense = true
-                        )
-                    }
-                }
-
-                ExpenseEvent.UpdateExpense -> {
-
-
-                    val id = state.value.id
-                    val cardId = state.value.cardId
-                    val name = state.value.name
-                    val latestAmount = state.value.latestAmount
-                    val currentAmount = state.value.currentAmount
-                    val initialDate = state.value.initialDate
-                    val currentDate = state.value.currentDate
-                    val completed = state.value.completed
-                    val deleted = state.value.deleted
-                    val cardDeleted = state.value.cardDeleted
-                    val repeatType = state.value.repeatType
-                    val repetition = state.value.repetition
-                    val expenseType = state.value.expenseType
-                    val lender = state.value.lender
-
-                    if (name.isBlank() || latestAmount.isBlank() || (expenseType == ExpenseType.DEBT && lender.isBlank())) {
-                        return
-                    }
-
-                    val expenseModel = ExpenseModel(
-                        id = id,
-                        name = name,
-                        latestAmount = latestAmount.toFloatOrZero(),
-                        initialDate = SqlDateUtil.convertDate(initialDate),
-                        deleted = deleted,
-                        repeatType = repeatType,
-                        repetition = repetition.toIntOrZero(),
-                        expenseType = expenseType,
-                        lender = lender,
-                    )
-
-                    val expenseCardModel = ExpenseCardModel(
-                        currentAmount = currentAmount.toFloatOrZero(),
-                        currentDate = SqlDateUtil.convertDate(currentDate),
-                        cardDeleted = cardDeleted,
-                        completed = completed,
-                        cardId = cardId,
-                        id = id
-                    )
-
-                    test = expenseModel
-                    test = expenseCardModel
-
-                    viewModelScope.launch {
-                        dao.upsert(expenseModel)
-                        when (repeatType) {
-                            RepeatType.ONCE, RepeatType.INFINITY -> {
-                                dao.upsert(expenseCardModel)
-                            }
-
-                            RepeatType.LIMITED -> {
-                                val localDate = DateUtil.localDateNow
-                                val filterDate = SqlDateUtil.convertDate(DateUtil.convertToDate(localDate.year, localDate.monthValue, 1))
-                                dao.updateAmountOfCardsAfterSpecificDate(id, filterDate, latestAmount.toFloatOrZero())
+                            DateUtil.forEachMonthWithInitialDateAndRepetition(currentDate, repetition.toIntOrZero()) { date ->
+                                val expenseCardModel = ExpenseCardModel(
+                                    currentAmount = latestAmount.toFloatOrZero(),
+                                    currentDate = SqlDateUtil.convertDate(date),
+                                    cardDeleted = cardDeleted,
+                                    completed = completed,
+                                    id = getId
+                                )
                                 dao.upsert(expenseCardModel)
                             }
                         }
+
                     }
                 }
 
-                is ExpenseEvent.SetDate -> {
-                    _state.update {
-                        it.copy(currentDate = event.date)
-                    }
+
+            }
+
+            is ExpenseEvent.SetAmount -> {
+                _state.update {
+                    it.copy(
+                        currentAmount = event.amount,
+                        latestAmount = event.amount
+                    )
+                }
+            }
+
+
+            is ExpenseEvent.SetCompleted -> {
+                _state.update {
+                    it.copy(
+                        completed = event.completed
+                    )
+                }
+            }
+
+
+            is ExpenseEvent.SetLenderName -> {
+                _state.update {
+                    it.copy(
+                        lender = event.lender
+                    )
+                }
+            }
+
+
+            is ExpenseEvent.SetName -> {
+                _state.update {
+                    it.copy(
+                        name = event.name
+                    )
+                }
+            }
+
+            is ExpenseEvent.SetRepetition -> {
+                _state.update {
+                    it.copy(
+                        repetition = if (event.repetition != null) event.repetition.toString() else ""
+                    )
+                }
+            }
+
+
+            ExpenseEvent.ShowDialog -> {
+                _state.update {
+                    it.copy(
+                        isAddingExpense = true
+                    )
+                }
+            }
+
+            ExpenseEvent.UpdateExpense -> {
+
+
+                val id = state.value.id
+                val cardId = state.value.cardId
+                val name = state.value.name
+                val latestAmount = state.value.latestAmount
+                val currentAmount = state.value.currentAmount
+                val initialDate = state.value.initialDate
+                val currentDate = state.value.currentDate
+                val completed = state.value.completed
+                val deleted = state.value.deleted
+                val cardDeleted = state.value.cardDeleted
+                val repeatType = state.value.repeatType
+                val repetition = state.value.repetition
+                val expenseType = state.value.expenseType
+                val lender = state.value.lender
+
+                if (name.isBlank() || latestAmount.isBlank() || (expenseType == ExpenseType.DEBT && lender.isBlank())) {
+                    return
                 }
 
-                is ExpenseEvent.SetExpenseType -> {
-                    _state.update {
-                        it.copy(expenseType = event.type)
-                    }
-                }
+                val expenseModel = ExpenseModel(
+                    id = id,
+                    name = name,
+                    latestAmount = latestAmount.toFloatOrZero(),
+                    initialDate = SqlDateUtil.convertDate(initialDate),
+                    deleted = deleted,
+                    repeatType = repeatType,
+                    repetition = repetition.toIntOrZero(),
+                    expenseType = expenseType,
+                    lender = lender,
+                )
 
-                is ExpenseEvent.SetRepeatType -> {
-                    _state.update {
-                        it.copy(repeatType = event.repeatType)
-                    }
-                }
+                val expenseCardModel = ExpenseCardModel(
+                    currentAmount = currentAmount.toFloatOrZero(),
+                    currentDate = SqlDateUtil.convertDate(currentDate),
+                    cardDeleted = cardDeleted,
+                    completed = completed,
+                    cardId = cardId,
+                    id = id
+                )
 
-                is ExpenseEvent.Complete -> {
-                    viewModelScope.launch {
-                        dao.upsert(event.expense.toExpenseCardModel)
+
+                viewModelScope.launch {
+                    dao.upsert(expenseModel)
+                    when (repeatType) {
+                        RepeatType.ONCE, RepeatType.INFINITY -> {
+                            dao.upsert(expenseCardModel)
+                        }
+
+                        RepeatType.LIMITED -> {
+                            val localDate = DateUtil.localDateNow
+                            val filterDate = SqlDateUtil.convertDate(DateUtil.convertToDate(localDate.year, localDate.monthValue, 1))
+                            dao.updateAmountOfCardsAfterSpecificDate(id, filterDate, latestAmount.toFloatOrZero())
+                            dao.upsert(expenseCardModel)
+                        }
                     }
                 }
             }
-        }
 
-        fun setState(expense: Expense) {
-            _state.update {
-                it.copy(id = expense.id, cardId = expense.cardId, name = expense.name, latestAmount = expense.latestAmount.toString(), currentAmount = expense.currentAmount.toString(), initialDate = expense.initialLocalDate, currentDate = expense.currentLocalDate, completed = expense.completed ?: false, repeatType = expense.repeatType, cardDeleted = expense.cardDeleted, deleted = expense.deleted, expenseType = expense.expenseType)
+            is ExpenseEvent.SetDate -> {
+                _state.update {
+                    it.copy(currentDate = event.date)
+                }
+            }
+
+            is ExpenseEvent.SetExpenseType -> {
+                _state.update {
+                    it.copy(expenseType = event.type)
+                }
+            }
+
+            is ExpenseEvent.SetRepeatType -> {
+                _state.update {
+                    it.copy(repeatType = event.repeatType)
+                }
+            }
+
+            is ExpenseEvent.Complete -> {
+                viewModelScope.launch {
+                    dao.upsert(event.expense.toExpenseCardModel)
+                }
             }
         }
-
-        fun clearState() {
-            _state.update {
-                it.copy(id = 0, cardId = 0, name = "", latestAmount = "", currentAmount = "", initialDate = DateUtil.localDateNow, currentDate = DateUtil.localDateNow, completed = false, cardDeleted = false, repeatType = RepeatType.LIMITED, deleted = false, expenseType = ExpenseType.NEED, isAddingExpense = false, lender = "", repetition = "")
-            }
-        }
-
     }
+
+    fun setState(expense: Expense) {
+        _state.update {
+            it.copy(id = expense.id, cardId = expense.cardId, name = expense.name, latestAmount = expense.latestAmount.toString(), currentAmount = expense.currentAmount.toString(), initialDate = expense.initialLocalDate, currentDate = expense.currentLocalDate, completed = expense.completed ?: false, repeatType = expense.repeatType, cardDeleted = expense.cardDeleted, deleted = expense.deleted, expenseType = expense.expenseType)
+        }
+    }
+
+    fun clearState() {
+        _state.update {
+            it.copy(id = 0, cardId = 0, name = "", latestAmount = "", currentAmount = "", initialDate = DateUtil.localDateNow, currentDate = DateUtil.localDateNow, completed = false, cardDeleted = false, repeatType = RepeatType.LIMITED, deleted = false, expenseType = ExpenseType.NEED, isAddingExpense = false, lender = "", repetition = "")
+        }
+    }
+
+}

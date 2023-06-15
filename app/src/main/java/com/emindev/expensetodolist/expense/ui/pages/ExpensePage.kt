@@ -46,10 +46,14 @@ import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companio
 import com.emindev.expensetodolist.helperlibrary.common.helper.test
 import com.emindev.expensetodolist.main.common.constant.Currency
 import com.emindev.expensetodolist.main.common.constant.Page
+import com.emindev.expensetodolist.main.common.util.ColorUtil
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AlertDialogDelete
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -230,9 +234,32 @@ private fun RowExpenseOneCard(expense: Expense, onLongClick: () -> Unit) {
 
 @Composable
 private fun TextRemainedDay(expense: Expense) {
-    Text(
-        text = if (expense.isPaymentTime) stringResource(R.string.payment_time) else (DateUtil.dayBetweenTwoDate(expense.currentLocalDate, DateUtil.localDateNow)).toString() + " " + stringResource(R.string.day_remained),
-        color = if (expense.isPaymentTime) Color.Yellow else Color.Unspecified, fontWeight = FontWeight.Bold)
+
+    if (expense.completed) {
+        Text(
+            text = stringResource(id = R.string.paid),
+            color = Color.Green
+        )
+    }
+    else
+        if (expense.remainedDay > 0L) {
+
+            Text(
+                text = (expense.remainedDay.toString() + " " + stringResource(R.string.day_remained)),
+                color = if (expense.remainedDayAsPercentage > 50) Color.Unspecified else ColorUtil.getColorBetweenRedAndYellow(expense.remainedDayAsPercentage * 2), fontWeight = FontWeight.Bold
+            )
+        }
+        else if (expense.remainedDay < 0L) {
+            Text(
+                text = (expense.remainedDay.absoluteValue.toString() + " " + stringResource(R.string.day_passed)),
+                color = Color.Red, fontWeight = FontWeight.Bold
+            )
+        }
+        else
+            Text(
+                text = stringResource(id = R.string.payment_time),
+                color = Color.Red
+            )
 }
 
 @Composable

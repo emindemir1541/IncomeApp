@@ -37,8 +37,11 @@ data class Expense(
     val toExpenseCardModel: ExpenseCardModel
         get() = ExpenseCardModel(id = id, currentDate = currentDate, currentAmount = currentAmount, completed = completed, cardDeleted = cardDeleted, cardId = cardId)
 
-    val isPaymentTime: Boolean
-        get() = currentLocalDate <= DateUtil.localDateNow
+    val remainedDay: Long
+        get() =DateUtil.dayBetweenTwoDate(currentLocalDate, DateUtil.localDateNow)
+
+    val remainedDayAsPercentage:Int
+        get() = if (remainedDay >= 0) ((remainedDay * 100) /currentLocalDate.dayOfMonth).toInt() else 0
 
     val isCardPassed: Boolean
         get() = currentLocalDate.isMonthAndYearSmallerThan(DateUtil.localDateNow)
