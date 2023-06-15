@@ -67,9 +67,9 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
                     if (selectedPage.value == BottomNavItems.IncomePage)
                         navController.navigate(Page.IncomeAdd.route)
                     if (selectedPage.value == BottomNavItems.ExpensePage)
-                    // navController.navigate(Page.ExpenseAdd.route)
-                        expenseViewModel.setState(Expense(1, 1, "ldsjfk", 45f, 4f, SqlDateUtil.convertDate(DateUtil.localDateNow), SqlDateUtil.convertDate(DateUtil.localDateNow), false, false, false, RepeatType.INFINITY, 5, ExpenseType.NEED, ""))
-                        onExpenseEvent(ExpenseEvent.SaveExpense)
+                        navController.navigate(Page.ExpenseAdd.route)
+                    //  expenseViewModel.setState(Expense(1, 1, "ldsjfk", 45f, 4f, SqlDateUtil.convertDate(DateUtil.localDateNow), SqlDateUtil.convertDate(DateUtil.localDateNow), false, false, false, RepeatType.INFINITY, 5, ExpenseType.NEED, ""))
+                    //  onExpenseEvent(ExpenseEvent.SaveExpense)
                 }) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add))
                 }

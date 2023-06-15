@@ -13,8 +13,9 @@ sealed interface ExpenseEvent {
     data class SetCompleted(val completed:Boolean): ExpenseEvent
     data class SetLenderName(val lender:String): ExpenseEvent
     data class SetRepeatType(val repeatType:RepeatType): ExpenseEvent
-    data class SetRepetition(val repetition:Int?): ExpenseEvent
+    data class SetRepetition(val repetition:String?): ExpenseEvent
     data class SetExpenseType(val type:ExpenseType): ExpenseEvent
+    data class Complete(val expense: Expense):ExpenseEvent
     object ShowDialog: ExpenseEvent
     object HideDialog: ExpenseEvent
     data class DeleteExpense(val expense: Expense): ExpenseEvent

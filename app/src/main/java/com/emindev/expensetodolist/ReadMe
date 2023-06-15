@@ -9,6 +9,7 @@ todo    while adding income, check person input date or other things
 todo    income ileri tarihler için yansıma yap, bir expense veya income tamamlanırsa onu kaydet
 todo    datastore shared preference kullanarak yeni aya girip girmediğini kontrol et, ve yeni aya girdiysen cardcreator fonksiyonunu çalıştır
 todo    kart oluşturulurken yükleme ekranı getir
+todo    kart başlıkları çok uzun olduğunda yazıyı küçült veya karakter sınırı koy
 
 Should Add
 todo    message after deleted

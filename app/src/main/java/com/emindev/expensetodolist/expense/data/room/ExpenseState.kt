@@ -3,6 +3,8 @@ package com.emindev.expensetodolist.expense.data.room
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.constant.RepeatType
+import com.emindev.expensetodolist.main.common.util.SqlDateUtil
+import com.emindev.expensetodolist.main.common.util.toFloatOrZero
 import java.time.LocalDate
 
 data class ExpenseState(
@@ -24,4 +26,6 @@ data class ExpenseState(
     val expenseType: ExpenseType = ExpenseType.NEED,
     val lender: String = "",
     val isAddingExpense:Boolean = false
-)
+){
+    fun toExpense() = Expense(id=id,cardId = cardId,name = name, latestAmount = latestAmount.toFloatOrZero(), currentDate = SqlDateUtil.convertDate(currentDate), currentAmount = currentAmount.toFloatOrZero(), initialDate = SqlDateUtil.convertDate(initialDate), completed = completed, deleted = deleted, cardDeleted = cardDeleted, repeatType = repeatType, expenseType = expenseType, repetition = repetition.toIntOrNull(), lender = lender)
+}

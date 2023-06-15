@@ -58,9 +58,6 @@ fun IncomeAddPage(navController: NavController, mainViewModel: MainViewModel, in
     val incomeState by incomeViewModel.state.collectAsState()
 
 
-
-
-
     CalendarDialog(
         state = calendarState,
         config = CalendarConfig(yearSelection = false, monthSelection = false),
@@ -160,7 +157,7 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
             .padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             item {
 
-                TopAppBar(title = { Text(text = stringResource(id = R.string.income_update)) }, actions ={
+                TopAppBar(title = { Text(text = stringResource(id = R.string.income_update)) }, actions = {
                     IconButton(onClick = {
                         onEvent(IncomeEvent.DeleteIncome(incomeState.toIncome()));
                         onEvent(IncomeEvent.HideDialog)
@@ -178,27 +175,27 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
             item {
                 OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = incomeState.latestAmount, onValueChange = { onEvent(IncomeEvent.SetAmount(it)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), label = { Text(stringResource(id = R.string.amount)) })
             }
-/*
-            item {
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                    ElevatedFilterChip(label = { Text(text = stringResource(id = R.string.income_forOnce)) }, selected = incomeState.repeatType == RepeatType.ONCE, onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.ONCE)) })
-                    ElevatedFilterChip(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.LIMITED)) }, label = { Text(text = stringResource(id = R.string.limited)) }, selected = incomeState.repeatType == RepeatType.LIMITED)
-                    ElevatedFilterChip(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.INFINITY)) }, label = { Text(text = stringResource(id = R.string.every_month)) }, selected = incomeState.repeatType == RepeatType.INFINITY)
-                }
-            }
+            /*
+                        item {
+                            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                                ElevatedFilterChip(label = { Text(text = stringResource(id = R.string.income_forOnce)) }, selected = incomeState.repeatType == RepeatType.ONCE, onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.ONCE)) })
+                                ElevatedFilterChip(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.LIMITED)) }, label = { Text(text = stringResource(id = R.string.limited)) }, selected = incomeState.repeatType == RepeatType.LIMITED)
+                                ElevatedFilterChip(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.INFINITY)) }, label = { Text(text = stringResource(id = R.string.every_month)) }, selected = incomeState.repeatType == RepeatType.INFINITY)
+                            }
+                        }
 
-            item {
-                AnimatedVisibility(visible = incomeState.repeatType == RepeatType.LIMITED) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = incomeState.repetition, onValueChange = { onEvent(IncomeEvent.SetRepetition(it)) }, label = { Text(text = stringResource(id = R.string.Repetition)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal))
-                    }
-                }
-            }
-            item {
-                OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = { calendarState.show() }) {
-                    Text(text = stringResource(id = R.string.income_date))
-                }
-            }*/
+                        item {
+                            AnimatedVisibility(visible = incomeState.repeatType == RepeatType.LIMITED) {
+                                Column(modifier = Modifier.fillMaxWidth()) {
+                                    OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = incomeState.repetition, onValueChange = { onEvent(IncomeEvent.SetRepetition(it)) }, label = { Text(text = stringResource(id = R.string.Repetition)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal))
+                                }
+                            }
+                        }
+                        item {
+                            OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = { calendarState.show() }) {
+                                Text(text = stringResource(id = R.string.income_date))
+                            }
+                        }*/
 
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {

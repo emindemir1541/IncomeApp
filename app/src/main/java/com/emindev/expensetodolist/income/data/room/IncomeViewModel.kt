@@ -79,12 +79,12 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                 val name = state.value.name
                 //val cardAmount = state.value.cardAmount
                 val latestAmount = state.value.latestAmount
-               // val initialDate = state.value.initialDate
+                // val initialDate = state.value.initialDate
                 val currentDate = state.value.currentDate
                 val repeatType = state.value.repeatType
                 val repetition = state.value.repetition
 
-                if (name.isBlank() || latestAmount.isBlank() || (repeatType == RepeatType.LIMITED && repetition.isBlank()) ) {
+                if (name.isBlank() || latestAmount.isBlank() || (repeatType == RepeatType.LIMITED && repetition.isBlank())) {
                     // TODO:  edit this place
                     return
                 }
@@ -96,11 +96,12 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                     repeatType = repeatType,
                     repetition = repetition.toIntOrZero()
                 )
-                when (repeatType) {
-                    RepeatType.ONCE, RepeatType.INFINITY -> {
+                viewModelScope.launch {
+                    val getId = dao.upsert(incomeModel)
 
-                        viewModelScope.launch {
-                            val getId = dao.upsert(incomeModel)
+                    when (repeatType) {
+                        RepeatType.ONCE, RepeatType.INFINITY -> {
+
                             val incomeCardModel = IncomeCardModel(
                                 id = getId,
                                 currentDate = SqlDateUtil.convertDate(currentDate),
@@ -109,12 +110,9 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                             )
                             dao.upsert(incomeCardModel)
                         }
-                    }
 
-                    RepeatType.LIMITED -> {
-                        DateUtil.forEachMonthWithInitialDateAndRepetition(currentDate, repetition.toIntOrZero()) { date ->
-                            viewModelScope.launch {
-                                val getId = dao.upsert(incomeModel)
+                        RepeatType.LIMITED -> {
+                            DateUtil.forEachMonthWithInitialDateAndRepetition(currentDate, repetition.toIntOrZero()) { date ->
                                 val incomeCardModel = IncomeCardModel(
                                     id = getId,
                                     currentDate = SqlDateUtil.convertDate(date),

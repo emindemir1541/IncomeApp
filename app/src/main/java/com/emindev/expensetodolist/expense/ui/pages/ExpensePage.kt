@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
@@ -42,6 +43,7 @@ import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.convertToString
 import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearBiggerThan
+import com.emindev.expensetodolist.helperlibrary.common.helper.test
 import com.emindev.expensetodolist.main.common.constant.Currency
 import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
@@ -81,17 +83,25 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
             Box(modifier = Modifier
                 .animateItemPlacement(animationSpec = tween(durationMillis = 600))
             ) {
-                RowExpenseMultipleCard(expense,{onEvent(ExpenseEvent.SetCompleted(it)); onEvent(ExpenseEvent.UpdateExpense)}) {
+                RowExpenseMultipleCard(expense, {
+                    val checkedExpense = expense.copy(completed = it)
+                    onEvent(ExpenseEvent.Complete(checkedExpense))
+                }) {
                     if (expense.isCardPassed) {
                         alertDialogState.show()
                     }
                     else {
                         expenseViewModel.setState(expense)
-                        navController.navigate(Page.IncomeUpdate.route)
+                        navController.navigate(Page.ExpenseUpdate.route)
                     }
                 }
             }
         } // TODO: yükleme animasyonunu düzelt
+
+        /*    item {
+                if (expenseState.expensesMultipleCard.isNotEmpty()||(expenseState.expensesOneCard.isNotEmpty() && expenseState.expenseInfinityModels.isNotEmpty()))
+                Divider(modifier = Modifier.fillMaxWidth())
+            }*/
 
         items(expenseState.expensesOneCard) { expense ->
             Box(modifier = Modifier
@@ -103,6 +113,9 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
                 }
             }
         }
+        item {
+            Spacer(modifier = Modifier.padding(100.dp))
+        }
 
     }
 
@@ -110,7 +123,7 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RowExpenseMultipleCard(expense: Expense,onCheckedChanged:(Boolean)->Unit,onLongClick: () -> Unit) {
+fun RowExpenseMultipleCard(expense: Expense, onCheckedChanged: (Boolean) -> Unit, onLongClick: () -> Unit) {
     val context = LocalContext.current
     Card(
         modifier = Modifier
@@ -124,12 +137,27 @@ fun RowExpenseMultipleCard(expense: Expense,onCheckedChanged:(Boolean)->Unit,onL
     ) {
 
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                Text(text = expense.name, fontSize = 30.sp)
-                Checkbox(checked = expense.completed, onCheckedChange = {onCheckedChanged(it)})
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+                        Text(text = expense.lender, fontSize = 20.sp)
+                    }
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                        Text(text = expense.name, fontSize = 30.sp)
+                    }
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp), horizontalArrangement = Arrangement.End) {
+                        Checkbox(checked = expense.completed, onCheckedChange = { onCheckedChanged(it) })
+                    }
+                }
+
             }
+
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {

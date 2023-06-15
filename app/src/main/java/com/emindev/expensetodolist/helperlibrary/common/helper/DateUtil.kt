@@ -2,11 +2,16 @@ package com.emindev.expensetodolist.helperlibrary.common.helper
 
 
 import android.annotation.SuppressLint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.lang.IllegalArgumentException
 import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
 
 @SuppressLint("SimpleDateFormat")
@@ -117,7 +122,8 @@ sealed interface DateUtil {
 
         }
 
-        fun forEachMonthWithInitialDateAndRepetition(includedFirstDate: LocalDate, repetition: Int, onEveryMonth: (LocalDate) -> Unit) {
+        suspend fun forEachMonthWithInitialDateAndRepetition(includedFirstDate: LocalDate, repetition: Int, onEveryMonth: suspend (LocalDate) -> Unit) = runBlocking {
+
             var currentDate = includedFirstDate
 
             repeat(repetition) {
