@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
@@ -55,7 +56,7 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
 
 
     val selectedPage = mainViewModel.bottomNavItem.collectAsState()
-
+    val isCardCreating = mainViewModel.isCardCreating.collectAsState()
     val lazyColumnListState = rememberLazyListState()
 
 
@@ -64,14 +65,19 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
             HideAbleButtonContent(isVisibleBecauseOfScrolling = selectedPage.value != BottomNavItems.MainPage && lazyColumnListState.isScrollingUp()) {
 
                 LargeFloatingActionButton(onClick = {
-                    if (selectedPage.value == BottomNavItems.IncomePage)
-                        navController.navigate(Page.IncomeAdd.route)
-                    if (selectedPage.value == BottomNavItems.ExpensePage)
-                        navController.navigate(Page.ExpenseAdd.route)
+                    if (!isCardCreating.value) {
+                        if (selectedPage.value == BottomNavItems.IncomePage)
+                            navController.navigate(Page.IncomeAdd.route)
+                        if (selectedPage.value == BottomNavItems.ExpensePage)
+                            navController.navigate(Page.ExpenseAdd.route)
+                    }
                     //  expenseViewModel.setState(Expense(1, 1, "ldsjfk", 45f, 4f, SqlDateUtil.convertDate(DateUtil.localDateNow), SqlDateUtil.convertDate(DateUtil.localDateNow), false, false, false, RepeatType.INFINITY, 5, ExpenseType.NEED, ""))
                     //  onExpenseEvent(ExpenseEvent.SaveExpense)
                 }) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add))
+                    if (isCardCreating.value)
+                        CircularProgressIndicator()
+                    else
+                        Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(id = R.string.add))
                 }
             }
         },

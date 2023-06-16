@@ -21,9 +21,22 @@ class MainViewModel() : ViewModel() {
     private val _bottomNavItem = MutableStateFlow<BottomNavItems>(BottomNavItems.MainPage)
     val bottomNavItem = _bottomNavItem.asStateFlow()
 
+    private val _isCardCreating = MutableStateFlow(false)
+    val isCardCreating = _isCardCreating.asStateFlow()
+
     fun setNavItem(bottomNavItem: BottomNavItems) {
         _bottomNavItem.value = bottomNavItem
     }
+
+    val cardCreatingStarted:Unit
+        get() {
+            _isCardCreating.value = true
+        }
+
+    val cardCreatingFinished:Unit
+        get(){
+            _isCardCreating.value = false
+        }
 
     val appIsLoading: Unit
         get() {

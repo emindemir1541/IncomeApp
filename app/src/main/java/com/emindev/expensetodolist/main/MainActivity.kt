@@ -23,6 +23,7 @@ import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
 import com.emindev.expensetodolist.main.data.room.FinanceDatabase
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.common.constant.RepeatType
+import com.emindev.expensetodolist.main.common.util.CardCreator
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.data.update.RemoteRepository
@@ -75,6 +76,7 @@ class MainActivity : ComponentActivity() {
         SystemInfo.PACKAGE_NAME = packageName
 
 
+
         //updateCheck()
 
 
@@ -94,6 +96,7 @@ class MainActivity : ComponentActivity() {
 
         mainViewModel.appLoaded
 
+        CardCreator(mainViewModel,incomeViewModel,expenseViewModel).runCreator
 
     }
 

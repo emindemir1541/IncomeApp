@@ -1,12 +1,10 @@
 Errors
-todo repeat ile kart kaydetme kısmında viewmodel.launch her tekrarda çalışıyor, incomeviewmodel, expenseviewmodel
 
 Important Adds
 todo    add finish button for infinity cards
 todo    get deleted cards while creating months, if you dont get them it will create to deleted card again
 todo    when a button pushed, disable button a while, mutable interaction source
 todo    while adding income, check person input date or other things
-todo    income ileri tarihler için yansıma yap, bir expense veya income tamamlanırsa onu kaydet
 todo    datastore shared preference kullanarak yeni aya girip girmediğini kontrol et, ve yeni aya girdiysen cardcreator fonksiyonunu çalıştır
 todo    kart oluşturulurken yükleme ekranı getir
 todo    kart başlıkları çok uzun olduğunda yazıyı küçült veya karakter sınırı koy

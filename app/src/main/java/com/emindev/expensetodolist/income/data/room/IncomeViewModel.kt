@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: MainViewModel) :
     ViewModel() {
 
-    val incomeModelsNotDeleted = dao.getIncomeModelsNotDeleted()
+    val incomeInfinityModelsNotDeleted = dao.getInfinityIncomeModelsNotDeleted()
     val incomeModels = dao.getIncomeModels()
     val incomeCardModelsNotDeleted = dao.getIncomeCardModelsNotDeleted()
     val incomeCardModels = dao.getIncomeCardModels()
