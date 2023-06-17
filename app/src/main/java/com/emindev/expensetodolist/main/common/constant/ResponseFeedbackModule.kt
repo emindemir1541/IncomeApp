@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.helperlibrary.common.util
+package com.emindev.expensetodolist.main.common.constant
 
 object ResponseFeedbackModule {
     const val div = "/"

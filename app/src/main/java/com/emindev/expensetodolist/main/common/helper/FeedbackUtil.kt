@@ -1,14 +1,14 @@
-package com.emindev.expensetodolist.helperlibrary.common.helper
+package com.emindev.expensetodolist.main.common.helper
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import com.emindev.expensetodolist.helperlibrary.common.model.Comment
-import com.emindev.expensetodolist.helperlibrary.common.model.Error
-import com.emindev.expensetodolist.helperlibrary.common.model.Resource
-import com.emindev.expensetodolist.helperlibrary.data.feedbackrepository.FeedBackRepository
+import com.emindev.expensetodolist.main.common.model.Comment
+import com.emindev.expensetodolist.main.common.model.Error
+import com.emindev.expensetodolist.main.common.model.Resource
+import com.emindev.expensetodolist.main.data.feedbackrepository.FeedBackRepository
 import kotlin.system.exitProcess
 
 object FeedbackUtil {

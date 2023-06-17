@@ -2,8 +2,8 @@ package com.emindev.expensetodolist.income.data.room
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.toDateString
+import com.emindev.expensetodolist.main.common.helper.DateUtil
+import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.toDateString
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.common.util.toFloatOrZero
@@ -175,7 +175,6 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
 
                         }
                     }
-
 
                 }
                 clearState()

@@ -1,8 +1,8 @@
 package com.emindev.expensetodolist.main.common.util
 
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.convertToString
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.convertToStringReverted
+import com.emindev.expensetodolist.main.common.helper.DateUtil
+import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.convertToString
+import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.convertToStringReverted
 import java.time.LocalDate
 
 object SqlDateUtil {

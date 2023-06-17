@@ -1,6 +1,6 @@
 package com.emindev.expensetodolist.income.data.room
 
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
+import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import java.time.LocalDate
@@ -21,6 +21,6 @@ data class IncomeState(
     val isAddingIncome:Boolean = false,
 ){
     fun toIncome(): Income {
-        return Income(id = id,cardId = cardId,name=name, cardAmount =  cardAmount.toFloat(), latestAmount = latestAmount.toFloat(), initialDate = SqlDateUtil.convertDate(initialDate?:DateUtil.localDateNow), currentDate = SqlDateUtil.convertDate(currentDate), deleted = false, cardDeleted = false, repeatType = repeatType, repetition = repetition.toInt())
+        return Income(id = id,cardId = cardId,name=name, cardAmount =  cardAmount.toFloat(), latestAmount = latestAmount.toFloat(), initialDate = SqlDateUtil.convertDate(initialDate?: DateUtil.localDateNow), currentDate = SqlDateUtil.convertDate(currentDate), deleted = false, cardDeleted = false, repeatType = repeatType, repetition = repetition.toInt())
     }
 }

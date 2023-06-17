@@ -1,6 +1,7 @@
 package com.emindev.expensetodolist.expense.data.room
 
 import androidx.room.*
+import com.emindev.expensetodolist.income.data.room.IncomeCardModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -13,6 +14,13 @@ interface ExpenseDao {
 
     @Query("update table_expense_card set currentAmount = :amount where id = :id and date(currentDate) >= date(:dateForFilter)")
     suspend fun updateAmountOfCardsAfterSpecificDate(id:Long,dateForFilter:String,amount:Float)
+
+    @Query("select * from table_expense where repeatType = 'INFINITY' and deleted = 0 order by initialDate")
+    fun getInfinityExpenseModelsNotDeleted():Flow<List<ExpenseModel>>
+
+    @Query("select * from table_expense_card order by currentDate")
+    fun getExpenseCardModels():Flow<List<ExpenseCardModel>>
+
     @Query("select * from table_expense " +
             "where  deleted = 0 and repeatType = 'INFINITY'  order by initialDate")
     fun getExpenseInfinityModels(): Flow<List<ExpenseModel>>

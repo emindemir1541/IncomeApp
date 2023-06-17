@@ -1,8 +1,8 @@
 package com.sddk.schoolgadgets.library.data.feedbackrepository
 
-import com.emindev.expensetodolist.helperlibrary.common.model.Comment
-import com.emindev.expensetodolist.helperlibrary.common.model.Error
-import com.emindev.expensetodolist.helperlibrary.common.model.Resource
+import com.emindev.expensetodolist.main.common.model.Comment
+import com.emindev.expensetodolist.main.common.model.Error
+import com.emindev.expensetodolist.main.common.model.Resource
 
 interface FeedBackRepositoryInterface {
 

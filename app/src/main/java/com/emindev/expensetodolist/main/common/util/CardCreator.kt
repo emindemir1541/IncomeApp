@@ -1,31 +1,20 @@
 package com.emindev.expensetodolist.main.common.util
 
+import com.emindev.expensetodolist.expense.data.room.ExpenseCardModel
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.addLog
-import com.emindev.expensetodolist.helperlibrary.common.helper.test
+import com.emindev.expensetodolist.main.common.helper.DateUtil
+import com.emindev.expensetodolist.main.common.helper.addLog
 import com.emindev.expensetodolist.income.data.room.IncomeCardModel
-import com.emindev.expensetodolist.income.data.room.IncomeModel
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
-import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.supervisorScope
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
-import java.lang.Exception
-import kotlin.coroutines.CoroutineContext
 
 class CardCreator(private val mainViewModel: MainViewModel, private val incomeViewModel: IncomeViewModel, private val expenseViewModel: ExpenseViewModel) {
 
@@ -38,14 +27,13 @@ class CardCreator(private val mainViewModel: MainViewModel, private val incomeVi
         withTimeoutOrNull(15000L) {
             mainViewModel.cardCreatingStarted
             coroutineScope {
-                joinAll(createIncomeCards(),createExpenseCars())
+                joinAll(createIncomeCards(), createExpenseCars())
                 mainViewModel.cardCreatingFinished
             }
 
 
         } ?: run {
             mainViewModel.cardCreatingFinished
-            test = "creator timeout"
         }
 
     }
@@ -69,8 +57,23 @@ class CardCreator(private val mainViewModel: MainViewModel, private val incomeVi
     }
 
     private fun CoroutineScope.createExpenseCars() = launch {
+        val expenseModelList = expenseViewModel.infinityExpenseModelsNotDeleted.firstOrNull()
+        val expenseCardModelList = expenseViewModel.expenseCardModels.firstOrNull()
 
+        if (!expenseModelList.isNullOrEmpty() && !expenseCardModelList.isNullOrEmpty()) {
+            expenseModelList.forEach{expenseModel->
+                DateUtil.forEachMonthBetweenTwoDate(expenseModel.initialLocalDate, DateUtil.localDateNow) { currentDate->
+                    val expenseCard = expenseCardModelList.find { expenseCardModel -> expenseCardModel.id == expenseModel.id && expenseCardModel.currentLocalDate == currentDate }
+                    if (expenseCard == null) {
+                        val expenseCardModel = ExpenseCardModel(id = expenseModel.id, currentDate = SqlDateUtil.convertDate(currentDate), currentAmount = expenseModel.latestAmount, cardDeleted = false, completed = false)
+                        expenseViewModel.addExpenseCard(expenseCardModel)
+                    }
+                }
+            }
+        }
     }
 
 
 }
+
+

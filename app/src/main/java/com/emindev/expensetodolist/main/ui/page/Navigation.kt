@@ -1,29 +1,66 @@
 package com.emindev.expensetodolist.main.ui.page
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.emindev.expensetodolist.BuildConfig
 import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.expense.ui.pages.ExpenseAddPage
 import com.emindev.expensetodolist.expense.ui.pages.ExpenseUpdatePage
+import com.emindev.expensetodolist.main.common.helper.addLog
+import com.emindev.expensetodolist.main.common.helper.test
+import com.emindev.expensetodolist.main.common.model.Resource
 import com.emindev.expensetodolist.income.ui.pages.IncomeAddPage
 import com.emindev.expensetodolist.income.ui.pages.IncomeUpdatePage
 import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.income.data.room.IncomeEvent
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
+import com.emindev.expensetodolist.main.data.update.RemoteDataStore
+import com.emindev.expensetodolist.main.data.update.RemoteRepository
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 
 @Composable
 fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, expenseViewModel: ExpenseViewModel, onIncomeEvent: (IncomeEvent) -> Unit, onExpenseEvent: (ExpenseEvent) -> Unit) {
+
+    val context = LocalContext.current
+    val remoteSettings = RemoteDataStore(context)
+  //  val remoteModel = remember { mutableStateOf(remoteSettings.getRemote()) }
+    val remoteModel = RemoteRepository(context).remoteData.collectAsState()
+
+    test = remoteModel.value.isLocked
+
+    val updateShowed = remember {
+        mutableStateOf(false)
+    }
+
+/*    RemoteRepository().remoteData {
+        when (it) {
+            is Resource.Success -> {
+                test = it.data!!
+                remoteModel.value =it.data!!
+                remoteSettings.saveRemoteData(it.data)
+                addLog("RemoteSource", it.data, "", "StartPage()")
+                addLog("RemoteSource", BuildConfig.VERSION_CODE, "Current Version Code", "StartPage()")
+            }
+
+            is Resource.Error -> {}
+            is Resource.Loading -> {}
+        }
+    }*/
+
 
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Page.PageContent.route) {
 
         composable(route = Page.PageContent.route) {
-            PageContent(navController = navController, incomeViewModel, expenseViewModel, mainViewModel, onIncomeEvent, onExpenseEvent)
+            PageContent(navController = navController, incomeViewModel, expenseViewModel, mainViewModel, onIncomeEvent, onExpenseEvent,remoteModel,updateShowed)
         }
 
 
@@ -37,7 +74,13 @@ fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, e
             ExpenseAddPage(navController = navController, mainViewModel = mainViewModel, expenseViewModel = expenseViewModel, onEvent = onExpenseEvent)
         }
         composable(route = Page.ExpenseUpdate.route) {
-            ExpenseUpdatePage(navController = navController, mainViewModel = mainViewModel, expenseViewModel =expenseViewModel , onEvent =onExpenseEvent )
+            ExpenseUpdatePage(navController = navController, mainViewModel = mainViewModel, expenseViewModel = expenseViewModel, onEvent = onExpenseEvent)
+        }
+        composable(route = Page.Lock.route) {
+            LockPage()
+        }
+        composable(route = Page.Update.route) {
+            UpdatePage(forceUpdate = remoteModel.value.forceUpdate, navController = navController,updateShowed)
         }
     }
 

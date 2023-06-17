@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.helperlibrary.common.helper
+package com.emindev.expensetodolist.main.common.helper
 
 import android.annotation.SuppressLint
 import android.app.Activity

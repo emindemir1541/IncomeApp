@@ -3,9 +3,9 @@ package com.emindev.expensetodolist.expense.data.room
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.toDateString
-import com.emindev.expensetodolist.helperlibrary.common.helper.test
+import com.emindev.expensetodolist.main.common.helper.DateUtil
+import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.toDateString
+import com.emindev.expensetodolist.income.data.room.IncomeCardModel
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.common.util.toFloatOrZero
@@ -34,7 +34,8 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val expenseInfinityModels = dao.getExpenseInfinityModels()
-
+    val infinityExpenseModelsNotDeleted = dao.getInfinityExpenseModelsNotDeleted()
+    val expenseCardModels = dao.getExpenseCardModels()
     private val _state = MutableStateFlow(ExpenseState())
 
     val state = combine(_state, _expensesOneCard, _expensesMultipleCard, expenseInfinityModels, mainViewModel.selectedDate) { state, expensesOneCard, expensesMultipleCard, expenseInfinityModels, selectedDate ->
@@ -278,6 +279,11 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
         }
     }
 
+    fun addExpenseCard(expenseCardModel: ExpenseCardModel) {
+        viewModelScope.launch {
+            dao.upsert(expenseCardModel)
+        }
+    }
     fun setState(expense: Expense) {
         _state.update {
             it.copy(id = expense.id, cardId = expense.cardId, name = expense.name, latestAmount = expense.latestAmount.toString(), currentAmount = expense.currentAmount.toString(), initialDate = expense.initialLocalDate, currentDate = expense.currentLocalDate, completed = expense.completed ?: false, repeatType = expense.repeatType, cardDeleted = expense.cardDeleted, deleted = expense.deleted, expenseType = expense.expenseType)

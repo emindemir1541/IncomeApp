@@ -8,4 +8,8 @@ sealed class Page(val route: String) {
     object PageContent : Page("PageContent")
     object MainPage : Page("MainPage")
     object ExpenseAdd : Page("ExpenseAdd")
+
+    object Lock:Page("Lock")
+    object Update:Page("Update")
+
 }

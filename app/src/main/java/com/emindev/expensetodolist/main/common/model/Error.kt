@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.helperlibrary.common.model
+package com.emindev.expensetodolist.main.common.model
 
 import com.google.gson.Gson
 

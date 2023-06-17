@@ -2,8 +2,8 @@ package com.emindev.expensetodolist.expense.data.room
 
 import androidx.room.Entity
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil
-import com.emindev.expensetodolist.helperlibrary.common.helper.DateUtil.Companion.isMonthAndYearSmallerThan
+import com.emindev.expensetodolist.main.common.helper.DateUtil
+import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.isMonthAndYearSmallerThan
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import java.time.LocalDate
@@ -38,7 +38,7 @@ data class Expense(
         get() = ExpenseCardModel(id = id, currentDate = currentDate, currentAmount = currentAmount, completed = completed, cardDeleted = cardDeleted, cardId = cardId)
 
     val remainedDay: Long
-        get() =DateUtil.dayBetweenTwoDate(currentLocalDate, DateUtil.localDateNow)
+        get() = DateUtil.dayBetweenTwoDate(currentLocalDate, DateUtil.localDateNow)
 
     val remainedDayAsPercentage:Int
         get() = if (remainedDay >= 0) ((remainedDay * 100) /currentLocalDate.dayOfMonth).toInt() else 0

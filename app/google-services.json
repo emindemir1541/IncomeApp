@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:248169060566:android:0ed21ca36f83ce6e455177",
+        "mobilesdk_app_id": "1:248169060566:android:51d0b6e2bf90c4b1455177",
         "android_client_info": {
           "package_name": "com.emindev.expensetodolist"
         }
@@ -36,9 +36,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:248169060566:android:0d2d2109a34ef5b2455177",
+        "mobilesdk_app_id": "1:248169060566:android:9e33f356e2e56d26455177",
         "android_client_info": {
-          "package_name": "com.example.gelirgideruygulamas"
+          "package_name": "com.emindev.schoolgadgets"
         }
       },
       "oauth_client": [
