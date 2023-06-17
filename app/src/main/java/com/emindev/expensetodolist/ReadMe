@@ -1,10 +1,7 @@
 Errors
 
 Important Adds
-todo    add finish button for infinity cards
-todo    get deleted cards while creating months, if you dont get them it will create to deleted card again
 todo    when a button pushed, disable button a while, mutable interaction source
-todo    while adding income, check person input date or other things
 todo    datastore shared preference kullanarak yeni aya girip girmediğini kontrol et, ve yeni aya girdiysen cardcreator fonksiyonunu çalıştır
 todo    kart oluşturulurken yükleme ekranı getir
 todo    kart başlıkları çok uzun olduğunda yazıyı küçült veya karakter sınırı koy

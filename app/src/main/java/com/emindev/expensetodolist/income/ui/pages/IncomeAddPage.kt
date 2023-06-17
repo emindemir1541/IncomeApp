@@ -3,6 +3,7 @@
 package com.emindev.expensetodolist.income.ui.pages
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -52,6 +54,7 @@ import java.time.LocalDate
 @Composable
 fun IncomeAddPage(navController: NavController, mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, onEvent: (IncomeEvent) -> Unit) {
 
+    val context = LocalContext.current
     onEvent(IncomeEvent.ShowDialog)
     val calendarState = rememberUseCaseState()
 
@@ -112,8 +115,14 @@ fun IncomeAddPage(navController: NavController, mainViewModel: MainViewModel, in
             }
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    navController.popBackStack()
-                    onEvent(IncomeEvent.SaveIncome)
+                    if (!incomeViewModel.stateSaveSituation) {
+                        Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+
+                        navController.popBackStack()
+                        onEvent(IncomeEvent.SaveIncome)
+                    }
                 }) {
                     Text(text = stringResource(id = R.string.add))
                 }
@@ -130,6 +139,7 @@ fun IncomeAddPage(navController: NavController, mainViewModel: MainViewModel, in
 @Composable
 fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, onEvent: (IncomeEvent) -> Unit) {
 
+    val context = LocalContext.current
     onEvent(IncomeEvent.ShowDialog)
     val calendarState = rememberUseCaseState()
 
@@ -199,8 +209,13 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
 
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    navController.popBackStack()
-                    onEvent(IncomeEvent.UpdateIncome)
+                    if (!incomeViewModel.stateUpdateSituation) {
+                        Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        navController.popBackStack()
+                        onEvent(IncomeEvent.UpdateIncome)
+                    }
                 }) {
                     Text(text = stringResource(id = R.string.update))
                 }

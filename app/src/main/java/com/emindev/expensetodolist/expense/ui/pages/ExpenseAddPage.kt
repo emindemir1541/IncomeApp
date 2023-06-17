@@ -1,6 +1,7 @@
 package com.emindev.expensetodolist.expense.ui.pages
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -54,6 +56,7 @@ import java.time.LocalDate
 @Composable
 fun ExpenseAddPage(navController: NavController, mainViewModel: MainViewModel, expenseViewModel: ExpenseViewModel, onEvent: (ExpenseEvent) -> Unit) {
 
+    val context = LocalContext.current
     onEvent(ExpenseEvent.ShowDialog)
     val calendarState = rememberUseCaseState()
 
@@ -128,8 +131,13 @@ fun ExpenseAddPage(navController: NavController, mainViewModel: MainViewModel, e
             }
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    navController.popBackStack()
-                    onEvent(ExpenseEvent.SaveExpense)
+                    if (expenseViewModel.stateSaveSituation) {
+                        Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        navController.popBackStack()
+                        onEvent(ExpenseEvent.SaveExpense)
+                    }
                 }) {
                     Text(text = stringResource(id = R.string.add))
                 }
@@ -147,6 +155,7 @@ fun ExpenseAddPage(navController: NavController, mainViewModel: MainViewModel, e
 @Composable
 fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel, expenseViewModel: ExpenseViewModel, onEvent: (ExpenseEvent) -> Unit) {
 
+    val context = LocalContext.current
     onEvent(ExpenseEvent.ShowDialog)
     val calendarState = rememberUseCaseState()
 
@@ -210,9 +219,16 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
 
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    navController.popBackStack()
-                    onEvent(ExpenseEvent.UpdateExpense)
-                    expenseViewModel.clearState()
+                    if (expenseViewModel.stateUpdateSituation) {
+                        Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        navController.popBackStack()
+                        onEvent(ExpenseEvent.UpdateExpense)
+                        expenseViewModel.clearState()
+                    }
+
+
                 }) {
                     Text(text = stringResource(id = R.string.update))
                 }

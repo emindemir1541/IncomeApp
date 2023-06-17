@@ -84,9 +84,6 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
                 val expenseType = state.value.expenseType
                 val lender = state.value.lender
 
-                if (name.isBlank() || latestAmount.isBlank() || (expenseType == ExpenseType.DEBT && lender.isBlank()) || (repeatType == RepeatType.LIMITED && repetition.isBlank())) {
-                    return
-                }
 
 
                 val expenseModel = ExpenseModel(
@@ -210,10 +207,6 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
                 val expenseType = state.value.expenseType
                 val lender = state.value.lender
 
-                if (name.isBlank() || latestAmount.isBlank() || (expenseType == ExpenseType.DEBT && lender.isBlank())) {
-                    return
-                }
-
                 val expenseModel = ExpenseModel(
                     id = id,
                     name = name,
@@ -295,5 +288,28 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
             it.copy(id = 0, cardId = 0, name = "", latestAmount = "", currentAmount = "", initialDate = DateUtil.localDateNow, currentDate = DateUtil.localDateNow, completed = false, cardDeleted = false, repeatType = RepeatType.LIMITED, deleted = false, expenseType = ExpenseType.NEED, isAddingExpense = false, lender = "", repetition = "")
         }
     }
+
+    val stateSaveSituation: Boolean
+        get() {
+            val name = state.value.name
+            val latestAmount = state.value.latestAmount
+            val repeatType = state.value.repeatType
+            val repetition = state.value.repetition
+            val expenseType = state.value.expenseType
+            val lender = state.value.lender
+
+            return (name.isBlank() || latestAmount.isBlank() || (expenseType == ExpenseType.DEBT && lender.isBlank()) || (repeatType == RepeatType.LIMITED && repetition.isBlank()))
+
+        }
+
+    val stateUpdateSituation: Boolean
+        get(){
+            val name = state.value.name
+            val latestAmount = state.value.latestAmount
+            val expenseType = state.value.expenseType
+            val lender = state.value.lender
+
+            return (name.isBlank() || latestAmount.isBlank() || (expenseType == ExpenseType.DEBT && lender.isBlank()))
+        }
 
 }

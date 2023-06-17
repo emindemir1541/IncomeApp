@@ -84,10 +84,6 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                 val repeatType = state.value.repeatType
                 val repetition = state.value.repetition
 
-                if (name.isBlank() || latestAmount.isBlank() || (repeatType == RepeatType.LIMITED && repetition.isBlank())) {
-                    // TODO:  edit this place
-                    return
-                }
                 val incomeModel = IncomeModel(
                     name = name,
                     latestAmount = latestAmount.toFloatOrZero(),
@@ -141,9 +137,6 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                 val repeatType = state.value.repeatType
                 val repetition = state.value.repetition
 
-                if (name.isBlank() || latestAmount.isBlank() || (repeatType == RepeatType.LIMITED && repetition.isBlank())) {
-                    return
-                }
 
                 val incomeModel = IncomeModel(
                     id = id,
@@ -256,6 +249,26 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
                 id = income.id, cardId = income.cardId, latestAmount = income.latestAmount.toString(), cardAmount = income.cardAmount.toString(), initialDate = income.initialLocalDate, currentDate = income.currentLocalDate, repeatType = income.repeatType, repetition = income.repetition.toString(), name = income.name,
             )
         }
+    }
+
+    val stateSaveSituation: Boolean
+        get() {
+            val name = state.value.name
+            val latestAmount = state.value.latestAmount
+            val repeatType = state.value.repeatType
+            val repetition = state.value.repetition
+
+            return !(name.isBlank() || latestAmount.isBlank() || (repeatType == RepeatType.LIMITED && repetition.isBlank()))
+
+        }
+
+    val stateUpdateSituation: Boolean
+        get(){
+        val name = state.value.name
+        val latestAmount = state.value.latestAmount
+
+        return !(name.isBlank() || latestAmount.isBlank())
+
     }
 
 }
