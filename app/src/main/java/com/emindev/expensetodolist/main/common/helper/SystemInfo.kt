@@ -52,7 +52,6 @@ object SystemInfo : Build() {
             device["fingerprint"] = FINGERPRINT
             device["cpuAbi"] = CPU_ABI
             device["cpuAbi2"] = CPU_ABI2
-            device["sku"] = SKU
             device["device"] = DEVICE
             device["bootloader"] = BOOTLOADER
             device["tags"] = TAGS
