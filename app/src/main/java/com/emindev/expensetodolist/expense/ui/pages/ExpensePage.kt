@@ -49,6 +49,7 @@ import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.main.common.util.ColorUtil
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AlertDialogDelete
+import com.emindev.expensetodolist.main.ui.component.TextSizeable
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -108,12 +109,13 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
             }*/
 
         items(expenseState.expensesOneCard) { expense ->
+            test = expense.lender
             Box(modifier = Modifier
                 .animateItemPlacement(animationSpec = tween(durationMillis = 600))
             ) {
                 RowExpenseOneCard(expense) {
                     expenseViewModel.setState(expense)
-                    navController.navigate(Page.IncomeUpdate.route)
+                    navController.navigate(Page.ExpenseUpdate.route)
                 }
             }
         }
@@ -151,7 +153,7 @@ fun RowExpenseMultipleCard(expense: Expense, onCheckedChanged: (Boolean) -> Unit
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                        Text(text = expense.name, fontSize = 30.sp)
+                        TextSizeable(text = expense.name, fontSize = 40)
                     }
                     Row(modifier = Modifier
                         .fillMaxWidth()
@@ -188,7 +190,7 @@ fun RowExpenseMultipleCard(expense: ExpenseModel, selectedDate: LocalDate) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                Text(text = expense.name, fontSize = 30.sp)
+                TextSizeable(text = expense.name, fontSize = 40)
             }
             Row(modifier = Modifier
                 .fillMaxWidth()
@@ -222,7 +224,7 @@ private fun RowExpenseOneCard(expense: Expense, onLongClick: () -> Unit) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 18.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-                Text(text = expense.name, fontSize = 25.sp) // TODO: title sınırı, belli bir değerden sonra yazı boyutu küçülsün
+                TextSizeable(text = expense.name, fontSize = 25)
                 Text(text = expense.currentLocalDate.convertToString(DateUtil.Delimiters.slash)) // TODO: bunu tam ortala
                 Text(text = if (expense.isCardPassed) expense.currentAmount.toString() else expense.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
 

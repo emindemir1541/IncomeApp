@@ -2,7 +2,6 @@ package com.emindev.expensetodolist.expense.ui.pages
 
 import android.annotation.SuppressLint
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,8 +39,8 @@ import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
-import com.emindev.expensetodolist.income.data.room.IncomeEvent
 import com.emindev.expensetodolist.main.common.constant.RepeatType
+import com.emindev.expensetodolist.main.common.helper.test
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AnimatedVisibilityTextField
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -131,12 +129,13 @@ fun ExpenseAddPage(navController: NavController, mainViewModel: MainViewModel, e
             }
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    if (expenseViewModel.stateSaveSituation) {
+                    if (expenseViewModel.stateSaveValid) {
                         Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
                     }
                     else {
                         navController.popBackStack()
                         onEvent(ExpenseEvent.SaveExpense)
+                        expenseViewModel.clearState()
                     }
                 }) {
                     Text(text = stringResource(id = R.string.add))
@@ -211,6 +210,7 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
 
             item {
                 AnimatedVisibilityTextField(visible = expenseState.expenseType == ExpenseType.DEBT) {
+                    test = expenseState.lender
                     Column(modifier = Modifier.fillMaxWidth()) {
                         OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = expenseState.lender, onValueChange = { onEvent(ExpenseEvent.SetLenderName(it)) }, label = { Text(text = stringResource(id = R.string.lender)) })
                     }
@@ -219,7 +219,7 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
 
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    if (expenseViewModel.stateUpdateSituation) {
+                    if (expenseViewModel.stateUpdateValid) {
                         Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
                     }
                     else {

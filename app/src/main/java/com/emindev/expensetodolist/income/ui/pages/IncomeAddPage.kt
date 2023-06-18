@@ -115,13 +115,14 @@ fun IncomeAddPage(navController: NavController, mainViewModel: MainViewModel, in
             }
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    if (!incomeViewModel.stateSaveSituation) {
+                    if (!incomeViewModel.stateSaveValid) {
                         Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
                     }
                     else {
 
                         navController.popBackStack()
                         onEvent(IncomeEvent.SaveIncome)
+                        incomeViewModel.clearState()
                     }
                 }) {
                     Text(text = stringResource(id = R.string.add))
@@ -209,7 +210,7 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
 
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                    if (!incomeViewModel.stateUpdateSituation) {
+                    if (!incomeViewModel.stateUpdateValid) {
                         Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
                     }
                     else {

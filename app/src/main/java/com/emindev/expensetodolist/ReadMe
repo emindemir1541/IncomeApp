@@ -1,10 +1,10 @@
 Errors
+todo    basılı tutma animasyonunu düzelt
 
 Important Adds
 todo    when a button pushed, disable button a while, mutable interaction source
-todo    datastore shared preference kullanarak yeni aya girip girmediğini kontrol et, ve yeni aya girdiysen cardcreator fonksiyonunu çalıştır
-todo    kart oluşturulurken yükleme ekranı getir
 todo    kart başlıkları çok uzun olduğunda yazıyı küçült veya karakter sınırı koy
+
 
 Should Add
 todo    message after deleted

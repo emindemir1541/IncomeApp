@@ -45,6 +45,7 @@ import com.emindev.expensetodolist.income.data.room.IncomeModel
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AlertDialogDelete
+import com.emindev.expensetodolist.main.ui.component.TextSizeable
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import java.time.LocalDate
 
@@ -102,6 +103,10 @@ fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incom
             }
         }
 
+        item {
+            Spacer(modifier = Modifier.padding(100.dp))
+        }
+
     }
 
 }
@@ -125,13 +130,13 @@ fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                Text(text = income.name, fontSize = 30.sp)
+                TextSizeable(text = income.name, fontSize = 40)
             }
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
                 TextRemainedDay(income = income)
-                Text(text = income.cardAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
+                TextSizeable(text = income.cardAmount.toString() + Currency.TL, fontSize = 16)  // TODO: handle the cardPassed error
                 Text(text = income.currentLocalDate.convertToString(DateUtil.Delimiters.slash))
             }
             Spacer(modifier = Modifier.padding(6.dp))
@@ -154,14 +159,14 @@ fun RowIncomeMultipleCard(income: IncomeModel, selectedDate: LocalDate) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                Text(text = income.name, fontSize = 30.sp)
+                TextSizeable(text = income.name, fontSize = 40)
             }
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
                 val date = DateUtil.convertToDate(selectedDate.year, selectedDate.monthValue, income.initialLocalDate.dayOfMonth)
                 TextRemainedDay(selectedDate)
-                Text(text = income.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
+                TextSizeable(text = income.latestAmount.toString() + Currency.TL, fontSize = 16)  // TODO: handle the cardPassed error
                 Text(text = date.convertToString(DateUtil.Delimiters.slash))
             }
             Spacer(modifier = Modifier.padding(6.dp))
@@ -188,7 +193,7 @@ private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 18.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-                Text(text = income.name, fontSize = 25.sp) // TODO: title sınırı, belli bir değerden sonra yazı boyutu küçülsün 
+                TextSizeable(text = income.name, fontSize = 25)
                 Text(text = income.currentLocalDate.convertToString(DateUtil.Delimiters.slash)) // TODO: bunu tam ortala
                 Text(text = if (income.isCardPassed) income.cardAmount.toString() else income.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
 

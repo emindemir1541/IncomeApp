@@ -174,12 +174,13 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             }
 
             is IncomeEvent.SetAmount -> {
-                _state.update {
-                    it.copy(
-                        latestAmount = event.amount,
-                        cardAmount = event.amount
-                    )
-                }
+                if (event.amount.toFloatOrZero() < 1000000000)
+                    _state.update {
+                        it.copy(
+                            latestAmount = event.amount,
+                            cardAmount = event.amount
+                        )
+                    }
             }
 
             is IncomeEvent.SetCardId -> {
@@ -208,11 +209,12 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             }
 
             is IncomeEvent.SetName -> {
-                _state.update {
-                    it.copy(
-                        name = event.name
-                    )
-                }
+                if (event.name.length < 30)
+                    _state.update {
+                        it.copy(
+                            name = event.name
+                        )
+                    }
             }
 
 
@@ -251,7 +253,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
         }
     }
 
-    val stateSaveSituation: Boolean
+    val stateSaveValid: Boolean
         get() {
             val name = state.value.name
             val latestAmount = state.value.latestAmount
@@ -262,14 +264,14 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
 
         }
 
-    val stateUpdateSituation: Boolean
-        get(){
-        val name = state.value.name
-        val latestAmount = state.value.latestAmount
+    val stateUpdateValid: Boolean
+        get() {
+            val name = state.value.name
+            val latestAmount = state.value.latestAmount
 
-        return !(name.isBlank() || latestAmount.isBlank())
+            return !(name.isBlank() || latestAmount.isBlank())
 
-    }
+        }
 
 }
 

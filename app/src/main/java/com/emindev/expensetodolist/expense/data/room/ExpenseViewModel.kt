@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.toDateString
-import com.emindev.expensetodolist.income.data.room.IncomeCardModel
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.common.util.toFloatOrZero
@@ -279,7 +278,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
     }
     fun setState(expense: Expense) {
         _state.update {
-            it.copy(id = expense.id, cardId = expense.cardId, name = expense.name, latestAmount = expense.latestAmount.toString(), currentAmount = expense.currentAmount.toString(), initialDate = expense.initialLocalDate, currentDate = expense.currentLocalDate, completed = expense.completed ?: false, repeatType = expense.repeatType, cardDeleted = expense.cardDeleted, deleted = expense.deleted, expenseType = expense.expenseType)
+            it.copy(id = expense.id, cardId = expense.cardId, name = expense.name, latestAmount = expense.latestAmount.toString(), currentAmount = expense.currentAmount.toString(), initialDate = expense.initialLocalDate, currentDate = expense.currentLocalDate, completed = expense.completed ?: false, repeatType = expense.repeatType, cardDeleted = expense.cardDeleted, deleted = expense.deleted, expenseType = expense.expenseType, lender = expense.lender)
         }
     }
 
@@ -289,7 +288,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
         }
     }
 
-    val stateSaveSituation: Boolean
+    val stateSaveValid: Boolean
         get() {
             val name = state.value.name
             val latestAmount = state.value.latestAmount
@@ -302,7 +301,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
 
         }
 
-    val stateUpdateSituation: Boolean
+    val stateUpdateValid: Boolean
         get(){
             val name = state.value.name
             val latestAmount = state.value.latestAmount
