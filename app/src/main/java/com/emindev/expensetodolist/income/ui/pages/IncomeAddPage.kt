@@ -26,8 +26,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,6 +50,7 @@ import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -104,26 +108,30 @@ fun IncomeAddPage(navController: NavController, mainViewModel: MainViewModel, in
             item {
                 AnimatedVisibility(visible = incomeState.repeatType == RepeatType.LIMITED) {
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = incomeState.repetition, onValueChange = { onEvent(IncomeEvent.SetRepetition(it)) }, label = { Text(text = stringResource(id = R.string.Repetition)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal))
+                        OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = incomeState.repetition, onValueChange = { onEvent(IncomeEvent.SetRepetition(it)) }, label = { Text(text = stringResource(id = R.string.Repetition)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
                     }
                 }
             }
             item {
-                OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = { calendarState.show() }) {
+                OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = { mainViewModel.interactionFunction(2000L) { calendarState.show() } }) {
                     Text(text = stringResource(id = R.string.income_date))
                 }
             }
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
+
                     if (!incomeViewModel.stateSaveValid) {
                         Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
                     }
                     else {
+                        mainViewModel.interactionFunction(3000L) {
+                            navController.popBackStack()
+                            onEvent(IncomeEvent.SaveIncome)
+                            incomeViewModel.clearState()
+                        }
 
-                        navController.popBackStack()
-                        onEvent(IncomeEvent.SaveIncome)
-                        incomeViewModel.clearState()
                     }
+
                 }) {
                     Text(text = stringResource(id = R.string.add))
                 }
@@ -170,10 +178,12 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
 
                 TopAppBar(title = { Text(text = stringResource(id = R.string.income_update)) }, actions = {
                     IconButton(onClick = {
-                        onEvent(IncomeEvent.DeleteIncome(incomeState.toIncome()));
-                        onEvent(IncomeEvent.HideDialog)
-                        incomeViewModel.clearState()
-                        navController.popBackStack()
+                        mainViewModel.interactionFunction(3000L) {
+                            onEvent(IncomeEvent.DeleteIncome(incomeState.toIncome()));
+                            onEvent(IncomeEvent.HideDialog)
+                            incomeViewModel.clearState()
+                            navController.popBackStack()
+                        }
                     }) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(id = R.string.delete), tint = Color.Red)
                     }
@@ -186,27 +196,6 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
             item {
                 OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = incomeState.latestAmount, onValueChange = { onEvent(IncomeEvent.SetAmount(it)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), label = { Text(stringResource(id = R.string.amount)) })
             }
-            /*
-                        item {
-                            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                                ElevatedFilterChip(label = { Text(text = stringResource(id = R.string.income_forOnce)) }, selected = incomeState.repeatType == RepeatType.ONCE, onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.ONCE)) })
-                                ElevatedFilterChip(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.LIMITED)) }, label = { Text(text = stringResource(id = R.string.limited)) }, selected = incomeState.repeatType == RepeatType.LIMITED)
-                                ElevatedFilterChip(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.INFINITY)) }, label = { Text(text = stringResource(id = R.string.every_month)) }, selected = incomeState.repeatType == RepeatType.INFINITY)
-                            }
-                        }
-
-                        item {
-                            AnimatedVisibility(visible = incomeState.repeatType == RepeatType.LIMITED) {
-                                Column(modifier = Modifier.fillMaxWidth()) {
-                                    OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = incomeState.repetition, onValueChange = { onEvent(IncomeEvent.SetRepetition(it)) }, label = { Text(text = stringResource(id = R.string.Repetition)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal))
-                                }
-                            }
-                        }
-                        item {
-                            OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = { calendarState.show() }) {
-                                Text(text = stringResource(id = R.string.income_date))
-                            }
-                        }*/
 
             item {
                 Button(modifier = Modifier.fillMaxWidth(), onClick = {
@@ -214,8 +203,12 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
                         Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
                     }
                     else {
-                        navController.popBackStack()
-                        onEvent(IncomeEvent.UpdateIncome)
+                        mainViewModel.interactionFunction(3000L) {
+
+                            navController.popBackStack()
+                            onEvent(IncomeEvent.UpdateIncome)
+                            incomeViewModel.clearState()
+                        }
                     }
                 }) {
                     Text(text = stringResource(id = R.string.update))

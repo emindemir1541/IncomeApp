@@ -79,10 +79,12 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
 
                     LargeFloatingActionButton(onClick = {
                         if (!isCardCreating.value) {
-                            if (selectedPage.value == BottomNavItems.IncomePage)
-                                navController.navigate(Page.IncomeAdd.route)
-                            if (selectedPage.value == BottomNavItems.ExpensePage)
-                                navController.navigate(Page.ExpenseAdd.route)
+                            mainViewModel.interactionFunction(3000L) {
+                                if (selectedPage.value == BottomNavItems.IncomePage)
+                                    navController.navigate(Page.IncomeAdd.route)
+                                if (selectedPage.value == BottomNavItems.ExpensePage)
+                                    navController.navigate(Page.ExpenseAdd.route)
+                            }
                         }
                         //  expenseViewModel.setState(Expense(1, 1, "ldsjfk", 45f, 4f, SqlDateUtil.convertDate(DateUtil.localDateNow), SqlDateUtil.convertDate(DateUtil.localDateNow), false, false, false, RepeatType.INFINITY, 5, ExpenseType.NEED, ""))
                         //  onExpenseEvent(ExpenseEvent.SaveExpense)
@@ -127,7 +129,7 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
                     when (selectedPage.value) {
                         BottomNavItems.ExpensePage -> ExpensePage(navController = navController, mainViewModel = mainViewModel, expenseViewModel = expenseViewModel, listState = lazyColumnListState, onEvent = onExpenseEvent)
                         BottomNavItems.IncomePage -> IncomePage(navController = navController, mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, lazyColumnListState, onEvent = onIncomeEvent)
-                        BottomNavItems.MainPage -> MainPage(mainViewModel,financeViewModel)
+                        BottomNavItems.MainPage -> MainPage(financeViewModel)
                     }
                 }
             }

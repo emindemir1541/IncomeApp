@@ -3,6 +3,7 @@ package com.emindev.expensetodolist.expense.data.room
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
+import com.emindev.expensetodolist.main.common.constant.FinanceConstants
 import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.toDateString
 import com.emindev.expensetodolist.main.common.constant.RepeatType
@@ -31,7 +32,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
         dao.getExpenseWithMultipleCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toDateString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-     val allExpensesNotDeletedBySelectedDate = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
+    val allExpensesNotDeletedBySelectedDate = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
         dao.getAllExpensesNotDeletedBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
@@ -137,12 +138,13 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
             }
 
             is ExpenseEvent.SetAmount -> {
-                _state.update {
-                    it.copy(
-                        currentAmount = event.amount,
-                        latestAmount = event.amount
-                    )
-                }
+                if (event.amount.toFloatOrZero() < FinanceConstants.maxAmount)
+                    _state.update {
+                        it.copy(
+                            currentAmount = event.amount,
+                            latestAmount = event.amount
+                        )
+                    }
             }
 
 
@@ -156,28 +158,31 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
 
 
             is ExpenseEvent.SetLenderName -> {
-                _state.update {
-                    it.copy(
-                        lender = event.lender
-                    )
-                }
+                if (event.lender.length < FinanceConstants.maxNameLength)
+                    _state.update {
+                        it.copy(
+                            lender = event.lender
+                        )
+                    }
             }
 
 
             is ExpenseEvent.SetName -> {
-                _state.update {
-                    it.copy(
-                        name = event.name
-                    )
-                }
+                if (event.name.length < FinanceConstants.maxNameLength)
+                    _state.update {
+                        it.copy(
+                            name = event.name
+                        )
+                    }
             }
 
             is ExpenseEvent.SetRepetition -> {
-                _state.update {
-                    it.copy(
-                        repetition = if (event.repetition != null) event.repetition.toString() else ""
-                    )
-                }
+                if (event.repetition != null && event.repetition.toIntOrZero() < FinanceConstants.maxRepetitionLength)
+                    _state.update {
+                        it.copy(
+                            repetition =  event.repetition.toString()
+                        )
+                    }
             }
 
 

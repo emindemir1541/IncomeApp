@@ -2,6 +2,7 @@ package com.emindev.expensetodolist.income.data.room
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.emindev.expensetodolist.main.common.constant.FinanceConstants
 import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.toDateString
 import com.emindev.expensetodolist.main.common.constant.RepeatType
@@ -47,8 +48,6 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             incomesOneCard = incomesOneCard,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IncomeState())
-
-
 
 
     fun addIncomeCard(incomeCardModel: IncomeCardModel) {
@@ -175,7 +174,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             }
 
             is IncomeEvent.SetAmount -> {
-                if (event.amount.toFloatOrZero() < 1000000000)
+                if (event.amount.toFloatOrZero() < FinanceConstants.maxAmount)
                     _state.update {
                         it.copy(
                             latestAmount = event.amount,
@@ -202,15 +201,16 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
             }
 
             is IncomeEvent.SetRepetition -> {
-                _state.update {
-                    it.copy(
-                        repetition = event.repetition
-                    )
-                }
+                if (event.repetition.toIntOrZero() < FinanceConstants.maxRepetitionLength)
+                    _state.update {
+                        it.copy(
+                            repetition = event.repetition
+                        )
+                    }
             }
 
             is IncomeEvent.SetName -> {
-                if (event.name.length < 30)
+                if (event.name.length < FinanceConstants.maxNameLength)
                     _state.update {
                         it.copy(
                             name = event.name

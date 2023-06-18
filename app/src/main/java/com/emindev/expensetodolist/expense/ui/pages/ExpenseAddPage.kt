@@ -118,12 +118,12 @@ fun ExpenseAddPage(navController: NavController, mainViewModel: MainViewModel, e
             item {
                 AnimatedVisibilityTextField(visible = expenseState.repeatType == RepeatType.LIMITED) {
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = expenseState.repetition, onValueChange = { onEvent(ExpenseEvent.SetRepetition(it)) }, label = { Text(text = stringResource(id = R.string.Repetition)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal))
+                        OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = expenseState.repetition, onValueChange = { onEvent(ExpenseEvent.SetRepetition(it)) }, label = { Text(text = stringResource(id = R.string.Repetition)) }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
                     }
                 }
             }
             item {
-                OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = { calendarState.show() }) {
+                OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = { mainViewModel.interactionFunction(2000L) { calendarState.show() } }) {
                     Text(text = stringResource(id = R.string.expense_date))
                 }
             }
@@ -133,9 +133,11 @@ fun ExpenseAddPage(navController: NavController, mainViewModel: MainViewModel, e
                         Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
                     }
                     else {
-                        navController.popBackStack()
-                        onEvent(ExpenseEvent.SaveExpense)
-                        expenseViewModel.clearState()
+                        mainViewModel.interactionFunction(3000L) {
+                            navController.popBackStack()
+                            onEvent(ExpenseEvent.SaveExpense)
+                            expenseViewModel.clearState()
+                        }
                     }
                 }) {
                     Text(text = stringResource(id = R.string.add))
@@ -184,10 +186,12 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
 
                 TopAppBar(title = { Text(text = stringResource(id = R.string.update_expense)) }, actions = {
                     IconButton(onClick = {
-                        onEvent(ExpenseEvent.DeleteExpense(expenseState.toExpense()));
-                        onEvent(ExpenseEvent.HideDialog)
-                        expenseViewModel.clearState()
-                        navController.popBackStack()
+                        mainViewModel.interactionFunction(3000L) {
+                            onEvent(ExpenseEvent.DeleteExpense(expenseState.toExpense()));
+                            onEvent(ExpenseEvent.HideDialog)
+                            expenseViewModel.clearState()
+                            navController.popBackStack()
+                        }
                     }) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(id = R.string.delete), tint = Color.Red)
                     }
@@ -223,9 +227,11 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
                         Toast.makeText(context, context.getString(R.string.warning_empty), Toast.LENGTH_SHORT).show()
                     }
                     else {
-                        navController.popBackStack()
-                        onEvent(ExpenseEvent.UpdateExpense)
-                        expenseViewModel.clearState()
+                        mainViewModel.interactionFunction(3000L) {
+                            navController.popBackStack()
+                            onEvent(ExpenseEvent.UpdateExpense)
+                            expenseViewModel.clearState()
+                        }
                     }
 
 

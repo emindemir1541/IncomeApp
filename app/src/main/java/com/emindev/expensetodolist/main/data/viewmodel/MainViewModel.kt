@@ -1,18 +1,17 @@
 package com.emindev.expensetodolist.main.data.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
-import com.emindev.expensetodolist.income.data.room.IncomeViewModel
+import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.constant.BottomNavItems
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class MainViewModel : ViewModel() {
-
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
@@ -32,28 +31,32 @@ class MainViewModel : ViewModel() {
     private val _jobInteraction = MutableStateFlow(false)
     val jobInteraction = _jobInteraction.asStateFlow()
 
-
-
-    val jobInteractionStarted:Unit
-        get(){
+    private fun interactWithJob(millisecond: Long) {
+        viewModelScope.launch {
             _jobInteraction.value = true
-        }
-
-    val jobInteractionFinished:Unit
-        get() {
+            delay(millisecond)
             _jobInteraction.value = false
         }
+    }
+
+    fun interactionFunction(millisecond: Long, interaction: () -> Unit) {
+        if (!jobInteraction.value) {
+            interactWithJob(millisecond)
+            interaction()
+        }
+    }
+
     fun setNavItem(bottomNavItem: BottomNavItems) {
         _bottomNavItem.value = bottomNavItem
     }
 
-    val cardCreatingStarted:Unit
+    val cardCreatingStarted: Unit
         get() {
             _isCardCreating.value = true
         }
 
-    val cardCreatingFinished:Unit
-        get(){
+    val cardCreatingFinished: Unit
+        get() {
             _isCardCreating.value = false
         }
 
