@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -25,6 +26,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -132,20 +134,22 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
 
 @Composable
 private fun RowScope.NavItem(page: BottomNavItems, selected: Boolean, onclick: () -> Unit) {
-    NavigationBarItem(
-        selected = selected,
-        onClick = onclick,
-        label = {
-            Text(
-                text = stringResource(id = page.name),
-                fontWeight = FontWeight.SemiBold,
-            )
-        },
-        icon = {
-            Icon(
-                imageVector = page.icon,
-                contentDescription = "${page.name} Icon",
-            )
-        }
-    )
+
+        NavigationBarItem(
+            selected = selected,
+            onClick = onclick,
+            label = {
+                Text(
+                    text = stringResource(id = page.name),
+                    fontWeight = FontWeight.SemiBold,
+                )
+            },
+            icon = {
+                Icon(
+                    modifier=Modifier.size(27.dp),
+                    painter = painterResource(id =page.drawableIcon) ,
+                    contentDescription = "${page.name} Icon",
+                )
+            }
+        )
 }
