@@ -1,4 +1,4 @@
-package com.emindev.expensetodolist.main.common.util
+package com.emindev.expensetodolist.main.common.model
 
 import com.emindev.expensetodolist.BuildConfig
 

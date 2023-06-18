@@ -55,19 +55,13 @@ object Helper {
         exitProcess(0)
     }
 
-    fun String.cleanBlanks(): String = this.replace(" ", "")
+
 
     val Context.isDarkThemeOn: Boolean get() =
          this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
 
-    fun Float.clearZero(): String {
-        val splitValue = this.toString().split(".")
-        return if (splitValue[1] == "0") {
-            splitValue[0]
-        }
-        else this.toString()
-    }
+
 
 }
 

@@ -2,21 +2,13 @@ package com.emindev.expensetodolist.main.data.update
 
 import android.content.Context
 import com.emindev.expensetodolist.main.common.helper.FeedbackUtil.setError
-import com.emindev.expensetodolist.main.common.helper.test
 import com.emindev.expensetodolist.main.common.model.Resource
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.emindev.expensetodolist.main.common.util.RemoteModel
-import com.emindev.expensetodolist.main.common.util.RemoteUtil
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.snapshots
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.Flow
+import com.emindev.expensetodolist.main.common.model.RemoteModel
+import com.emindev.expensetodolist.main.common.constant.RemoteNames
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 
 
 class RemoteRepository(private val context: Context) : RemoteRepositoryInterface {
@@ -33,9 +25,9 @@ class RemoteRepository(private val context: Context) : RemoteRepositoryInterface
     override fun remoteData(listener: (Resource<RemoteModel>) -> Unit) {
         remoteConfig.fetchAndActivate().addOnSuccessListener {
             val remoteModel = RemoteModel(
-                remoteConfig.getLong(RemoteUtil.VERSION_CODE),
-                remoteConfig.getBoolean(RemoteUtil.FORCED_UPDATE),
-                remoteConfig.getBoolean(RemoteUtil.LOCK)
+                remoteConfig.getLong(RemoteNames.VERSION_CODE),
+                remoteConfig.getBoolean(RemoteNames.FORCED_UPDATE),
+                remoteConfig.getBoolean(RemoteNames.LOCK)
             )
             listener.invoke(Resource.Success(remoteModel))
         }.addOnFailureListener {
@@ -55,9 +47,9 @@ class RemoteRepository(private val context: Context) : RemoteRepositoryInterface
    private fun getRemoteData() {
         remoteConfig.fetchAndActivate().addOnSuccessListener {
             val newRemoteModel = RemoteModel(
-                remoteConfig.getLong(RemoteUtil.VERSION_CODE),
-                remoteConfig.getBoolean(RemoteUtil.FORCED_UPDATE),
-                remoteConfig.getBoolean(RemoteUtil.LOCK)
+                remoteConfig.getLong(RemoteNames.VERSION_CODE),
+                remoteConfig.getBoolean(RemoteNames.FORCED_UPDATE),
+                remoteConfig.getBoolean(RemoteNames.LOCK)
             )
             _remoteData.value = newRemoteModel
             remoteDataStore.saveRemoteData(newRemoteModel)

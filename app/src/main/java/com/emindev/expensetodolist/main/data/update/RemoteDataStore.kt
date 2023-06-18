@@ -5,8 +5,8 @@ import com.emindev.expensetodolist.BuildConfig
 import com.emindev.expensetodolist.main.common.helper.addLog
 import com.emindev.expensetodolist.main.common.constant.DataStoreNames
 import com.emindev.expensetodolist.main.data.datastore.DataStoreBase
-import com.emindev.expensetodolist.main.common.util.RemoteModel
-import com.emindev.expensetodolist.main.common.util.RemoteUtil
+import com.emindev.expensetodolist.main.common.model.RemoteModel
+import com.emindev.expensetodolist.main.common.constant.RemoteNames
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,16 +22,16 @@ class RemoteDataStore(private val context: Context) {
     }
 
     fun saveRemoteData(remoteModel: RemoteModel) = CoroutineScope(Dispatchers.IO+coroutineExceptionHandler).launch {
-        remoteDataStore.save(RemoteUtil.VERSION_CODE, remoteModel.versionCode)
-        remoteDataStore.save(RemoteUtil.FORCED_UPDATE, remoteModel.forceUpdate)
-        remoteDataStore.save(RemoteUtil.LOCK, remoteModel.isLocked)
+        remoteDataStore.save(RemoteNames.VERSION_CODE, remoteModel.versionCode)
+        remoteDataStore.save(RemoteNames.FORCED_UPDATE, remoteModel.forceUpdate)
+        remoteDataStore.save(RemoteNames.LOCK, remoteModel.isLocked)
     }
 
     fun getRemote() = runBlocking(coroutineExceptionHandler) {
         return@runBlocking RemoteModel(
-            versionCode = remoteDataStore.readLong(RemoteUtil.VERSION_CODE)?:currentVersionCode.toLong(),
-            forceUpdate = remoteDataStore.readBoolean(RemoteUtil.FORCED_UPDATE)?:false,
-            isLocked = remoteDataStore.readBoolean(RemoteUtil.LOCK)?:false
+            versionCode = remoteDataStore.readLong(RemoteNames.VERSION_CODE)?:currentVersionCode.toLong(),
+            forceUpdate = remoteDataStore.readBoolean(RemoteNames.FORCED_UPDATE)?:false,
+            isLocked = remoteDataStore.readBoolean(RemoteNames.LOCK)?:false
         )
     }
 

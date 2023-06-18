@@ -23,37 +23,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.emindev.expensetodolist.BuildConfig
 import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.expense.ui.pages.ExpensePage
-import com.emindev.expensetodolist.main.common.helper.addLog
-import com.emindev.expensetodolist.main.common.helper.test
-import com.emindev.expensetodolist.main.common.model.Resource
 import com.emindev.expensetodolist.income.ui.pages.IncomePage
 import com.emindev.expensetodolist.main.common.constant.BottomNavItems
 import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.income.data.room.IncomeEvent
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
-import com.emindev.expensetodolist.main.common.util.RemoteModel
-import com.emindev.expensetodolist.main.data.update.RemoteDataStore
-import com.emindev.expensetodolist.main.data.update.RemoteRepository
+import com.emindev.expensetodolist.main.common.model.RemoteModel
 import com.emindev.expensetodolist.main.data.viewmodel.FinanceViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.DateRow
 import com.emindev.expensetodolist.main.ui.component.HideAbleButtonContent
 import com.emindev.expensetodolist.main.ui.component.isScrollingUp
-import kotlinx.coroutines.flow.StateFlow
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
