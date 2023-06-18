@@ -30,7 +30,7 @@
     <string name="edit">Edit</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
 
     <string name="total_income">Total Income</string>
     <string name="potential_expense">Potential Expense</string>
@@ -81,41 +81,18 @@
     <string name="info_deleted_after_now">\'s after deleted</string>
     <string name="info_deleted_card">Current Card deleted</string>
 
+    <string name="name">Name</string>
+    <string name="amount">Amount</string>
+    <string name="limited">Limited</string>
+    <string name="Repetition">Repetition</string>
+    <string name="income_update">Update Income</string>
+    <string name="info_delete_card">This income is from a time in the past, do you want to delete the card from this time only?</string>
+    <string name="delete_this_card">Delete this card ?</string>
+    <string name="delete_income">Delete this income ?</string>
+    <string name="main_page">Main Page</string>
+    <string name="update_expense">Update Expense</string>
     <string name="back">Back</string>
     <string name="forward">Forward</string>
 
-    <string-array name="days">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-        <item>13</item>
-        <item>14</item>
-        <item>15</item>
-        <item>16</item>
-        <item>17</item>
-        <item>18</item>
-        <item>19</item>
-        <item>20</item>
-        <item>21</item>
-        <item>22</item>
-        <item>23</item>
-        <item>24</item>
-        <item>25</item>
-        <item>26</item>
-        <item>27</item>
-        <item>28</item>
-        <item>29</item>
-        <item>30</item>
-        <item>31</item>
 
-    </string-array>
 </resources>
