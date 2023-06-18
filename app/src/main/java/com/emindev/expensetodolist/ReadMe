@@ -3,18 +3,17 @@ todo    basılı tutma animasyonunu düzelt
 
 Important Adds
 todo    when a button pushed, disable button a while, mutable interaction source
-todo    kart başlıkları çok uzun olduğunda yazıyı küçült veya karakter sınırı koy
-
+todo    ay tekrar sayısına sınır koy
 
 Should Add
 todo    message after deleted
 todo    animation of Lazy column
 
 Can Be Add
-// TODO: 11.10.2022 kalan geliri bir sonraki aya aktar
-// TODO: 11.10.2022 döviz bilgilerini internettten çek
-// TODO: telefona bildirim gönder
-todo    update class, school gadgets'ten çekebilirsin
+todo    grafik ekle
+todo    kalan geliri bir sonraki aya aktar
+todo    döviz bilgilerini internettten çek
+todo    telefona bildirim gönder
 todo    yorumlar
 todo    testler
 

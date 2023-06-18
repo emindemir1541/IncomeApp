@@ -1,14 +1,19 @@
 package com.emindev.expensetodolist.main.data.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
+import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.constant.BottomNavItems
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
-class MainViewModel() : ViewModel() {
+class MainViewModel : ViewModel() {
+
+
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
 
@@ -26,6 +31,8 @@ class MainViewModel() : ViewModel() {
 
     private val _jobInteraction = MutableStateFlow(false)
     val jobInteraction = _jobInteraction.asStateFlow()
+
+
 
     val jobInteractionStarted:Unit
         get(){
@@ -76,7 +83,5 @@ class MainViewModel() : ViewModel() {
     fun selectCurrentDate() {
         _selectedDate.value = DateUtil.localDateNow
     }
-
-
 
 }

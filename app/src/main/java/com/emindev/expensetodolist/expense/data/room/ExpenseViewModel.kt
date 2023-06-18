@@ -27,17 +27,19 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
     private val _expensesOneCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
         dao.getExpenseWithOneCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
-
     private val _expensesMultipleCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
         dao.getExpenseWithMultipleCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toDateString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    private val expenseInfinityModels = dao.getExpenseInfinityModels()
+     val allExpensesNotDeletedBySelectedDate = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
+        dao.getAllExpensesNotDeletedBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
     val infinityExpenseModelsNotDeleted = dao.getInfinityExpenseModelsNotDeleted()
     val expenseCardModels = dao.getExpenseCardModels()
     private val _state = MutableStateFlow(ExpenseState())
 
-    val state = combine(_state, _expensesOneCard, _expensesMultipleCard, expenseInfinityModels, mainViewModel.selectedDate) { state, expensesOneCard, expensesMultipleCard, expenseInfinityModels, selectedDate ->
+    val state = combine(_state, _expensesOneCard, _expensesMultipleCard, infinityExpenseModelsNotDeleted, mainViewModel.selectedDate) { state, expensesOneCard, expensesMultipleCard, expenseInfinityModels, selectedDate ->
         state.copy(
             expensesOneCard = expensesOneCard,
             expensesMultipleCard = expensesMultipleCard,
@@ -82,7 +84,6 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
                 val repetition = state.value.repetition
                 val expenseType = state.value.expenseType
                 val lender = state.value.lender
-
 
 
                 val expenseModel = ExpenseModel(
@@ -276,6 +277,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
             dao.upsert(expenseCardModel)
         }
     }
+
     fun setState(expense: Expense) {
         _state.update {
             it.copy(id = expense.id, cardId = expense.cardId, name = expense.name, latestAmount = expense.latestAmount.toString(), currentAmount = expense.currentAmount.toString(), initialDate = expense.initialLocalDate, currentDate = expense.currentLocalDate, completed = expense.completed ?: false, repeatType = expense.repeatType, cardDeleted = expense.cardDeleted, deleted = expense.deleted, expenseType = expense.expenseType, lender = expense.lender)
@@ -302,7 +304,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
         }
 
     val stateUpdateValid: Boolean
-        get(){
+        get() {
             val name = state.value.name
             val latestAmount = state.value.latestAmount
             val expenseType = state.value.expenseType

@@ -13,6 +13,7 @@ import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.main.data.room.FinanceDatabase
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.common.util.CardCreator
+import com.emindev.expensetodolist.main.data.viewmodel.FinanceViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.page.Navigation
 
@@ -28,12 +29,13 @@ class MainActivity : ComponentActivity() {
         ).build()
     }
 
-    private val mainViewModel: MainViewModel by viewModels()
-    private val expenseViewModel by viewModels<ExpenseViewModel>(
+    private val mainViewModel :MainViewModel by viewModels()
+
+    private val financeViewModel by viewModels<FinanceViewModel>(
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return ExpenseViewModel(financeDatabase.expenseDao(), mainViewModel) as T
+                    return FinanceViewModel(incomeViewModel,expenseViewModel) as T
                 }
             }
         }
@@ -47,6 +49,16 @@ class MainActivity : ComponentActivity() {
             }
         }
     )
+    private val expenseViewModel by viewModels<ExpenseViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return ExpenseViewModel(financeDatabase.expenseDao(), mainViewModel) as T
+                }
+            }
+        }
+    )
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +84,7 @@ class MainActivity : ComponentActivity() {
             val onExpenseEvent = expenseViewModel::onEvent
             val onIncomeEvent = incomeViewModel::onEvent
 
-            Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, expenseViewModel = expenseViewModel, onIncomeEvent = onIncomeEvent, onExpenseEvent = onExpenseEvent)
+            Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, expenseViewModel = expenseViewModel,financeViewModel = financeViewModel, onIncomeEvent = onIncomeEvent, onExpenseEvent = onExpenseEvent)
 
         }
 

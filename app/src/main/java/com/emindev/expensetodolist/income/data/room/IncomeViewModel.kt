@@ -23,10 +23,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
     ViewModel() {
 
     val incomeInfinityModelsNotDeleted = dao.getInfinityIncomeModelsNotDeleted()
-    val incomeModels = dao.getIncomeModels()
-    val incomeCardModelsNotDeleted = dao.getIncomeCardModelsNotDeleted()
     val incomeCardModels = dao.getIncomeCardModels()
-    val incomeInfinityModels = dao.getIncomeInfinityModels()
 
 
     private val _incomesMultipleCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
@@ -38,8 +35,12 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
         dao.getIncomesWithOneCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
+    val allIncomesNotDeletedBySelectedDate = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
+        dao.getAllIncomesNotDeletedBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
     private val _state = MutableStateFlow(IncomeState())
-    val state = combine(_state, _incomesMultipleCard, incomeInfinityModels, _incomesOneCard, mainViewModel.selectedDate) { state, incomesMultipleCard, _incomeInfinityModels, incomesOneCard, _ ->
+    val state = combine(_state, _incomesMultipleCard, incomeInfinityModelsNotDeleted, _incomesOneCard, mainViewModel.selectedDate) { state, incomesMultipleCard, _incomeInfinityModels, incomesOneCard, _ ->
         state.copy(
             incomesMultipleCard = incomesMultipleCard,
             incomesInfinity = _incomeInfinityModels,
@@ -48,7 +49,7 @@ class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: Mai
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IncomeState())
 
 
-    fun cardsByIncome(income: Income) = dao.getCardsByIncome(income.id)
+
 
     fun addIncomeCard(incomeCardModel: IncomeCardModel) {
         viewModelScope.launch {

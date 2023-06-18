@@ -48,6 +48,7 @@ import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.common.util.RemoteModel
 import com.emindev.expensetodolist.main.data.update.RemoteDataStore
 import com.emindev.expensetodolist.main.data.update.RemoteRepository
+import com.emindev.expensetodolist.main.data.viewmodel.FinanceViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.DateRow
 import com.emindev.expensetodolist.main.ui.component.HideAbleButtonContent
@@ -56,7 +57,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, expenseViewModel: ExpenseViewModel, mainViewModel: MainViewModel, onIncomeEvent: (IncomeEvent) -> Unit, onExpenseEvent: (ExpenseEvent) -> Unit, remoteModel: State<RemoteModel>, updateShowed: MutableState<Boolean>) {
+fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, expenseViewModel: ExpenseViewModel, mainViewModel: MainViewModel,financeViewModel: FinanceViewModel, onIncomeEvent: (IncomeEvent) -> Unit, onExpenseEvent: (ExpenseEvent) -> Unit, remoteModel: State<RemoteModel>, updateShowed: MutableState<Boolean>) {
 
     if (remoteModel.value.isLocked) {
         LockPage()
@@ -126,7 +127,7 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
                     when (selectedPage.value) {
                         BottomNavItems.ExpensePage -> ExpensePage(navController = navController, mainViewModel = mainViewModel, expenseViewModel = expenseViewModel, listState = lazyColumnListState, onEvent = onExpenseEvent)
                         BottomNavItems.IncomePage -> IncomePage(navController = navController, mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, lazyColumnListState, onEvent = onIncomeEvent)
-                        BottomNavItems.MainPage -> MainPage()
+                        BottomNavItems.MainPage -> MainPage(mainViewModel,financeViewModel)
                     }
                 }
             }
