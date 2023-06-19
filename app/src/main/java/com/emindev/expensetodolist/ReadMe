@@ -1,17 +1,26 @@
 Errors
+todo    divier expenses ekle
+todo    ekleme sayfasından geri geldiğinde lender textfield açılıyor
+todo    karanlık mod ekle
 
 Important Adds
+
 
 Should Add
 todo    anasayfada hangilerinin görüneceğini seç
 
 Can Be Add
+todo    yenilikler alert dialog
 todo    grafik ekle
 todo    kalan geliri bir sonraki aya aktar
 todo    döviz bilgilerini internettten çek
 todo    telefona bildirim gönder
 todo    yorumlar
 todo    testler
+
+big ideas
+todo    grup oluştur
+todo    firebase a yedekleme ve hesap ile giriş
 
 
 

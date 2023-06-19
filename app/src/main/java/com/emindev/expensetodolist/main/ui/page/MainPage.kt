@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,6 +40,7 @@ import com.emindev.expensetodolist.main.ui.component.ProgressBarRemainedMoney
 
 @Composable
 fun MainPage(financeViewModel: FinanceViewModel, currencyViewModel: CurrencyViewModel) {
+Surface() {
 
     val context = LocalContext.current
 
@@ -51,7 +55,7 @@ fun MainPage(financeViewModel: FinanceViewModel, currencyViewModel: CurrencyView
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             ProgressBarRemainedMoney(finance = finance, size = 100.dp)
         }
-        LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalItemSpacing = 16.dp) {
+        LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalItemSpacing = 8.dp) {
 
 
             items(finance.value.getCardModelList(context)) { finance ->
@@ -79,11 +83,13 @@ fun MainPage(financeViewModel: FinanceViewModel, currencyViewModel: CurrencyView
             }
         }
     }
+
+}
 }
 
 @Composable
 private fun FinanceCard(financeCardModel: CardModel) {
-    Card(modifier = Modifier, colors = CardDefaults.cardColors(containerColor = financeCardModel.cardColor), border = BorderStroke(2.dp,financeCardModel.cardColor)) {
+    Card() {
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(vertical = 40.dp, horizontal = 12.dp), verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -93,7 +99,7 @@ private fun FinanceCard(financeCardModel: CardModel) {
             if (financeCardModel.imageVector != null) {
                 Icon(imageVector = financeCardModel.imageVector, contentDescription = "ImageVector")
             }
-            Text(text = financeCardModel.title, fontSize = 20.sp, textAlign = TextAlign.Center)
+            Text(text = financeCardModel.title, fontSize = 20.sp, textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
 
             financeCardModel.subTitleList.forEach { subTitle ->
                 Text(text = subTitle + Currency.TL)

@@ -30,7 +30,8 @@
     <color name="Neutral_Variant20">#43483E</color>
     <color name="Neutral_Variant30">#72776C</color>
 
-    <color name="Navigation_Light">#ECF0E3</color>
+    <color name="Navigation_Light">#FFBDAB8C</color>
+    <color name="Navigation_Up_Light">#FFEBE5D9</color>
 
 
 

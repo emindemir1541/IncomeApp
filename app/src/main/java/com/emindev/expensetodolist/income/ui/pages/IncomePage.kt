@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -51,7 +53,10 @@ import java.time.LocalDate
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, listState: LazyListState, onEvent: (IncomeEvent) -> Unit,) {
+fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, listState: LazyListState, onEvent: (IncomeEvent) -> Unit) {
+
+    Surface() {
+
 
     val context = LocalContext.current
     val incomeState by incomeViewModel.state.collectAsState()
@@ -108,6 +113,7 @@ fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incom
         }
 
     }
+    }
 
 }
 
@@ -123,7 +129,6 @@ fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
                 onLongClick = onLongClick
             ),
         elevation = CardDefaults.cardElevation(0.dp),
-        border = BorderStroke(1.dp, Color.Black),
     ) {
 
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -152,7 +157,6 @@ fun RowIncomeMultipleCard(income: IncomeModel, selectedDate: LocalDate) {
         modifier = Modifier
             .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(0.dp),
-        border = BorderStroke(1.dp, Color.Black),
     ) {
 
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -186,7 +190,6 @@ private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
                 onLongClick = onLongClick
             ),
         elevation = CardDefaults.cardElevation(0.dp),
-        border = BorderStroke(1.dp, Color.Black),
     ) {
 
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -207,7 +210,7 @@ private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
 private fun TextRemainedDay(income: Income) {
     Text(
         text = if (income.isMoneyPaid) stringResource(R.string.paid) else (DateUtil.dayBetweenTwoDate(income.currentLocalDate, DateUtil.localDateNow)).toString() + " " + stringResource(R.string.day_remained),
-        color = if (income.isMoneyPaid) Color.Green else Color.Unspecified, fontWeight = FontWeight.Bold)
+        color = if (income.isMoneyPaid) MaterialTheme.colorScheme.tertiary else Color.Unspecified, fontWeight = FontWeight.Bold)
 }
 
 @Composable

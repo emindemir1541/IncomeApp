@@ -41,7 +41,7 @@ fun TextSizeable(
     if (8 >= text.length)
         Text(text, modifier, color, fontSize.sp, fontStyle, fontWeight, fontFamily, letterSpacing, textDecoration, textAlign, lineHeight, overflow, softWrap, maxLines, minLines, onTextLayout, style)
     else if (16 > text.length)
-        Text(text, modifier, color, ((fontSize*8)/10).sp, fontStyle, fontWeight, fontFamily, letterSpacing, textDecoration, textAlign, lineHeight, overflow, softWrap, maxLines, minLines, onTextLayout, style)
+        Text(text, modifier, color, ((fontSize*95)/100).sp, fontStyle, fontWeight, fontFamily, letterSpacing, textDecoration, textAlign, lineHeight, overflow, softWrap, maxLines, minLines, onTextLayout, style)
     else if (24 > text.length)
         Text(text, modifier, color, ((fontSize*7)/10).sp, fontStyle, fontWeight, fontFamily, letterSpacing, textDecoration, textAlign, lineHeight, overflow, softWrap, maxLines, minLines, onTextLayout, style)
     else

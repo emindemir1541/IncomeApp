@@ -14,7 +14,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +21,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -42,6 +42,7 @@ import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AnimatedVisibilityTextField
+import com.emindev.expensetodolist.main.ui.component.FilterChipColored
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -81,7 +82,7 @@ fun ExpenseAddPage(navController: NavController, mainViewModel: MainViewModel, e
             .padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             item {
 
-                TopAppBar(title = { Text(text = stringResource(id = R.string.expense_add)) })
+                TopAppBar(title = { Text(text = stringResource(id = R.string.expense_add)) }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent))
             }
             item {
                 OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = expenseState.name, onValueChange = { onEvent(ExpenseEvent.SetName(it)) }, label = { Text(stringResource(id = R.string.expense_name)) })
@@ -92,9 +93,9 @@ fun ExpenseAddPage(navController: NavController, mainViewModel: MainViewModel, e
             }
             item {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                    ElevatedFilterChip(label = { Text(text = stringResource(id = R.string.debt)) }, selected = expenseState.expenseType == ExpenseType.DEBT, onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.DEBT)) })
-                    ElevatedFilterChip(onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.NEED)) }, label = { Text(text = stringResource(id = R.string.need)) }, selected = expenseState.expenseType == ExpenseType.NEED)
-                    ElevatedFilterChip(onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.UNNECESSARY)) }, label = { Text(text = stringResource(id = R.string.want)) }, selected = expenseState.expenseType == ExpenseType.UNNECESSARY)
+                    FilterChipColored(label = { Text(text = stringResource(id = R.string.debt)) }, selected = expenseState.expenseType == ExpenseType.DEBT, onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.DEBT)) })
+                    FilterChipColored(onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.NEED)) }, label = { Text(text = stringResource(id = R.string.need)) }, selected = expenseState.expenseType == ExpenseType.NEED)
+                    FilterChipColored(onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.UNNECESSARY)) }, label = { Text(text = stringResource(id = R.string.want)) }, selected = expenseState.expenseType == ExpenseType.UNNECESSARY)
                 }
             }
 
@@ -108,9 +109,9 @@ fun ExpenseAddPage(navController: NavController, mainViewModel: MainViewModel, e
 
             item {
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                    ElevatedFilterChip(label = { Text(text = stringResource(id = R.string.expense_forOnce)) }, selected = expenseState.repeatType == RepeatType.ONCE, onClick = { onEvent(ExpenseEvent.SetRepeatType(RepeatType.ONCE)) })
-                    ElevatedFilterChip(onClick = { onEvent(ExpenseEvent.SetRepeatType(RepeatType.LIMITED)) }, label = { Text(text = stringResource(id = R.string.limited)) }, selected = expenseState.repeatType == RepeatType.LIMITED)
-                    ElevatedFilterChip(onClick = { onEvent(ExpenseEvent.SetRepeatType(RepeatType.INFINITY)) }, label = { Text(text = stringResource(id = R.string.every_month)) }, selected = expenseState.repeatType == RepeatType.INFINITY)
+                    FilterChipColored(label = { Text(text = stringResource(id = R.string.expense_forOnce)) }, selected = expenseState.repeatType == RepeatType.ONCE, onClick = { onEvent(ExpenseEvent.SetRepeatType(RepeatType.ONCE)) })
+                    FilterChipColored(onClick = { onEvent(ExpenseEvent.SetRepeatType(RepeatType.LIMITED)) }, label = { Text(text = stringResource(id = R.string.limited)) }, selected = expenseState.repeatType == RepeatType.LIMITED)
+                    FilterChipColored(onClick = { onEvent(ExpenseEvent.SetRepeatType(RepeatType.INFINITY)) }, label = { Text(text = stringResource(id = R.string.every_month)) }, selected = expenseState.repeatType == RepeatType.INFINITY)
                 }
             }
 
@@ -205,9 +206,9 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
             }
             item {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                    ElevatedFilterChip(label = { Text(text = stringResource(id = R.string.debt)) }, selected = expenseState.expenseType == ExpenseType.DEBT, onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.DEBT)) })
-                    ElevatedFilterChip(onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.NEED)) }, label = { Text(text = stringResource(id = R.string.need)) }, selected = expenseState.expenseType == ExpenseType.NEED)
-                    ElevatedFilterChip(onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.UNNECESSARY)) }, label = { Text(text = stringResource(id = R.string.want)) }, selected = expenseState.expenseType == ExpenseType.UNNECESSARY)
+                    FilterChipColored(label = { Text(text = stringResource(id = R.string.debt)) }, selected = expenseState.expenseType == ExpenseType.DEBT, onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.DEBT)) })
+                    FilterChipColored(onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.NEED)) }, label = { Text(text = stringResource(id = R.string.need)) }, selected = expenseState.expenseType == ExpenseType.NEED)
+                    FilterChipColored(onClick = { onEvent(ExpenseEvent.SetExpenseType(ExpenseType.UNNECESSARY)) }, label = { Text(text = stringResource(id = R.string.want)) }, selected = expenseState.expenseType == ExpenseType.UNNECESSARY)
                 }
             }
 

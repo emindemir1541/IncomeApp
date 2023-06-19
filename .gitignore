@@ -13,5 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
-/app/src/main/java/com/example/gelirgideruygulamas/helperlibrary/common/util/ResponseFeedbackModule.kt
-/app/src/main/java/com/example/gelirgideruygulamas/ReadMe
+/app/src/main/java/com/emindev/expensetodolist/main/common/constant/ResponseFeedbackModule.kt
+/app/src/main/java/com/emindev/expensetodolist/ReadMe
+/app/src/main/java/com/emindev/expensetodolist/main/data/retrofit/RetrofitConstants.kt

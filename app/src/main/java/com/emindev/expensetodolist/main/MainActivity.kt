@@ -1,5 +1,7 @@
 package com.emindev.expensetodolist.main
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,6 +19,7 @@ import com.emindev.expensetodolist.main.data.retrofit.CurrencyViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.FinanceViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.page.Navigation
+import com.emindev.expensetodolist.main.ui.theme.MainTheme
 
 
 class MainActivity : ComponentActivity() {
@@ -62,6 +65,7 @@ class MainActivity : ComponentActivity() {
 
     private val currencyViewModel:CurrencyViewModel by viewModels()
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -71,6 +75,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         mainViewModel.appIsLoading
 
@@ -86,13 +91,19 @@ class MainActivity : ComponentActivity() {
             val onExpenseEvent = expenseViewModel::onEvent
             val onIncomeEvent = incomeViewModel::onEvent
 
-            Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, expenseViewModel = expenseViewModel,financeViewModel = financeViewModel, onIncomeEvent = onIncomeEvent, onExpenseEvent = onExpenseEvent,currencyViewModel=currencyViewModel)
+            MainTheme(useDarkTheme = true) {
+                Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, expenseViewModel = expenseViewModel,financeViewModel = financeViewModel, onIncomeEvent = onIncomeEvent, onExpenseEvent = onExpenseEvent,currencyViewModel=currencyViewModel)
+            }
 
         }
 
-        mainViewModel.appLoaded
 
         CardCreator(mainViewModel,incomeViewModel,expenseViewModel).runCreator
+
+    }
+
+    override fun onResume() {
+        super.onResume()
 
     }
 

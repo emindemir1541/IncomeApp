@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -21,7 +22,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -55,70 +59,93 @@ import kotlin.math.absoluteValue
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expenseViewModel: ExpenseViewModel, listState: LazyListState, onEvent: (ExpenseEvent) -> Unit) {
+    Surface() {
 
-    val expenseState by expenseViewModel.state.collectAsState()
-    val alertDialogState = rememberUseCaseState(false)
-    val selectedDate by mainViewModel.selectedDate.collectAsState()
-
-
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
-        state = listState) {
+        val expenseState by expenseViewModel.state.collectAsState()
+        val alertDialogState = rememberUseCaseState(false)
+        val selectedDate by mainViewModel.selectedDate.collectAsState()
 
 
-        items(expenseState.expenseInfinityModels) { expense ->
-            Box(modifier = Modifier
-                .animateItemPlacement(animationSpec = tween(durationMillis = 600))
-            ) {
-                if (selectedDate.isMonthAndYearBiggerThan(DateUtil.localDateNow))
-                    RowExpenseMultipleCard(expense, selectedDate)
+        LazyColumn(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
+            state = listState) {
+
+
+            items(expenseState.expenseInfinityModels) { expense ->
+                Box(modifier = Modifier
+                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+                ) {
+                    if (selectedDate.isMonthAndYearBiggerThan(DateUtil.localDateNow))
+                        RowExpenseMultipleCard(expense, selectedDate)
+                }
             }
-        }
 
 
-        items(expenseState.expensesMultipleCard) { expense ->
-            AlertDialogDelete(onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) }, onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) }, alertDialogState)
+            items(expenseState.expensesMultipleCard.filter { expense: Expense -> !expense.completed }) { expense ->
+                AlertDialogDelete(onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) }, onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) }, alertDialogState)
 
-            Box(modifier = Modifier
-                .animateItemPlacement(animationSpec = tween(durationMillis = 600))
-            ) {
-                RowExpenseMultipleCard(expense, {
-                    val checkedExpense = expense.copy(completed = it)
-                    onEvent(ExpenseEvent.Complete(checkedExpense))
-                }) {
-                    if (expense.isCardPassed) {
-                        alertDialogState.show()
+                Box(modifier = Modifier
+                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+                ) {
+                    RowExpenseMultipleCard(expense, {
+                        val checkedExpense = expense.copy(completed = it)
+                        onEvent(ExpenseEvent.Complete(checkedExpense))
+                    }) {
+                        if (expense.isCardPassed) {
+                            alertDialogState.show()
+                        }
+                        else {
+                            expenseViewModel.setState(expense)
+                            navController.navigate(Page.ExpenseUpdate.route)
+                        }
                     }
-                    else {
+                }
+            } // TODO: yükleme animasyonunu düzelt
+
+            items(expenseState.expensesMultipleCard.filter { expense: Expense -> expense.completed }) { expense ->
+                AlertDialogDelete(onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) }, onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) }, alertDialogState)
+
+                Box(modifier = Modifier
+                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+                ) {
+                    RowExpenseMultipleCard(expense, {
+                        val checkedExpense = expense.copy(completed = it)
+                        onEvent(ExpenseEvent.Complete(checkedExpense))
+                    }) {
+                        if (expense.isCardPassed) {
+                            alertDialogState.show()
+                        }
+                        else {
+                            expenseViewModel.setState(expense)
+                            navController.navigate(Page.ExpenseUpdate.route)
+                        }
+                    }
+                }
+            }
+
+
+        /*    if (expenseState.expensesMultipleCard.isNotEmpty() || (expenseState.expensesOneCard.isNotEmpty() && expenseState.expenseInfinityModels.isNotEmpty()))
+                item {
+                    Divider(modifier = Modifier.fillMaxWidth())
+                }*/
+
+            items(expenseState.expensesOneCard) { expense ->
+                Box(modifier = Modifier
+                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+                ) {
+                    RowExpenseOneCard(expense) {
                         expenseViewModel.setState(expense)
                         navController.navigate(Page.ExpenseUpdate.route)
                     }
                 }
             }
-        } // TODO: yükleme animasyonunu düzelt
-
-        /*    item {
-                if (expenseState.expensesMultipleCard.isNotEmpty()||(expenseState.expensesOneCard.isNotEmpty() && expenseState.expenseInfinityModels.isNotEmpty()))
-                Divider(modifier = Modifier.fillMaxWidth())
-            }*/
-
-        items(expenseState.expensesOneCard) { expense ->
-            Box(modifier = Modifier
-                .animateItemPlacement(animationSpec = tween(durationMillis = 600))
-            ) {
-                RowExpenseOneCard(expense) {
-                    expenseViewModel.setState(expense)
-                    navController.navigate(Page.ExpenseUpdate.route)
-                }
+            item {
+                Spacer(modifier = Modifier.padding(100.dp))
             }
-        }
-        item {
-            Spacer(modifier = Modifier.padding(100.dp))
-        }
 
+        }
     }
-
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -133,7 +160,6 @@ fun RowExpenseMultipleCard(expense: Expense, onCheckedChanged: (Boolean) -> Unit
                 onLongClick = onLongClick
             ),
         elevation = CardDefaults.cardElevation(0.dp),
-        border = BorderStroke(1.dp, Color.Black),
     ) {
 
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -176,8 +202,8 @@ fun RowExpenseMultipleCard(expense: ExpenseModel, selectedDate: LocalDate) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
+
         elevation = CardDefaults.cardElevation(0.dp),
-        border = BorderStroke(1.dp, Color.Black),
     ) {
 
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -211,7 +237,6 @@ private fun RowExpenseOneCard(expense: Expense, onLongClick: () -> Unit) {
                 onLongClick = onLongClick
             ),
         elevation = CardDefaults.cardElevation(0.dp),
-        border = BorderStroke(1.dp, Color.Black),
     ) {
 
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -234,7 +259,8 @@ private fun TextRemainedDay(expense: Expense) {
     if (expense.completed) {
         Text(
             text = stringResource(id = R.string.paid),
-            color = Color.Green
+            color = MaterialTheme.colorScheme.tertiary,
+            fontWeight = FontWeight.Bold
         )
     }
     else
@@ -262,7 +288,7 @@ private fun TextRemainedDay(expense: Expense) {
 private fun TextRemainedDay(selectedDate: LocalDate) {
     Text(
         text = (DateUtil.dayBetweenTwoDate(selectedDate, DateUtil.localDateNow)).toString() + " " + stringResource(R.string.day_remained),
-        color = Color.Unspecified, fontWeight = FontWeight.Bold)
+        fontWeight = FontWeight.Bold)
 }
 
 

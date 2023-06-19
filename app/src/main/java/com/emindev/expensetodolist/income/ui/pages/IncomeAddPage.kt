@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedFilterChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,12 +24,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,6 +43,7 @@ import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.income.data.room.IncomeEvent
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
+import com.emindev.expensetodolist.main.ui.component.FilterChipColored
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -87,7 +85,7 @@ fun IncomeAddPage(navController: NavController, mainViewModel: MainViewModel, in
             .padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             item {
 
-                TopAppBar(title = { Text(text = stringResource(id = R.string.income_add)) })
+                TopAppBar(title = { Text(text = stringResource(id = R.string.income_add)) },colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent))
             }
             item {
                 OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = incomeState.name, onValueChange = { onEvent(IncomeEvent.SetName(it)) }, label = { Text(stringResource(id = R.string.income_name)) })
@@ -99,9 +97,9 @@ fun IncomeAddPage(navController: NavController, mainViewModel: MainViewModel, in
 
             item {
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-                    ElevatedFilterChip(label = { Text(text = stringResource(id = R.string.income_forOnce)) }, selected = incomeState.repeatType == RepeatType.ONCE, onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.ONCE)) })
-                    ElevatedFilterChip(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.LIMITED)) }, label = { Text(text = stringResource(id = R.string.limited)) }, selected = incomeState.repeatType == RepeatType.LIMITED)
-                    ElevatedFilterChip(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.INFINITY)) }, label = { Text(text = stringResource(id = R.string.every_month)) }, selected = incomeState.repeatType == RepeatType.INFINITY)
+                    FilterChipColored(label = { Text(text = stringResource(id = R.string.income_forOnce)) }, selected = incomeState.repeatType == RepeatType.ONCE, onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.ONCE)) })
+                    FilterChipColored(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.LIMITED)) }, label = { Text(text = stringResource(id = R.string.limited)) }, selected = incomeState.repeatType == RepeatType.LIMITED)
+                    FilterChipColored(onClick = { onEvent(IncomeEvent.SetRepeatType(RepeatType.INFINITY)) }, label = { Text(text = stringResource(id = R.string.every_month)) }, selected = incomeState.repeatType == RepeatType.INFINITY)
                 }
             }
 

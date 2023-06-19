@@ -1,9 +1,12 @@
 package com.emindev.expensetodolist.main.ui.page
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,7 +42,8 @@ fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, e
     NavHost(navController = navController, startDestination = Page.PageContent.route) {
 
         composable(route = Page.PageContent.route) {
-            PageContent(navController = navController, incomeViewModel, expenseViewModel, mainViewModel, financeViewModel, onIncomeEvent, onExpenseEvent,remoteModel,updateShowed,currencyViewModel)
+                PageContent(navController = navController, incomeViewModel, expenseViewModel, mainViewModel, financeViewModel, onIncomeEvent, onExpenseEvent,remoteModel,updateShowed,currencyViewModel)
+
         }
 
 
