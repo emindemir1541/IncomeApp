@@ -173,7 +173,7 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
             .padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             item {
 
-                TopAppBar(title = { Text(text = stringResource(id = R.string.income_update)) }, actions = {
+                TopAppBar(title = { Text(text = stringResource(id = R.string.income_update)) },colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent), actions = {
                     IconButton(onClick = {
                         mainViewModel.interactionFunction(3000L) {
                             onEvent(IncomeEvent.DeleteIncome(incomeState.toIncome()))

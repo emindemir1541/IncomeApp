@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +27,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -116,6 +118,7 @@ fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
             .combinedClickable(
                 onClick = {},
                 onLongClick = onLongClick
@@ -172,13 +175,14 @@ fun RowIncomeMultipleCard(income: IncomeModel, selectedDate: LocalDate) {
 @Composable
 private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
     Card(
+        elevation = CardDefaults.cardElevation(0.dp),
+
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().clip(RoundedCornerShape(16.dp))
             .combinedClickable(
                 onClick = {},
                 onLongClick = onLongClick
             ),
-        elevation = CardDefaults.cardElevation(0.dp),
     ) {
 
         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
