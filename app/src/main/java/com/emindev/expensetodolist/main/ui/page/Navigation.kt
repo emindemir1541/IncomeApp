@@ -8,27 +8,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.emindev.expensetodolist.BuildConfig
 import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.expense.ui.pages.ExpenseAddPage
 import com.emindev.expensetodolist.expense.ui.pages.ExpenseUpdatePage
-import com.emindev.expensetodolist.main.common.helper.addLog
-import com.emindev.expensetodolist.main.common.helper.test
-import com.emindev.expensetodolist.main.common.model.Resource
 import com.emindev.expensetodolist.income.ui.pages.IncomeAddPage
 import com.emindev.expensetodolist.income.ui.pages.IncomeUpdatePage
 import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.income.data.room.IncomeEvent
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
-import com.emindev.expensetodolist.main.common.model.FinanceModel
-import com.emindev.expensetodolist.main.data.update.RemoteDataStore
+import com.emindev.expensetodolist.main.data.retrofit.CurrencyViewModel
 import com.emindev.expensetodolist.main.data.update.RemoteRepository
 import com.emindev.expensetodolist.main.data.viewmodel.FinanceViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 
 @Composable
-fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, expenseViewModel: ExpenseViewModel,financeViewModel: FinanceViewModel, onIncomeEvent: (IncomeEvent) -> Unit, onExpenseEvent: (ExpenseEvent) -> Unit) {
+fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, expenseViewModel: ExpenseViewModel,financeViewModel: FinanceViewModel, currencyViewModel:CurrencyViewModel,onIncomeEvent: (IncomeEvent) -> Unit, onExpenseEvent: (ExpenseEvent) -> Unit) {
 
     val context = LocalContext.current
     val remoteModel = RemoteRepository(context).remoteData.collectAsState()
@@ -44,7 +39,7 @@ fun Navigation(mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, e
     NavHost(navController = navController, startDestination = Page.PageContent.route) {
 
         composable(route = Page.PageContent.route) {
-            PageContent(navController = navController, incomeViewModel, expenseViewModel, mainViewModel, financeViewModel, onIncomeEvent, onExpenseEvent,remoteModel,updateShowed)
+            PageContent(navController = navController, incomeViewModel, expenseViewModel, mainViewModel, financeViewModel, onIncomeEvent, onExpenseEvent,remoteModel,updateShowed,currencyViewModel)
         }
 
 

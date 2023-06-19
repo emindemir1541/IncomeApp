@@ -93,6 +93,7 @@
     <string name="update_expense">Update Expense</string>
     <string name="back">Back</string>
     <string name="forward">Forward</string>
+    <string name="currency">Döviz</string>
 
 
 </resources>

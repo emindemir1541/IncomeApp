@@ -1,5 +1,9 @@
 package com.emindev.expensetodolist.main.common.model
 
+import android.content.Context
+import com.emindev.expensetodolist.R
+import com.emindev.expensetodolist.main.common.util.ColorUtil
+
 data class FinanceModel(
     val remainedMoney:Float,
     val totalIncome:Float,
@@ -8,4 +12,14 @@ data class FinanceModel(
     val totalDebt:Float,
     val totalWish:Float,
     val totalNeed:Float
-)
+){
+    fun getCardModelList(context:Context): List<CardModel> = listOf(
+        CardModel(context.getString(R.string.remaining_money), listOf(remainedMoney.toString()), ColorUtil.getRandomColor()),
+        CardModel(context.getString(R.string.total_income), listOf(totalIncome.toString()), ColorUtil.getRandomColor()),
+        CardModel(context.getString(R.string.total_expense), listOf(totalExpense.toString()), ColorUtil.getRandomColor()),
+        CardModel(context.getString(R.string.paid_expense), listOf(paidExpense.toString()), ColorUtil.getRandomColor()),
+        CardModel(context.getString(R.string.debt), listOf(totalDebt.toString()), ColorUtil.getRandomColor()),
+        CardModel(context.getString(R.string.want), listOf(totalWish.toString()), ColorUtil.getRandomColor()),
+        CardModel(context.getString(R.string.need), listOf(totalNeed.toString()), ColorUtil.getRandomColor()),
+    )
+}

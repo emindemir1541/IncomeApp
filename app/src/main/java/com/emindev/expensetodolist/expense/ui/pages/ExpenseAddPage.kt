@@ -40,7 +40,6 @@ import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.main.common.constant.RepeatType
-import com.emindev.expensetodolist.main.common.helper.test
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AnimatedVisibilityTextField
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -214,7 +213,6 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
 
             item {
                 AnimatedVisibilityTextField(visible = expenseState.expenseType == ExpenseType.DEBT) {
-                    test = expenseState.lender
                     Column(modifier = Modifier.fillMaxWidth()) {
                         OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = expenseState.lender, onValueChange = { onEvent(ExpenseEvent.SetLenderName(it)) }, label = { Text(text = stringResource(id = R.string.lender)) })
                     }

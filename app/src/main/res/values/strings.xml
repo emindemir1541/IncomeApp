@@ -97,5 +97,6 @@
     <string name="delete_income">Geliri sil</string>
     <string name="main_page">Ana Sayfa</string>
     <string name="update_expense">Gider Güncelle</string>
+    <string name="currency">Döviz</string>
 
 </resources>

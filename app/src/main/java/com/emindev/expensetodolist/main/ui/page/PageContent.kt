@@ -41,6 +41,7 @@ import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.income.data.room.IncomeEvent
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.common.model.RemoteModel
+import com.emindev.expensetodolist.main.data.retrofit.CurrencyViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.FinanceViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.DateRow
@@ -49,7 +50,7 @@ import com.emindev.expensetodolist.main.ui.component.isScrollingUp
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, expenseViewModel: ExpenseViewModel, mainViewModel: MainViewModel,financeViewModel: FinanceViewModel, onIncomeEvent: (IncomeEvent) -> Unit, onExpenseEvent: (ExpenseEvent) -> Unit, remoteModel: State<RemoteModel>, updateShowed: MutableState<Boolean>) {
+fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, expenseViewModel: ExpenseViewModel, mainViewModel: MainViewModel,financeViewModel: FinanceViewModel, onIncomeEvent: (IncomeEvent) -> Unit, onExpenseEvent: (ExpenseEvent) -> Unit, remoteModel: State<RemoteModel>, updateShowed: MutableState<Boolean>,currencyViewModel: CurrencyViewModel) {
 
     if (remoteModel.value.isLocked) {
         LockPage()
@@ -121,7 +122,7 @@ fun PageContent(navController: NavController, incomeViewModel: IncomeViewModel, 
                     when (selectedPage.value) {
                         BottomNavItems.ExpensePage -> ExpensePage(navController = navController, mainViewModel = mainViewModel, expenseViewModel = expenseViewModel, listState = lazyColumnListState, onEvent = onExpenseEvent)
                         BottomNavItems.IncomePage -> IncomePage(navController = navController, mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, lazyColumnListState, onEvent = onIncomeEvent)
-                        BottomNavItems.MainPage -> MainPage(financeViewModel)
+                        BottomNavItems.MainPage -> MainPage(financeViewModel,currencyViewModel)
                     }
                 }
             }

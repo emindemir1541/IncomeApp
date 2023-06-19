@@ -13,6 +13,7 @@ import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.main.data.room.FinanceDatabase
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
 import com.emindev.expensetodolist.main.common.util.CardCreator
+import com.emindev.expensetodolist.main.data.retrofit.CurrencyViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.FinanceViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.page.Navigation
@@ -59,6 +60,7 @@ class MainActivity : ComponentActivity() {
         }
     )
 
+    private val currencyViewModel:CurrencyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +70,6 @@ class MainActivity : ComponentActivity() {
                 mainViewModel.isLoading.value
             }
         }
-
 
 
         mainViewModel.appIsLoading
@@ -81,10 +82,11 @@ class MainActivity : ComponentActivity() {
         setContent {
 
 
+
             val onExpenseEvent = expenseViewModel::onEvent
             val onIncomeEvent = incomeViewModel::onEvent
 
-            Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, expenseViewModel = expenseViewModel,financeViewModel = financeViewModel, onIncomeEvent = onIncomeEvent, onExpenseEvent = onExpenseEvent)
+            Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, expenseViewModel = expenseViewModel,financeViewModel = financeViewModel, onIncomeEvent = onIncomeEvent, onExpenseEvent = onExpenseEvent,currencyViewModel=currencyViewModel)
 
         }
 
@@ -94,39 +96,6 @@ class MainActivity : ComponentActivity() {
 
     }
 
-
-  /*  private fun updateCheck() {
-
-        fun remoteDialog(remote: RemoteModel) {
-            if (remote.isLocked) alertDialogClassic(getString(R.string.locked), getString(R.string.locked_content), false)
-            else if (remote.hasUpdate) if (remote.forceUpdate) alertDialogClassic(getString(R.string.update), getString(R.string.update_content), false)
-            else alertDialogClassic(getString(R.string.update), getString(R.string.update_force_content), getString(R.string.ok), {})
-            addLog("RemoteSource", remote, "", "StartPage()")
-            addLog("RemoteSource", BuildConfig.VERSION_CODE, "Current Version Code", "MainActivity")
-        }
-
-        RemoteRepository().remoteData {
-            val remoteSettings = RemoteSettings(this)
-            when (it) {
-                is Resource.Success -> {
-                    val remote = it.data!!
-                    remoteDialog(remote)
-                    remoteSettings.setRemoteData(remote)
-                }
-
-                is Resource.Error -> {
-                    val remote = remoteSettings.getRemoteData()
-                    remoteDialog(remote)
-                }
-
-                is Resource.Loading -> {
-
-                }
-            }
-        }
-
-
-    }*/
 
 
 }

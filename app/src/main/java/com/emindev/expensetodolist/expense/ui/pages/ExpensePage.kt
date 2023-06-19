@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
@@ -43,7 +42,6 @@ import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.convertToString
 import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.isMonthAndYearBiggerThan
-import com.emindev.expensetodolist.main.common.helper.test
 import com.emindev.expensetodolist.main.common.constant.Currency
 import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.main.common.util.ColorUtil
@@ -51,8 +49,6 @@ import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AlertDialogDelete
 import com.emindev.expensetodolist.main.ui.component.TextSizeable
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
 import kotlin.math.absoluteValue
 
@@ -60,7 +56,6 @@ import kotlin.math.absoluteValue
 @Composable
 fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expenseViewModel: ExpenseViewModel, listState: LazyListState, onEvent: (ExpenseEvent) -> Unit) {
 
-    val context = LocalContext.current
     val expenseState by expenseViewModel.state.collectAsState()
     val alertDialogState = rememberUseCaseState(false)
     val selectedDate by mainViewModel.selectedDate.collectAsState()
@@ -109,7 +104,6 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
             }*/
 
         items(expenseState.expensesOneCard) { expense ->
-            test = expense.lender
             Box(modifier = Modifier
                 .animateItemPlacement(animationSpec = tween(durationMillis = 600))
             ) {
