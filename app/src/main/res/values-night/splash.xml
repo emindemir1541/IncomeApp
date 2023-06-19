@@ -4,7 +4,7 @@
 
     <style name="Theme.AppCompat.Starting" parent="Theme.SplashScreen">
 
-        <item name="windowSplashScreenBackground">@color/Neutral_Variant20</item>
+        <item name="windowSplashScreenBackground">@color/Neutral40</item>
 
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
 

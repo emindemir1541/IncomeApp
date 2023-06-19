@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
             val onExpenseEvent = expenseViewModel::onEvent
             val onIncomeEvent = incomeViewModel::onEvent
 
-            MainTheme(useDarkTheme = true) {
+            MainTheme() {
                 Navigation(mainViewModel = mainViewModel, incomeViewModel = incomeViewModel, expenseViewModel = expenseViewModel,financeViewModel = financeViewModel, onIncomeEvent = onIncomeEvent, onExpenseEvent = onExpenseEvent,currencyViewModel=currencyViewModel)
             }
 

@@ -21,6 +21,6 @@ data class IncomeState(
     val isAddingIncome:Boolean = false,
 ){
     fun toIncome(): Income {
-        return Income(id = id,cardId = cardId,name=name, cardAmount =  cardAmount.toFloat(), latestAmount = latestAmount.toFloat(), initialDate = SqlDateUtil.convertDate(initialDate?: DateUtil.localDateNow), currentDate = SqlDateUtil.convertDate(currentDate), deleted = false, cardDeleted = false, repeatType = repeatType, repetition = repetition.toInt())
+        return Income(id = id,cardId = cardId,name=name, cardAmount =  cardAmount.toFloat(), latestAmount = latestAmount.toFloat(), initialDate = SqlDateUtil.convertDate(initialDate), currentDate = SqlDateUtil.convertDate(currentDate), deleted = false, cardDeleted = false, repeatType = repeatType, repetition = repetition.toInt())
     }
 }

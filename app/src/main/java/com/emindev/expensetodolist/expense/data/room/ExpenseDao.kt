@@ -1,7 +1,6 @@
 package com.emindev.expensetodolist.expense.data.room
 
 import androidx.room.*
-import com.emindev.expensetodolist.income.data.room.IncomeCardModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao

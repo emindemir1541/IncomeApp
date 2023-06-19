@@ -48,7 +48,6 @@ import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
-import kotlinx.coroutines.delay
 import java.time.LocalDate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -177,7 +176,7 @@ fun IncomeUpdatePage(navController: NavController, mainViewModel: MainViewModel,
                 TopAppBar(title = { Text(text = stringResource(id = R.string.income_update)) }, actions = {
                     IconButton(onClick = {
                         mainViewModel.interactionFunction(3000L) {
-                            onEvent(IncomeEvent.DeleteIncome(incomeState.toIncome()));
+                            onEvent(IncomeEvent.DeleteIncome(incomeState.toIncome()))
                             onEvent(IncomeEvent.HideDialog)
                             incomeViewModel.clearState()
                             navController.popBackStack()

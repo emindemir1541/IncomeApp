@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: MainViewModel) :
+class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel) :
     ViewModel() {
 
 
@@ -40,7 +40,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
     val expenseCardModels = dao.getExpenseCardModels()
     private val _state = MutableStateFlow(ExpenseState())
 
-    val state = combine(_state, _expensesOneCard, _expensesMultipleCard, infinityExpenseModelsNotDeleted, mainViewModel.selectedDate) { state, expensesOneCard, expensesMultipleCard, expenseInfinityModels, selectedDate ->
+    val state = combine(_state, _expensesOneCard, _expensesMultipleCard, infinityExpenseModelsNotDeleted, mainViewModel.selectedDate) { state, expensesOneCard, expensesMultipleCard, expenseInfinityModels, _ ->
         state.copy(
             expensesOneCard = expensesOneCard,
             expensesMultipleCard = expensesMultipleCard,
@@ -180,7 +180,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
                 if (event.repetition != null && event.repetition.toIntOrZero() < FinanceConstants.maxRepetitionLength)
                     _state.update {
                         it.copy(
-                            repetition =  event.repetition.toString()
+                            repetition = event.repetition.toString()
                         )
                     }
             }
@@ -285,7 +285,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, private val mainViewModel: M
 
     fun setState(expense: Expense) {
         _state.update {
-            it.copy(id = expense.id, cardId = expense.cardId, name = expense.name, latestAmount = expense.latestAmount.toString(), currentAmount = expense.currentAmount.toString(), initialDate = expense.initialLocalDate, currentDate = expense.currentLocalDate, completed = expense.completed ?: false, repeatType = expense.repeatType, cardDeleted = expense.cardDeleted, deleted = expense.deleted, expenseType = expense.expenseType, lender = expense.lender)
+            it.copy(id = expense.id, cardId = expense.cardId, name = expense.name, latestAmount = expense.latestAmount.toString(), currentAmount = expense.currentAmount.toString(), initialDate = expense.initialLocalDate, currentDate = expense.currentLocalDate, completed = expense.completed, repeatType = expense.repeatType, cardDeleted = expense.cardDeleted, deleted = expense.deleted, expenseType = expense.expenseType, lender = expense.lender)
         }
     }
 

@@ -46,13 +46,13 @@
     <color name="Secondary80">#3E4A36</color>
     <color name="Secondary90">#D9E7CB</color>
 
-    <color name="Tertiary50">#8CD3D4</color>
+    <color name="Tertiary50">#FFEBE5D9</color>
     <color name="Tertiary60">#003738</color>
     <color name="Tertiary70">#004F51</color>
     <color name="Tertiary80">#A8EFF0</color>
 
     <color name="Neutral30">#1A1C18</color>
-    <color name="Neutral40">#E0E4D7</color>
+    <color name="Neutral40">#FFEBE5D9</color>
 
     <color name="Neutral_Variant40">#43483E</color>
     <color name="Neutral_Variant50">#C4C9BC</color>

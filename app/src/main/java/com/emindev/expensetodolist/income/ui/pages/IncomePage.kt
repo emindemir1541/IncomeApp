@@ -3,7 +3,6 @@
 package com.emindev.expensetodolist.income.ui.pages
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,11 +27,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.main.common.helper.DateUtil
@@ -51,14 +47,11 @@ import com.emindev.expensetodolist.main.ui.component.TextSizeable
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import java.time.LocalDate
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incomeViewModel: IncomeViewModel, listState: LazyListState, onEvent: (IncomeEvent) -> Unit) {
 
-    Surface() {
-
-
-    val context = LocalContext.current
+    Surface {
     val incomeState by incomeViewModel.state.collectAsState()
     val alertDialogState = rememberUseCaseState(false)
     val selectedDate by mainViewModel.selectedDate.collectAsState()
@@ -120,7 +113,6 @@ fun IncomePage(navController: NavController, mainViewModel: MainViewModel, incom
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
-    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -149,10 +141,8 @@ fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RowIncomeMultipleCard(income: IncomeModel, selectedDate: LocalDate) {
-    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -181,7 +171,6 @@ fun RowIncomeMultipleCard(income: IncomeModel, selectedDate: LocalDate) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
-    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()

@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class IncomeViewModel(private val dao: IncomeDao, private val mainViewModel: MainViewModel) :
+class IncomeViewModel(private val dao: IncomeDao,  mainViewModel: MainViewModel) :
     ViewModel() {
 
     val incomeInfinityModelsNotDeleted = dao.getInfinityIncomeModelsNotDeleted()

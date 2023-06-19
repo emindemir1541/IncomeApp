@@ -187,7 +187,7 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
                 TopAppBar(title = { Text(text = stringResource(id = R.string.update_expense)) }, actions = {
                     IconButton(onClick = {
                         mainViewModel.interactionFunction(3000L) {
-                            onEvent(ExpenseEvent.DeleteExpense(expenseState.toExpense()));
+                            onEvent(ExpenseEvent.DeleteExpense(expenseState.toExpense()))
                             onEvent(ExpenseEvent.HideDialog)
                             expenseViewModel.clearState()
                             navController.popBackStack()
