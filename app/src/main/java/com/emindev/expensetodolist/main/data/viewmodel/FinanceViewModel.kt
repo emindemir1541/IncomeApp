@@ -6,6 +6,7 @@ import com.emindev.expensetodolist.expense.data.room.Expense
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
 import com.emindev.expensetodolist.income.data.room.Income
 import com.emindev.expensetodolist.income.data.room.IncomeViewModel
+import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.model.FinanceModel
 import kotlinx.coroutines.flow.combine
 
@@ -30,7 +31,7 @@ class FinanceViewModel(private val incomeViewModel: IncomeViewModel, private val
         }
         expenseList.forEach { expense: Expense ->
             totalExpense += expense.latestAmount
-            if (expense.completed)
+            if (expense.repeatType == RepeatType.ONCE || expense.completed)
                 paidExpense += expense.latestAmount
             when (expense.expenseType) {
                 ExpenseType.NEED -> totalNeed += expense.latestAmount
@@ -38,7 +39,7 @@ class FinanceViewModel(private val incomeViewModel: IncomeViewModel, private val
                 ExpenseType.DEBT -> totalDebt += expense.latestAmount
             }
         }
-        return FinanceModel(remainedMoney = totalIncome - totalExpense, totalIncome = totalIncome, totalExpense = totalExpense, totalDebt = totalDebt, totalWish = totalWish, totalNeed = totalNeed, paidExpense =paidExpense)
+        return FinanceModel(remainedMoney = totalIncome - paidExpense, totalIncome = totalIncome, totalExpense = totalExpense, totalDebt = totalDebt, totalWish = totalWish, totalNeed = totalNeed, paidExpense = paidExpense)
     }
 
 }

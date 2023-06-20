@@ -136,7 +136,7 @@ fun RowIncomeMultipleCard(income: Income, onLongClick: () -> Unit) {
                 .fillMaxWidth()
                 .padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
                 TextRemainedDay(income = income)
-                TextSizeable(text = income.cardAmount.toString() + Currency.TL, fontSize = 16)  // TODO: handle the cardPassed error
+                TextSizeable(text = income.cardAmount.toString() + Currency.TL, fontSize = 16)
                 Text(text = income.currentLocalDate.convertToString(DateUtil.Delimiters.slash))
             }
             Spacer(modifier = Modifier.padding(6.dp))
@@ -190,7 +190,7 @@ private fun RowIncomeOneCard(income: Income, onLongClick: () -> Unit) {
                 .fillMaxWidth()
                 .padding(vertical = 18.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
                 TextSizeable(text = income.name, fontSize = 25)
-                Text(text = income.currentLocalDate.convertToString(DateUtil.Delimiters.slash)) // TODO: bunu tam ortala
+                Text(text = income.currentLocalDate.convertToString(DateUtil.Delimiters.slash))
                 Text(text = if (income.isCardPassed) income.cardAmount.toString() else income.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
 
             }

@@ -36,43 +36,43 @@ import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 
 @Composable
-fun DateRow(modifier: Modifier,mainViewModel: MainViewModel) {
+fun DateRow(modifier: Modifier, mainViewModel: MainViewModel) {
     Surface() {
-        
-    val selectedDate = mainViewModel.selectedDate.collectAsState()
-    val calendarState = rememberUseCaseState()
 
-    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-        IconButton(onClick = { mainViewModel.previousMonth }) {
-            Icon(imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(id = R.string.back))
-        }
-        if (selectedDate.value.isMonthAndYearEqualTo(DateUtil.localDateNow)) {
-            Button(onClick = {
-                calendarState.show()
-            }) {
-                Text(text = selectedDate.value.dayOfMonth.toString()+"  "+selectedDate.value.monthString())
+        val selectedDate = mainViewModel.selectedDate.collectAsState()
+        val calendarState = rememberUseCaseState()
+
+        Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
+            IconButton(onClick = { mainViewModel.previousMonth }) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(id = R.string.back))
+            }
+            if (selectedDate.value.isMonthAndYearEqualTo(DateUtil.localDateNow)) {
+                Button(onClick = {
+                    calendarState.show()
+                }) {
+                    Text(text = selectedDate.value.monthString())
+                }
+            }
+            else {
+                OutlinedButton(onClick = {
+                    mainViewModel.selectCurrentDate()
+                }) {
+                    Text(text = selectedDate.value.monthString())
+                }
+
+            }
+            IconButton(onClick = { mainViewModel.nextMonth }) {
+                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = stringResource(id = R.string.forward))
             }
         }
-        else {
-            OutlinedButton(onClick ={
-                mainViewModel.selectCurrentDate()
-            }) {
-            Text(text = selectedDate.value.dayOfMonth.toString()+"  "+selectedDate.value.monthString())
+        CalendarDialog(
+            state = calendarState,
+            config = CalendarConfig(yearSelection = true, monthSelection = true),
+            selection = CalendarSelection.Date(selectedDate = selectedDate.value) { newDate ->
+                mainViewModel.setSelectedDate(newDate)
             }
 
-        }
-        IconButton(onClick = { mainViewModel.nextMonth }) {
-            Icon(imageVector = Icons.Default.ArrowForward, contentDescription = stringResource(id = R.string.forward))
-        }
-    }
-    CalendarDialog(
-        state = calendarState,
-        config = CalendarConfig(yearSelection = true, monthSelection = true),
-        selection = CalendarSelection.Date(selectedDate = selectedDate.value) { newDate ->
-            mainViewModel.setSelectedDate(newDate)
-        }
-
-    )
+        )
     }
 
 }

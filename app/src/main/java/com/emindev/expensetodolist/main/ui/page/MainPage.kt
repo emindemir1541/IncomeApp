@@ -40,7 +40,7 @@ import com.emindev.expensetodolist.main.ui.component.ProgressBarRemainedMoney
 
 @Composable
 fun MainPage(financeViewModel: FinanceViewModel, currencyViewModel: CurrencyViewModel) {
-Surface() {
+Surface {
 
     val context = LocalContext.current
 

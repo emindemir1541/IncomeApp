@@ -98,7 +98,7 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
                         }
                     }
                 }
-            } // TODO: yükleme animasyonunu düzelt
+            }
 
             items(expenseState.expensesMultipleCard.filter { expense: Expense -> expense.completed }) { expense ->
                 AlertDialogDelete(onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) }, onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) }, alertDialogState)
@@ -241,7 +241,7 @@ private fun RowExpenseOneCard(expense: Expense, onLongClick: () -> Unit) {
                 .fillMaxWidth()
                 .padding(vertical = 18.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
                 TextSizeable(text = expense.name, fontSize = 25)
-                Text(text = expense.currentLocalDate.convertToString(DateUtil.Delimiters.slash)) // TODO: bunu tam ortala
+                Text(text = expense.currentLocalDate.convertToString(DateUtil.Delimiters.slash))
                 Text(text = if (expense.isCardPassed) expense.currentAmount.toString() else expense.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
 
             }
