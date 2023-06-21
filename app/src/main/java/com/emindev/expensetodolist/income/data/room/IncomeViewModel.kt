@@ -86,11 +86,11 @@ class IncomeViewModel(private val dao: IncomeDao,  mainViewModel: MainViewModel)
 
                 val incomeModel = IncomeModel(
                     name = name,
-                    latestAmount = latestAmount.toFloatOrZero(),
+                    latestAmount = latestAmount.toFloatOrZero,
                     initialDate = SqlDateUtil.convertDate(currentDate),
                     deleted = false,
                     repeatType = repeatType,
-                    repetition = repetition.toIntOrZero()
+                    repetition = repetition.toIntOrZero
                 )
                 viewModelScope.launch {
                     val getId = dao.upsert(incomeModel)
@@ -101,14 +101,14 @@ class IncomeViewModel(private val dao: IncomeDao,  mainViewModel: MainViewModel)
                             val incomeCardModel = IncomeCardModel(
                                 id = getId,
                                 currentDate = SqlDateUtil.convertDate(currentDate),
-                                cardAmount = latestAmount.toFloatOrZero(),
+                                cardAmount = latestAmount.toFloatOrZero,
                                 cardDeleted = false,
                             )
                             dao.upsert(incomeCardModel)
                         }
 
                         RepeatType.LIMITED -> {
-                            DateUtil.forEachMonthWithInitialDateAndRepetition(currentDate, repetition.toIntOrZero()) { date ->
+                            DateUtil.forEachMonthWithInitialDateAndRepetition(currentDate, repetition.toIntOrZero) { date ->
                                 val incomeCardModel = IncomeCardModel(
                                     id = getId,
                                     currentDate = SqlDateUtil.convertDate(date),
@@ -174,7 +174,7 @@ class IncomeViewModel(private val dao: IncomeDao,  mainViewModel: MainViewModel)
             }
 
             is IncomeEvent.SetAmount -> {
-                if (event.amount.toFloatOrZero() < FinanceConstants.maxAmount)
+                if (event.amount.toFloatOrZero < FinanceConstants.maxAmount)
                     _state.update {
                         it.copy(
                             latestAmount = event.amount,
@@ -201,7 +201,7 @@ class IncomeViewModel(private val dao: IncomeDao,  mainViewModel: MainViewModel)
             }
 
             is IncomeEvent.SetRepetition -> {
-                if (event.repetition.toIntOrZero() < FinanceConstants.maxRepetitionLength)
+                if (event.repetition.toIntOrZero < FinanceConstants.maxRepetitionLength)
                     _state.update {
                         it.copy(
                             repetition = event.repetition

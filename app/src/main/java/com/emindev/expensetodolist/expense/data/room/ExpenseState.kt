@@ -27,5 +27,5 @@ data class ExpenseState(
     val lender: String = "",
     val isAddingExpense:Boolean = false
 ){
-    fun toExpense() = Expense(id=id,cardId = cardId,name = name, latestAmount = latestAmount.toFloatOrZero(), currentDate = SqlDateUtil.convertDate(currentDate), currentAmount = currentAmount.toFloatOrZero(), initialDate = SqlDateUtil.convertDate(initialDate), completed = completed, deleted = deleted, cardDeleted = cardDeleted, repeatType = repeatType, expenseType = expenseType, repetition = repetition.toIntOrNull(), lender = lender)
+    fun toExpense() = Expense(id=id,cardId = cardId,name = name, latestAmount = latestAmount.toFloatOrZero, currentDate = SqlDateUtil.convertDate(currentDate), currentAmount = currentAmount.toFloatOrZero, initialDate = SqlDateUtil.convertDate(initialDate), completed = completed, deleted = deleted, cardDeleted = cardDeleted, repeatType = repeatType, expenseType = expenseType, repetition = repetition.toIntOrNull(), lender = lender)
 }

@@ -14,12 +14,12 @@ data class FinanceModel(
     val totalNeed:Float
 ){
     fun getCardModelList(context:Context): List<CardModel> = listOf(
-        CardModel(context.getString(R.string.remaining_money), listOf(remainedMoney.toString()), ColorUtil.getRandomColor()),
-        CardModel(context.getString(R.string.total_income), listOf(totalIncome.toString()), ColorUtil.getRandomColor()),
-        CardModel(context.getString(R.string.total_expense), listOf(totalExpense.toString()), ColorUtil.getRandomColor()),
-        CardModel(context.getString(R.string.paid_expense), listOf(paidExpense.toString()), ColorUtil.getRandomColor()),
-        CardModel(context.getString(R.string.debt), listOf(totalDebt.toString()), ColorUtil.getRandomColor()),
-        CardModel(context.getString(R.string.want), listOf(totalWish.toString()), ColorUtil.getRandomColor()),
-        CardModel(context.getString(R.string.need), listOf(totalNeed.toString()), ColorUtil.getRandomColor()),
+        CardModel(context.getString(R.string.remaining_money), listOf(remainedMoney.toString()), ColorUtil.randomColor),
+        CardModel(context.getString(R.string.total_income), listOf(totalIncome.toString()), ColorUtil.randomColor),
+        CardModel(context.getString(R.string.total_expense), listOf(totalExpense.toString()), ColorUtil.randomColor),
+        CardModel(context.getString(R.string.paid_expense), listOf(paidExpense.toString()), ColorUtil.randomColor),
+        CardModel(context.getString(R.string.debt), listOf(totalDebt.toString()), ColorUtil.randomColor),
+        CardModel(context.getString(R.string.want), listOf(totalWish.toString()), ColorUtil.randomColor),
+        CardModel(context.getString(R.string.need), listOf(totalNeed.toString()), ColorUtil.randomColor),
     )
 }

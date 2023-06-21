@@ -9,6 +9,6 @@ data class CurrencyModel(
     val selling: String
 ){
     val cardModel: CardModel
-        get() =CardModel(title = name, listOf(buying,selling), cardColor = ColorUtil.getRandomColor(),)
+        get() =CardModel(title = name, listOf(buying,selling), cardColor = ColorUtil.randomColor,)
 
 }

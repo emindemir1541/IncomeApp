@@ -26,10 +26,10 @@ class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel
 
 
     private val _expensesOneCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getExpenseWithOneCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
+        dao.getExpenseWithOneCardBySelectedDateNotDeleted(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
     private val _expensesMultipleCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getExpenseWithMultipleCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toDateString(), SqlDateUtil.dateDelimiter)
+        dao.getExpenseWithMultipleCardBySelectedDateNotDeleted(selectedDate.monthValue.toDateString(), selectedDate.year.toDateString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     val allExpensesNotDeletedBySelectedDate = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
@@ -89,11 +89,11 @@ class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel
 
                 val expenseModel = ExpenseModel(
                     name = name,
-                    latestAmount = latestAmount.toFloatOrZero(),
+                    latestAmount = latestAmount.toFloatOrZero,
                     initialDate = SqlDateUtil.convertDate(currentDate),
                     deleted = deleted,
                     repeatType = repeatType,
-                    repetition = repetition.toIntOrZero(),
+                    repetition = repetition.toIntOrZero,
                     expenseType = expenseType,
                     lender = lender,
                 )
@@ -107,7 +107,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel
                         RepeatType.ONCE, RepeatType.INFINITY -> {
 
                             val expenseCardModel = ExpenseCardModel(
-                                currentAmount = latestAmount.toFloatOrZero(),
+                                currentAmount = latestAmount.toFloatOrZero,
                                 currentDate = SqlDateUtil.convertDate(currentDate),
                                 cardDeleted = cardDeleted,
                                 completed = completed,
@@ -119,9 +119,9 @@ class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel
 
                         RepeatType.LIMITED -> {
 
-                            DateUtil.forEachMonthWithInitialDateAndRepetition(currentDate, repetition.toIntOrZero()) { date ->
+                            DateUtil.forEachMonthWithInitialDateAndRepetition(currentDate, repetition.toIntOrZero) { date ->
                                 val expenseCardModel = ExpenseCardModel(
-                                    currentAmount = latestAmount.toFloatOrZero(),
+                                    currentAmount = latestAmount.toFloatOrZero,
                                     currentDate = SqlDateUtil.convertDate(date),
                                     cardDeleted = cardDeleted,
                                     completed = completed,
@@ -138,7 +138,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel
             }
 
             is ExpenseEvent.SetAmount -> {
-                if (event.amount.toFloatOrZero() < FinanceConstants.maxAmount)
+                if (event.amount.toFloatOrZero < FinanceConstants.maxAmount)
                     _state.update {
                         it.copy(
                             currentAmount = event.amount,
@@ -177,7 +177,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel
             }
 
             is ExpenseEvent.SetRepetition -> {
-                if (event.repetition != null && event.repetition.toIntOrZero() < FinanceConstants.maxRepetitionLength)
+                if (event.repetition != null && event.repetition.toIntOrZero < FinanceConstants.maxRepetitionLength)
                     _state.update {
                         it.copy(
                             repetition = event.repetition.toString()
@@ -215,17 +215,17 @@ class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel
                 val expenseModel = ExpenseModel(
                     id = id,
                     name = name,
-                    latestAmount = latestAmount.toFloatOrZero(),
+                    latestAmount = latestAmount.toFloatOrZero,
                     initialDate = SqlDateUtil.convertDate(initialDate),
                     deleted = deleted,
                     repeatType = repeatType,
-                    repetition = repetition.toIntOrZero(),
+                    repetition = repetition.toIntOrZero,
                     expenseType = expenseType,
                     lender = lender,
                 )
 
                 val expenseCardModel = ExpenseCardModel(
-                    currentAmount = currentAmount.toFloatOrZero(),
+                    currentAmount = currentAmount.toFloatOrZero,
                     currentDate = SqlDateUtil.convertDate(currentDate),
                     cardDeleted = cardDeleted,
                     completed = completed,
@@ -244,7 +244,7 @@ class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel
                         RepeatType.LIMITED -> {
                             val localDate = DateUtil.localDateNow
                             val filterDate = SqlDateUtil.convertDate(DateUtil.convertToDate(localDate.year, localDate.monthValue, 1))
-                            dao.updateAmountOfCardsAfterSpecificDate(id, filterDate, latestAmount.toFloatOrZero())
+                            dao.updateAmountOfCardsAfterSpecificDate(id, filterDate, latestAmount.toFloatOrZero)
                             dao.upsert(expenseCardModel)
                         }
                     }

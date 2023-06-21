@@ -183,7 +183,7 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
             .padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             item {
 
-                TopAppBar(title = { Text(text = stringResource(id = R.string.update_expense)) },colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent), actions = {
+                TopAppBar(title = { Text(text = stringResource(id = R.string.update_expense)) }, colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent), actions = {
                     IconButton(onClick = {
                         mainViewModel.interactionFunction(3000L) {
                             onEvent(ExpenseEvent.DeleteExpense(expenseState.toExpense()))

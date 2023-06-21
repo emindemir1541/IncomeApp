@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import kotlin.random.Random
 
 object ColorUtil {
+
     fun getColorBetweenRedAndYellow(percentage: Int): Color {
         val red = (255).toInt()
         val green = (255f * (percentage / 100f)).toInt()
@@ -12,7 +13,8 @@ object ColorUtil {
         return Color(red, green, blue)
     }
 
-    fun getRandomColor(): Color {
-        return Color(Random.nextLong())
-    }
+    val randomColor: Color
+        get() {
+            return Color(Random.nextLong())
+        }
 }

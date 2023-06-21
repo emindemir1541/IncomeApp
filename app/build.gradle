@@ -62,7 +62,8 @@ android {
 dependencies {
 
     implementation 'com.google.firebase:firebase-config:21.4.0'
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.1'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.1'
+    testImplementation 'junit:junit:4.13.2'
     testImplementation 'junit:junit:4.12'
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
@@ -76,11 +77,11 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'com.google.android.gms:play-services-fitness:21.1.0'
-    implementation 'com.google.firebase:firebase-firestore:24.6.0'
+    implementation 'com.google.firebase:firebase-firestore:24.6.1'
     implementation 'com.google.firebase:firebase-config-ktx:21.4.0'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+
+
 
     // Compose
     def composeBom = platform('androidx.compose:compose-bom:2023.05.00')
@@ -156,4 +157,32 @@ dependencies {
     implementation "com.maxkeppeler.sheets-compose-dialogs:input:$picker_version"
     implementation "com.maxkeppeler.sheets-compose-dialogs:state:$picker_version"*/
 
+    // Local unit tests
+    testImplementation "androidx.test:core:1.5.0"
+    testImplementation "junit:junit:4.13.2"
+    testImplementation "androidx.arch.core:core-testing:2.2.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    testImplementation "com.google.truth:truth:1.1.3"
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
+    testImplementation "io.mockk:mockk:1.10.5"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.5.0-beta02"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+
+    // Instrumentation tests
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.37'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.37'
+    androidTestImplementation "junit:junit:4.13.2"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
+    androidTestImplementation "com.google.truth:truth:1.1.3"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test:core-ktx:1.5.0'
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:4.9.1"
+    androidTestImplementation "io.mockk:mockk-android:1.10.5"
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+
+    testImplementation "org.mockito:mockito-core:2.21.0"
+    implementation "androidx.test:core:1.5.0"
 }
