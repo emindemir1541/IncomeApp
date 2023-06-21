@@ -22,6 +22,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +36,7 @@ import com.emindev.expensetodolist.main.common.constant.Currency
 import com.emindev.expensetodolist.main.common.model.CardModel
 import com.emindev.expensetodolist.main.common.model.FinanceModel
 import com.emindev.expensetodolist.main.common.model.Resource
+import com.emindev.expensetodolist.main.data.retrofit.CurrencyModel
 import com.emindev.expensetodolist.main.data.retrofit.CurrencyViewModel
 import com.emindev.expensetodolist.main.data.viewmodel.FinanceViewModel
 import com.emindev.expensetodolist.main.ui.component.ProgressBarRemainedMoney
@@ -46,7 +49,8 @@ Surface {
 
     val finance = financeViewModel.finance.collectAsState(initial = FinanceModel(0f, 0f, 0f, 0f, 0f, 0f, 0f))
 
-    val currencyModelList = currencyViewModel.currency.collectAsState()
+    //val currencyModelList = currencyViewModel.currency.collectAsState()
+    val currencyModelList = remember{ mutableStateOf<Resource<List<CurrencyModel>>>(Resource.Error("")) }
 
 
     Column(modifier = Modifier

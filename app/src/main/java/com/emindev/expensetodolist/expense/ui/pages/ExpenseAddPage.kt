@@ -166,8 +166,7 @@ fun ExpenseUpdatePage(navController: NavController, mainViewModel: MainViewModel
         state = calendarState,
         config = CalendarConfig(yearSelection = false, monthSelection = false),
         selection = CalendarSelection.Date(selectedDate = expenseState.currentDate) { newDate ->
-            val date = LocalDate.of((expenseState.initialDate).year, (expenseState.initialDate).monthValue, newDate.dayOfMonth)
-            onEvent(ExpenseEvent.SetDate(date))
+            onEvent(ExpenseEvent.SetDate(newDate))
         }
 
     )
