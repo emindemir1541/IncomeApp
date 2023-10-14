@@ -2,16 +2,12 @@ package com.emindev.expensetodolist.main.common.helper
 
 
 import android.annotation.SuppressLint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.lang.IllegalArgumentException
 import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 
 
 @SuppressLint("SimpleDateFormat")
@@ -43,26 +39,32 @@ sealed interface DateUtil {
             get() = LocalDate.now()
 
         //Helpers
-        private fun formatterTr(dateType: String) = DateTimeFormatter.ofPattern(dateType)
+        //private fun formatter(dateType: String) = DateTimeFormatter.ofPattern(dateType)
 
-        fun Int.toDateString(): String {
-            val value = this.toString()
+        fun Int.dayOrMonthToValidString(): String {
+
+            val value = if (this < 1) "1" else this.toString()
             return if (value.length < 2) "0$value"
             else value
+        }
+
+        private fun Int.yearToValidString(): String {
+        val value = if (this<1980) 1980.toString() else this.toString()
+            return value
         }
 
         fun splitDate(date: String, delimiter: String): MutableList<String> = date.split(delimiter).toMutableList()
 
         //Conversations
-        fun convertToString(day: Int, month: Int, year: Int, delimiter: String): String = "${day.toDateString()}$delimiter${month.toDateString()}$delimiter$year"
-        fun convertToStringReverted(day: Int, month: Int, year: Int, delimiter: String): String = "$year$delimiter${month.toDateString()}$delimiter${day.toDateString()}"
+        fun convertToString(day: Int, month: Int, year: Int, delimiter: String): String = "${day.dayOrMonthToValidString()}$delimiter${month.dayOrMonthToValidString()}$delimiter${year.yearToValidString()}" // TODO: şubat ayına 30 gelirse hata veriyor 
+        fun convertToStringReverted(day: Int, month: Int, year: Int, delimiter: String): String = "$year$delimiter${month.dayOrMonthToValidString()}$delimiter${day.dayOrMonthToValidString()}"
         fun convertToString(timeInMillis: Long, dataType: String): String = android.text.format.DateFormat.format(dataType, timeInMillis).toString()
 
-        // fun convertToString(dateTime: LocalDate,delimiter: String): String = "${dateTime.dayOfMonth.toDateString()}$delimiter${dateTime.monthValue.toDateString()}$delimiter${dateTime.year}"
-        fun LocalDate.convertToString(delimiter: String): String = "${this.dayOfMonth.toDateString()}$delimiter${this.monthValue.toDateString()}$delimiter${this.year}"
+        // fun convertToString(dateTime: LocalDate,delimiter: String): String = "${dateTime.dayOfMonth.dayOrMonthToValidString()}$delimiter${dateTime.monthValue.dayOrMonthToValidString()}$delimiter${dateTime.year}"
+        fun LocalDate.convertToString(delimiter: String): String = "${this.dayOfMonth.dayOrMonthToValidString()}$delimiter${this.monthValue.dayOrMonthToValidString()}$delimiter${this.year}"
 
-        //  fun convertToStringReverted(dateTime: LocalDate,delimiter: String): String = "${dateTime.year}$delimiter${dateTime.monthValue.toDateString()}$delimiter${dateTime.dayOfMonth.toDateString()}"
-        fun LocalDate.convertToStringReverted(delimiter: String): String = "${this.year}$delimiter${this.monthValue.toDateString()}$delimiter${this.dayOfMonth.toDateString()}"
+        //  fun convertToStringReverted(dateTime: LocalDate,delimiter: String): String = "${dateTime.year}$delimiter${dateTime.monthValue.dayOrMonthToValidString()}$delimiter${dateTime.dayOfMonth.dayOrMonthToValidString()}"
+        fun LocalDate.convertToStringReverted(delimiter: String): String = "${this.year}$delimiter${this.monthValue.dayOrMonthToValidString()}$delimiter${this.dayOfMonth.dayOrMonthToValidString()}"
 
         fun convertToDateTime(dateTime: Long): LocalDateTime = Instant.ofEpochMilli(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime()
         fun convertToDateTime(date: LocalDate, time: LocalTime = LocalTime.of(0, 0, 0)): LocalDateTime = LocalDateTime.of(date, time)

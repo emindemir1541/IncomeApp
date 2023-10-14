@@ -8,7 +8,7 @@ import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.isMonthAndYearEqualTo
-import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.toDateString
+import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.dayOrMonthToValidString
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.data.room.FinanceDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -145,7 +145,7 @@ class ExpenseDaoTest {
         }
 
 
-        val expenseList = dao.getExpenseWithOneCardBySelectedDateNotDeleted(date.monthValue.toDateString(), date.year.toString(), SqlDateUtil.dateDelimiter).first()
+        val expenseList = dao.getExpenseWithOneCardBySelectedDateNotDeleted(date.monthValue.dayOrMonthToValidString(), date.year.toString(), SqlDateUtil.dateDelimiter).first()
 
         assert(expenseList.isNotEmpty()) { expenseList }
 
@@ -179,7 +179,7 @@ class ExpenseDaoTest {
         }
 
 
-        val expenseList = dao.getExpenseWithMultipleCardBySelectedDateNotDeleted(date.monthValue.toDateString(), date.year.toString(), SqlDateUtil.dateDelimiter).first()
+        val expenseList = dao.getExpenseWithMultipleCardBySelectedDateNotDeleted(date.monthValue.dayOrMonthToValidString(), date.year.toString(), SqlDateUtil.dateDelimiter).first()
 
         assert(expenseList.isNotEmpty()) { expenseList }
 
@@ -210,7 +210,7 @@ class ExpenseDaoTest {
         }
 
 
-        val expenseList = dao.getAllExpensesNotDeletedBySelectedDate(date.monthValue.toDateString(), date.year.toString(), SqlDateUtil.dateDelimiter).first()
+        val expenseList = dao.getAllExpensesNotDeletedBySelectedDate(date.monthValue.dayOrMonthToValidString(), date.year.toString(), SqlDateUtil.dateDelimiter).first()
 
         assert(expenseList.size==3) { expenseList }
 

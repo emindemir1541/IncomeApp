@@ -37,31 +37,36 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 
 @Composable
 fun DateRow(modifier: Modifier, mainViewModel: MainViewModel) {
-    Surface() {
+    Surface {
 
         val selectedDate = mainViewModel.selectedDate.collectAsState()
         val calendarState = rememberUseCaseState()
+        val delay = 200L
 
         Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-            IconButton(onClick = { mainViewModel.previousMonth }) {
+            IconButton(onClick = { mainViewModel.interactionFunction(delay){ mainViewModel.previousMonth }}) {
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(id = R.string.back))
             }
             if (selectedDate.value.isMonthAndYearEqualTo(DateUtil.localDateNow)) {
                 Button(onClick = {
-                    calendarState.show()
+                    mainViewModel.interactionFunction(delay) {
+                        calendarState.show()
+                    }
                 }) {
                     Text(text = selectedDate.value.monthString())
                 }
             }
             else {
                 OutlinedButton(onClick = {
-                    mainViewModel.selectCurrentDate()
+                    mainViewModel.interactionFunction(delay) {
+                        mainViewModel.selectCurrentDate()
+                    }
                 }) {
                     Text(text = selectedDate.value.monthString())
                 }
 
             }
-            IconButton(onClick = { mainViewModel.nextMonth }) {
+            IconButton(onClick = {mainViewModel.interactionFunction(delay) { mainViewModel.nextMonth }}) {
                 Icon(imageVector = Icons.Default.ArrowForward, contentDescription = stringResource(id = R.string.forward))
             }
         }

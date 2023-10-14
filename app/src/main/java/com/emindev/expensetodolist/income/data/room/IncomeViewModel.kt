@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.main.common.constant.FinanceConstants
 import com.emindev.expensetodolist.main.common.helper.DateUtil
-import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.toDateString
+import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.dayOrMonthToValidString
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.common.util.toFloatOrZero
@@ -28,16 +28,16 @@ class IncomeViewModel(private val dao: IncomeDao,  mainViewModel: MainViewModel)
 
 
     private val _incomesMultipleCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getIncomesWithMultipleCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
+        dao.getIncomesWithMultipleCardBySelectedDate(selectedDate.monthValue.dayOrMonthToValidString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
 
     private val _incomesOneCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getIncomesWithOneCardBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
+        dao.getIncomesWithOneCardBySelectedDate(selectedDate.monthValue.dayOrMonthToValidString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     val allIncomesNotDeletedBySelectedDate = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getAllIncomesNotDeletedBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
+        dao.getAllIncomesNotDeletedBySelectedDate(selectedDate.monthValue.dayOrMonthToValidString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     private val _state = MutableStateFlow(IncomeState())

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,11 +22,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,11 +50,16 @@ import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.convert
 import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.isMonthAndYearBiggerThan
 import com.emindev.expensetodolist.main.common.constant.Currency
 import com.emindev.expensetodolist.main.common.constant.Page
+import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.isMonthAndYearEqualOrSmallerThan
+import com.emindev.expensetodolist.main.common.helper.test
 import com.emindev.expensetodolist.main.common.util.ColorUtil
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AlertDialogDelete
+import com.emindev.expensetodolist.main.ui.component.AnimatedVisibilityTextField
 import com.emindev.expensetodolist.main.ui.component.TextSizeable
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
 import kotlin.math.absoluteValue
 
@@ -79,7 +89,7 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
             }
 
 
-            items(expenseState.expensesMultipleCard.filter { expense: Expense -> !expense.completed }) { expense ->
+            items(expenseState.expensesMultipleCardNotCompleted) { expense ->
                 AlertDialogDelete(onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) }, onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) }, alertDialogState)
 
                 Box(modifier = Modifier
@@ -100,7 +110,13 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
                 }
             }
 
-            items(expenseState.expensesMultipleCard.filter { expense: Expense -> expense.completed }) { expense ->
+            item {
+                AnimatedVisibilityTextField(visible = selectedDate.isMonthAndYearEqualOrSmallerThan(DateUtil.localDateNow) && expenseState.expensesMultipleCardNotCompleted.isNotEmpty() && (expenseState.expensesMultipleCardCompleted.isNotEmpty() || expenseState.expensesOneCard.isNotEmpty())) {
+                    Divider(modifier = Modifier.fillMaxWidth().padding(horizontal =8.dp), color = MaterialTheme.colorScheme.primary)
+                }
+            }
+
+            items(expenseState.expensesMultipleCardCompleted) { expense ->
                 AlertDialogDelete(onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) }, onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) }, alertDialogState)
 
                 Box(modifier = Modifier
@@ -122,10 +138,7 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
             }
 
 
-        /*    if (expenseState.expensesMultipleCard.isNotEmpty() || (expenseState.expensesOneCard.isNotEmpty() && expenseState.expenseInfinityModels.isNotEmpty()))
-                item {
-                    Divider(modifier = Modifier.fillMaxWidth())
-                }*/
+
 
             items(expenseState.expensesOneCard) { expense ->
                 Box(modifier = Modifier
@@ -152,6 +165,7 @@ fun RowExpenseMultipleCard(expense: Expense, onCheckedChanged: (Boolean) -> Unit
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
+            .border(1.dp, if (expense.completed) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp))
             .combinedClickable(
                 onClick = {},
                 onLongClick = onLongClick

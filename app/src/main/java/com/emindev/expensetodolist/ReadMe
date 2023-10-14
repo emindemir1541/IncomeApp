@@ -1,13 +1,14 @@
 Errors
-todo    divier expenses ekle
 todo    ekleme sayfasından geri geldiğinde lender textfield açılıyor
-todo    karanlık mod ekle
+todo    DateUtil.convertToDate(year,month,date) = LocalDate fonksiyonunda şubata 30 gelince hata veriyor, unit test
 Important Adds
-
+todo    ekleme yaparken textfieldlarda bir sonrakine geçmek için klavyede tab tuşu oluştur
 
 Should Add
 todo    anasayfada hangilerinin görüneceğini seç
 todo    expense veya income yokken fotoğraf ekle
+todo    karanlık mod ekle
+todo    settings page
 
 Can Be Add
 todo    yenilikler alert dialog

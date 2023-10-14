@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.main.common.constant.FinanceConstants
 import com.emindev.expensetodolist.main.common.helper.DateUtil
-import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.toDateString
+import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.dayOrMonthToValidString
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import com.emindev.expensetodolist.main.common.util.toFloatOrZero
@@ -26,24 +26,29 @@ class ExpenseViewModel(private val dao: ExpenseDao, mainViewModel: MainViewModel
 
 
     private val _expensesOneCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getExpenseWithOneCardBySelectedDateNotDeleted(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
+        dao.getExpenseWithOneCardBySelectedDateNotDeleted(selectedDate.monthValue.dayOrMonthToValidString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
-    private val _expensesMultipleCard = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getExpenseWithMultipleCardBySelectedDateNotDeleted(selectedDate.monthValue.toDateString(), selectedDate.year.toDateString(), SqlDateUtil.dateDelimiter)
+    private val _expensesMultipleCardCompleted = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
+        dao.getExpenseWithMultipleCardBySelectedDateCompletedNotDeleted(selectedDate.monthValue.dayOrMonthToValidString(), selectedDate.year.dayOrMonthToValidString(), SqlDateUtil.dateDelimiter)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+
+    private val _expensesMultipleCardNotCompleted = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
+        dao.getExpenseWithMultipleCardBySelectedDateNotCompletedNotDeleted(selectedDate.monthValue.dayOrMonthToValidString(), selectedDate.year.dayOrMonthToValidString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     val allExpensesNotDeletedBySelectedDate = mainViewModel.selectedDate.flatMapLatest { selectedDate ->
-        dao.getAllExpensesNotDeletedBySelectedDate(selectedDate.monthValue.toDateString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
+        dao.getAllExpensesNotDeletedBySelectedDate(selectedDate.monthValue.dayOrMonthToValidString(), selectedDate.year.toString(), SqlDateUtil.dateDelimiter)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     val infinityExpenseModelsNotDeleted = dao.getInfinityExpenseModelsNotDeleted()
     val expenseCardModels = dao.getExpenseCardModels()
     private val _state = MutableStateFlow(ExpenseState())
 
-    val state = combine(_state, _expensesOneCard, _expensesMultipleCard, infinityExpenseModelsNotDeleted, mainViewModel.selectedDate) { state, expensesOneCard, expensesMultipleCard, expenseInfinityModels, _ ->
+    val state = combine(_state, _expensesOneCard, _expensesMultipleCardCompleted,_expensesMultipleCardNotCompleted ,infinityExpenseModelsNotDeleted) { state, expensesOneCard, expensesMultipleCardCompleted,expensesMutlipleCardNotCompleted, expenseInfinityModels->
         state.copy(
             expensesOneCard = expensesOneCard,
-            expensesMultipleCard = expensesMultipleCard,
+            expensesMultipleCardCompleted = expensesMultipleCardCompleted,
+            expensesMultipleCardNotCompleted = expensesMutlipleCardNotCompleted,
             expenseInfinityModels = expenseInfinityModels
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ExpenseState())

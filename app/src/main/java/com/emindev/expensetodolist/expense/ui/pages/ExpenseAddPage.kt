@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -38,7 +39,9 @@ import androidx.navigation.NavController
 import com.emindev.expensetodolist.R
 import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.expense.data.room.ExpenseEvent
+import com.emindev.expensetodolist.expense.data.room.ExpenseState
 import com.emindev.expensetodolist.expense.data.room.ExpenseViewModel
+import com.emindev.expensetodolist.main.common.constant.Page
 import com.emindev.expensetodolist.main.common.constant.RepeatType
 import com.emindev.expensetodolist.main.data.viewmodel.MainViewModel
 import com.emindev.expensetodolist.main.ui.component.AnimatedVisibilityTextField
