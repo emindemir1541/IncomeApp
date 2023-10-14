@@ -39,7 +39,7 @@ class FinanceViewModel(private val incomeViewModel: IncomeViewModel, private val
                 ExpenseType.DEBT -> totalDebt += expense.latestAmount
             }
         }
-        return FinanceModel(remainedMoney = totalIncome - paidExpense, totalIncome = totalIncome, totalExpense = totalExpense, totalDebt = totalDebt, totalWish = totalWish, totalNeed = totalNeed, paidExpense = paidExpense)
+        return FinanceModel(remainedMoney = totalIncome - paidExpense, totalIncome = totalIncome, totalExpense = totalExpense, totalDebt = totalDebt, totalWish = totalWish, totalNeed = totalNeed, paidExpense = paidExpense, potentialRemainedMoney =totalIncome-totalExpense )
     }
 
 }

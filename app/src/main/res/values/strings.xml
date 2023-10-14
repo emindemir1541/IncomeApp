@@ -39,6 +39,7 @@
     <string name="avarage_income">Ortalama Gelir</string>
     <string name="avarage_expense">Ortalama Gider</string>
     <string name="remaining_money">Kalan Para</string>
+    <string name="potential_remained_money">Potansiyel Kalan Para</string>
     <string name="undo_complete">Geri al Tamamla</string>
     <string name="income_forOnce">Tel Seferlik</string>
     <string name="income_monthly">Aylık</string>

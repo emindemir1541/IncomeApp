@@ -47,7 +47,7 @@ Surface {
 
     val context = LocalContext.current
 
-    val finance = financeViewModel.finance.collectAsState(initial = FinanceModel(0f, 0f, 0f, 0f, 0f, 0f, 0f))
+    val finance = financeViewModel.finance.collectAsState(initial = FinanceModel(0f, 0f, 0f, 0f, 0f, 0f, 0f,0f))
 
     //val currencyModelList = currencyViewModel.currency.collectAsState()
     val currencyModelList = remember{ mutableStateOf<Resource<List<CurrencyModel>>>(Resource.Error("")) }

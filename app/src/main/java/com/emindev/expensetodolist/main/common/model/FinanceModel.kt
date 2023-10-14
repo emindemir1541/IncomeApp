@@ -11,10 +11,13 @@ data class FinanceModel(
     val paidExpense:Float,
     val totalDebt:Float,
     val totalWish:Float,
-    val totalNeed:Float
+    val totalNeed:Float,
+    val potentialRemainedMoney:Float,
+
 ){
     fun getCardModelList(context:Context): List<CardModel> = listOf(
         CardModel(context.getString(R.string.remaining_money), listOf(remainedMoney.toString()), ColorUtil.randomColor),
+        CardModel(context.getString(R.string.potential_remained_money), listOf(potentialRemainedMoney.toString()), ColorUtil.randomColor),
         CardModel(context.getString(R.string.total_income), listOf(totalIncome.toString()), ColorUtil.randomColor),
         CardModel(context.getString(R.string.total_expense), listOf(totalExpense.toString()), ColorUtil.randomColor),
         CardModel(context.getString(R.string.paid_expense), listOf(paidExpense.toString()), ColorUtil.randomColor),

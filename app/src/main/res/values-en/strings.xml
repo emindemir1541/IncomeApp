@@ -94,6 +94,7 @@
     <string name="back">Back</string>
     <string name="forward">Forward</string>
     <string name="currency">Döviz</string>
+    <string name="potential_remained_money">Potential Remained Money</string>
 
 
 </resources>
