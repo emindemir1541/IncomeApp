@@ -65,7 +65,13 @@ import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expenseViewModel: ExpenseViewModel, listState: LazyListState, onEvent: (ExpenseEvent) -> Unit) {
+fun ExpensePage(
+    navController: NavController,
+    mainViewModel: MainViewModel,
+    expenseViewModel: ExpenseViewModel,
+    listState: LazyListState,
+    onEvent: (ExpenseEvent) -> Unit
+) {
     Surface {
 
         val expenseState by expenseViewModel.state.collectAsState()
@@ -73,15 +79,18 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
         val selectedDate by mainViewModel.selectedDate.collectAsState()
 
 
-        LazyColumn(modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
-            state = listState) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
+            state = listState
+        ) {
 
 
             items(expenseState.expenseInfinityModels) { expense ->
-                Box(modifier = Modifier
-                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+                Box(
+                    modifier = Modifier
+                        .animateItemPlacement(animationSpec = tween(durationMillis = 600))
                 ) {
                     if (selectedDate.isMonthAndYearBiggerThan(DateUtil.localDateNow))
                         RowExpenseMultipleCard(expense, selectedDate)
@@ -90,10 +99,15 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
 
 
             items(expenseState.expensesMultipleCardNotCompleted) { expense ->
-                AlertDialogDelete(onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) }, onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) }, alertDialogState)
+                AlertDialogDelete(
+                    onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) },
+                    onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) },
+                    alertDialogState
+                )
 
-                Box(modifier = Modifier
-                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+                Box(
+                    modifier = Modifier
+                        .animateItemPlacement(animationSpec = tween(durationMillis = 600))
                 ) {
                     RowExpenseMultipleCard(expense, {
                         val checkedExpense = expense.copy(completed = it)
@@ -101,8 +115,7 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
                     }) {
                         if (expense.isCardPassed) {
                             alertDialogState.show()
-                        }
-                        else {
+                        } else {
                             expenseViewModel.setState(expense)
                             navController.navigate(Page.ExpenseUpdate.route)
                         }
@@ -111,16 +124,30 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
             }
 
             item {
-                AnimatedVisibilityTextField(visible = selectedDate.isMonthAndYearEqualOrSmallerThan(DateUtil.localDateNow) && expenseState.expensesMultipleCardNotCompleted.isNotEmpty() && (expenseState.expensesMultipleCardCompleted.isNotEmpty() || expenseState.expensesOneCard.isNotEmpty())) {
-                    Divider(modifier = Modifier.fillMaxWidth().padding(horizontal =8.dp), color = MaterialTheme.colorScheme.primary)
+                AnimatedVisibilityTextField(
+                    visible = selectedDate.isMonthAndYearEqualOrSmallerThan(
+                        DateUtil.localDateNow
+                    ) && expenseState.expensesMultipleCardNotCompleted.isNotEmpty() && (expenseState.expensesMultipleCardCompleted.isNotEmpty() || expenseState.expensesOneCard.isNotEmpty())
+                ) {
+                    Divider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
 
             items(expenseState.expensesMultipleCardCompleted) { expense ->
-                AlertDialogDelete(onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) }, onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) }, alertDialogState)
+                AlertDialogDelete(
+                    onDeleteCardClick = { onEvent(ExpenseEvent.DeleteCard(expense)) },
+                    onDeleteAllClick = { onEvent(ExpenseEvent.DeleteExpense(expense)) },
+                    alertDialogState
+                )
 
-                Box(modifier = Modifier
-                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+                Box(
+                    modifier = Modifier
+                        .animateItemPlacement(animationSpec = tween(durationMillis = 600))
                 ) {
                     RowExpenseMultipleCard(expense, {
                         val checkedExpense = expense.copy(completed = it)
@@ -128,8 +155,7 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
                     }) {
                         if (expense.isCardPassed) {
                             alertDialogState.show()
-                        }
-                        else {
+                        } else {
                             expenseViewModel.setState(expense)
                             navController.navigate(Page.ExpenseUpdate.route)
                         }
@@ -141,8 +167,9 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
 
 
             items(expenseState.expensesOneCard) { expense ->
-                Box(modifier = Modifier
-                    .animateItemPlacement(animationSpec = tween(durationMillis = 600))
+                Box(
+                    modifier = Modifier
+                        .animateItemPlacement(animationSpec = tween(durationMillis = 600))
                 ) {
                     RowExpenseOneCard(expense) {
                         expenseViewModel.setState(expense)
@@ -160,12 +187,20 @@ fun ExpensePage(navController: NavController, mainViewModel: MainViewModel, expe
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RowExpenseMultipleCard(expense: Expense, onCheckedChanged: (Boolean) -> Unit, onLongClick: () -> Unit) {
+fun RowExpenseMultipleCard(
+    expense: Expense,
+    onCheckedChanged: (Boolean) -> Unit,
+    onLongClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .border(1.dp, if (expense.completed) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp))
+            .border(
+                1.dp,
+                if (expense.completed) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primary,
+                RoundedCornerShape(16.dp)
+            )
             .combinedClickable(
                 onClick = {},
                 onLongClick = onLongClick
@@ -173,31 +208,51 @@ fun RowExpenseMultipleCard(expense: Expense, onCheckedChanged: (Boolean) -> Unit
         elevation = CardDefaults.cardElevation(0.dp),
     ) {
 
-        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
                         Text(text = expense.lender, fontSize = 20.sp)
                     }
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
                         TextSizeable(text = expense.name, fontSize = 40)
                     }
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp), horizontalArrangement = Arrangement.End) {
-                        Checkbox(checked = expense.completed, onCheckedChange = { onCheckedChanged(it) })
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp), horizontalArrangement = Arrangement.End
+                    ) {
+                        Checkbox(
+                            checked = expense.completed,
+                            onCheckedChange = { onCheckedChanged(it) })
                     }
                 }
 
             }
 
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
                 TextRemainedDay(expense = expense)
                 Text(text = expense.currentAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
                 Text(text = expense.currentLocalDate.convertToString(DateUtil.Delimiters.slash))
@@ -217,17 +272,33 @@ fun RowExpenseMultipleCard(expense: ExpenseModel, selectedDate: LocalDate) {
         elevation = CardDefaults.cardElevation(0.dp),
     ) {
 
-        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
                 TextSizeable(text = expense.name, fontSize = 40)
             }
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
-                val date = DateUtil.convertToDate(selectedDate.year, selectedDate.monthValue, expense.initialLocalDate.dayOfMonth)
-                TextRemainedDay(selectedDate)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                val date = DateUtil.convertToDate(
+                    selectedDate.year,
+                    selectedDate.monthValue,
+                    expense.initialLocalDate.dayOfMonth
+                )
+                TextRemainedDay(date)
                 Text(text = expense.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
                 Text(text = date.convertToString(DateUtil.Delimiters.slash))
             }
@@ -250,10 +321,18 @@ private fun RowExpenseOneCard(expense: Expense, onLongClick: () -> Unit) {
         elevation = CardDefaults.cardElevation(0.dp),
     ) {
 
-        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 18.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 18.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
                 TextSizeable(text = expense.name, fontSize = 25)
                 Text(text = expense.currentLocalDate.convertToString(DateUtil.Delimiters.slash))
                 Text(text = if (expense.isCardPassed) expense.currentAmount.toString() else expense.latestAmount.toString() + Currency.TL)  // TODO: handle the cardPassed error
@@ -273,22 +352,21 @@ private fun TextRemainedDay(expense: Expense) {
             color = MaterialTheme.colorScheme.tertiary,
             fontWeight = FontWeight.Bold
         )
-    }
-    else
+    } else
         if (expense.remainedDay > 0L) {
 
             Text(
                 text = (expense.remainedDay.toString() + " " + stringResource(R.string.day_remained)),
-                color = if (expense.remainedDayAsPercentage > 50) Color.Unspecified else ColorUtil.getColorBetweenRedAndYellow(expense.remainedDayAsPercentage * 2), fontWeight = FontWeight.Bold
+                color = if (expense.remainedDayAsPercentage > 50) Color.Unspecified else ColorUtil.getColorBetweenRedAndYellow(
+                    expense.remainedDayAsPercentage * 2
+                ), fontWeight = FontWeight.Bold
             )
-        }
-        else if (expense.remainedDay < 0L) {
+        } else if (expense.remainedDay < 0L) {
             Text(
                 text = (expense.remainedDay.absoluteValue.toString() + " " + stringResource(R.string.day_passed)),
                 color = Color.Red, fontWeight = FontWeight.Bold
             )
-        }
-        else
+        } else
             Text(
                 text = stringResource(id = R.string.payment_time),
                 color = Color.Red
@@ -298,8 +376,12 @@ private fun TextRemainedDay(expense: Expense) {
 @Composable
 private fun TextRemainedDay(selectedDate: LocalDate) {
     Text(
-        text = (DateUtil.dayBetweenTwoDate(selectedDate, DateUtil.localDateNow)).toString() + " " + stringResource(R.string.day_remained),
-        fontWeight = FontWeight.Bold)
+        text = (DateUtil.dayBetweenTwoDate(
+            selectedDate,
+            DateUtil.localDateNow
+        )).toString() + " " + stringResource(R.string.day_remained),
+        fontWeight = FontWeight.Bold
+    )
 }
 
 

@@ -5,6 +5,7 @@ import com.emindev.expensetodolist.expense.common.constant.ExpenseType
 import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.helper.DateUtil.Companion.isMonthAndYearSmallerThan
 import com.emindev.expensetodolist.main.common.constant.RepeatType
+import com.emindev.expensetodolist.main.common.helper.test
 import com.emindev.expensetodolist.main.common.util.SqlDateUtil
 import java.time.LocalDate
 
@@ -32,16 +33,36 @@ data class Expense(
         get() = SqlDateUtil.convertDate(currentDate)
 
     val toExpenseModel: ExpenseModel
-        get() = ExpenseModel(name = name, latestAmount = latestAmount, initialDate = initialDate, deleted = deleted, repeatType = repeatType, repetition = repetition, expenseType = expenseType, lender = lender, id = id)
+        get() = ExpenseModel(
+            name = name,
+            latestAmount = latestAmount,
+            initialDate = initialDate,
+            deleted = deleted,
+            repeatType = repeatType,
+            repetition = repetition,
+            expenseType = expenseType,
+            lender = lender,
+            id = id
+        )
 
     val toExpenseCardModel: ExpenseCardModel
-        get() = ExpenseCardModel(id = id, currentDate = currentDate, currentAmount = currentAmount, completed = completed, cardDeleted = cardDeleted, cardId = cardId)
+        get() = ExpenseCardModel(
+            id = id,
+            currentDate = currentDate,
+            currentAmount = currentAmount,
+            completed = completed,
+            cardDeleted = cardDeleted,
+            cardId = cardId
+        )
 
     val remainedDay: Long
-        get() = DateUtil.dayBetweenTwoDate(currentLocalDate, DateUtil.localDateNow)
+        get() {
+            return DateUtil.dayBetweenTwoDate(currentLocalDate, DateUtil.localDateNow)
+        }
 
-    val remainedDayAsPercentage:Int
-        get() = if (remainedDay >= 0) ((remainedDay * 100) /currentLocalDate.dayOfMonth).toInt() else 0
+
+    val remainedDayAsPercentage: Int
+        get() = if (remainedDay >= 0) ((remainedDay * 100) / currentLocalDate.dayOfMonth).toInt() else 0
 
     val isCardPassed: Boolean
         get() = currentLocalDate.isMonthAndYearSmallerThan(DateUtil.localDateNow)

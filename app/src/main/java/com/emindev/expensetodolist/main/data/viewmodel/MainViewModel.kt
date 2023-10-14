@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emindev.expensetodolist.main.common.helper.DateUtil
 import com.emindev.expensetodolist.main.common.constant.BottomNavItems
+import com.emindev.expensetodolist.main.common.helper.test
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,6 +37,7 @@ class MainViewModel : ViewModel() {
             _jobInteraction.value = true
             delay(millisecond)
             _jobInteraction.value = false
+
         }
     }
 
