@@ -1,4 +1,5 @@
-Expense Todo List App
-![ExpensePage](https://github.com/emindemir1541/IncomeApp/assets/94618987/4bdb618f-3642-4637-9ef1-d0c226ffaf0f)
-![MainPage](https://github.com/emindemir1541/IncomeApp/assets/94618987/cbd4f650-0443-430a-92db-b313641c0a32)
-![IncomePage](https://github.com/emindemir1541/IncomeApp/assets/94618987/9c1a499e-098b-42ca-a20a-ee7e18773365)
+# Expense Todo List App
+
+<img src="https://github.com/emindemir1541/IncomeApp/assets/94618987/979077d8-b2b7-4a29-a3bf-2027ee2d90cc" width="540" height="1140">
+<img src="https://github.com/emindemir1541/IncomeApp/assets/94618987/2dd9f080-d8ba-4428-a0db-108824ae99b5" width="540" height="1140">
+<img src="https://github.com/emindemir1541/IncomeApp/assets/94618987/de089e65-b929-47d9-9879-f8070565e9be" width="540" height="1140">
